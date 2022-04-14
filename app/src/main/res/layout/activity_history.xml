@@ -6,4 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.HistoryActivity">
 
+    <fi.sportti.app.ui.CustomGraph
+        android:id="@+id/history_exercise_graph"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/history_button_showPrevious"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="showPrevious"
+        android:text="Edellinen"
+        app:layout_constraintEnd_toStartOf="@+id/history_button_showNext"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/history_exercise_graph" />
+
+    <Button
+        android:id="@+id/history_button_showNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showNext"
+        android:text="Seuraava"
+        app:layout_constraintBaseline_toBaselineOf="@+id/history_button_showPrevious"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/history_button_showPrevious" />
+
+    <Button
+        android:id="@+id/history_button_show_daily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="showDailyGraph"
+        android:text="Päivä"
+        app:layout_constraintEnd_toStartOf="@+id/history_button_shop_monthly"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/history_button_showPrevious" />
+
+    <Button
+        android:id="@+id/history_button_shop_monthly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showMonthlyGraph"
+        android:text="Kuukausi"
+        app:layout_constraintBaseline_toBaselineOf="@+id/history_button_show_daily"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/history_button_show_daily" />
 </androidx.constraintlayout.widget.ConstraintLayout>

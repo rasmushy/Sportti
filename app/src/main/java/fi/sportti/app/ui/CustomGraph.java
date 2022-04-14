@@ -23,15 +23,16 @@ public class CustomGraph extends View  {
     public static final int MONTHS_OF_YEAR = 12;
     public static final int BAR_GRAPH = 1;
     public static final int LINE_GRAPH = 2;
-    private final int xOffset = 100;
-    private final int yTopOffset = 100;
-    private final int yBottomOffset = 50;
+    private static final int X_OFFSET = 100;
+    private static final int Y_TOP_OFFSET = 100;
+    private static final int Y_BOTTOM_OFFSET = 50;
     private LocalDateTime date;
     private Boolean isInit = false;
     private Boolean drawDailyGraph = true;
     private Boolean drawMonthlyGraph = false;
     private Path path;
     private Paint axisPaint, barPaint, linePaint, textPaint, greyPaint;
+    private Canvas canvas;
     private int graphType, graphMaxValue, rectWidth, viewWidth, viewHeight, origoX, origoY, graphHeight, graphWidth;
     private double oneHourHeight;
     private HashMap<LocalDateTime, Long> dataMap;
@@ -55,6 +56,7 @@ public class CustomGraph extends View  {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        this.canvas = canvas;
         if (!isInit){
             init();
         }
@@ -62,27 +64,25 @@ public class CustomGraph extends View  {
             path.reset();
             path.moveTo(origoX, origoY);
         }
-
-        drawAxis(canvas);
+        drawAxis();
         if(dataMap != null){
-            drawGraph(canvas);
-            drawHorizontalMarks(canvas);
+            drawGraph();
+            drawHorizontalMarks();
         }
-
     }
 
     private void init(){
         initPaints();
-        path = new Path();
         graphMaxValue = 10;
         viewWidth = getWidth();
         viewHeight = getHeight();
-        origoX = xOffset;
-        origoY = viewHeight - yBottomOffset;
-        graphHeight = viewHeight - yTopOffset - yBottomOffset;
-        graphWidth = viewWidth - xOffset - xOffset;
+        origoX = X_OFFSET;
+        origoY = viewHeight - Y_BOTTOM_OFFSET;
+        graphHeight = viewHeight - Y_TOP_OFFSET - Y_BOTTOM_OFFSET;
+        graphWidth = viewWidth - X_OFFSET - X_OFFSET;
         isInit = true;
         date = LocalDateTime.now();
+        path = new Path();
         path.moveTo(origoX, origoY);
     }
 
@@ -114,15 +114,15 @@ public class CustomGraph extends View  {
         oneHourHeight = 1.0 * graphHeight / graphMaxValue;
     }
 
-    private void drawAxis(Canvas canvas) {
+    private void drawAxis() {
         //y-axis
-        canvas.drawLine(origoX, origoY, origoX, yTopOffset -50, axisPaint);
+        canvas.drawLine(origoX, origoY, origoX, Y_TOP_OFFSET -50, axisPaint);
         //x-axis
         canvas.drawLine(origoX, origoY, viewWidth - origoX, origoY, axisPaint);
         canvas.drawText("Tunnit", 30, 30, textPaint);
     }
 
-    private void drawGraph(Canvas canvas){
+    private void drawGraph(){
         setCorrectStartDateForGraph();
         int endForLoop = 0;
         if(drawDailyGraph) endForLoop = DAYS_OF_WEEK;
@@ -137,7 +137,7 @@ public class CustomGraph extends View  {
         for(int i = 0; i < endForLoop; i++){
             if(drawDailyGraph) date = this.date.plusDays(i);
             else if(drawMonthlyGraph) date = this.date.plusMonths(i);
-            drawDataPointAndText(currentXPosition, date, canvas);
+            drawDataPointAndText(currentXPosition, date);
             currentXPosition += rectWidth *2;
         }
         if(graphType == LINE_GRAPH){
@@ -160,23 +160,23 @@ public class CustomGraph extends View  {
         }
     }
 
-    private void drawDataPointAndText(int xPos, LocalDateTime date, Canvas canvas){
+    private void drawDataPointAndText(int xPos, LocalDateTime date){
         String text = getTextForBar(date);
         long hour = 0;
         if(dataMap.containsKey(date)){
             hour = dataMap.get(date);
         }
         if(graphType == BAR_GRAPH){
-            drawBar(canvas, hour, xPos);
+            drawBar(hour, xPos);
         }
         else if(graphType == LINE_GRAPH){
-            drawLine(canvas, hour, xPos);
+            drawLine(hour, xPos);
         }
         canvas.drawText(text, xPos, origoY + 50, textPaint);
         canvas.drawText(String.valueOf(hour), xPos, origoY - 30, textPaint);
     }
 
-    private void drawBar(Canvas canvas, long hour, int xPos){
+    private void drawBar(long hour, int xPos){
         Rect mBar = new Rect();
         mBar.left = xPos;
         mBar.right = mBar.left + rectWidth;
@@ -185,7 +185,7 @@ public class CustomGraph extends View  {
         canvas.drawRect(mBar, barPaint);
     }
 
-    private void drawLine(Canvas canvas, long hour, int xPos){
+    private void drawLine(long hour, int xPos){
         int newY = origoY - (int)(oneHourHeight * hour);
         path.lineTo(xPos, newY);
         path.moveTo(xPos, newY);
@@ -193,7 +193,7 @@ public class CustomGraph extends View  {
         canvas.drawCircle(xPos, newY, radius, barPaint);
     }
 
-    private void drawHorizontalMarks(Canvas canvas) {
+    private void drawHorizontalMarks() {
         greyPaint.setStrokeWidth(3);
         int maxValue = 10;
         if(drawDailyGraph) maxValue = 10;
