@@ -1,3 +1,2 @@
 # Sportti
-Sportti, android application for fitness tracking and more.
-This branch is for project group member Rasmus
+Source code for the application. Project for the Metropolia University of Applied Sciences Mobile Application course. Sportti is for fitness tracking and more. 
