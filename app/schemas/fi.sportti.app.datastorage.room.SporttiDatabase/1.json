@@ -1,0 +1,251 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "5c66a2e87df1aca98333f807281cebf3",
+    "entities": [
+      {
+        "tableName": "user_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userName",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weight",
+            "columnName": "weight",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "height",
+            "columnName": "height",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "age",
+            "columnName": "age",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weeklyGoalMinute",
+            "columnName": "weeklyGoalMinute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weeklyGoalHour",
+            "columnName": "weeklyGoalHour",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_user_data_uid",
+            "unique": false,
+            "columnNames": [
+              "uid"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_uid` ON `${TABLE_NAME}` (`uid`)"
+          },
+          {
+            "name": "index_user_data_username",
+            "unique": false,
+            "columnNames": [
+              "username"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_username` ON `${TABLE_NAME}` (`username`)"
+          },
+          {
+            "name": "index_user_data_weight",
+            "unique": false,
+            "columnNames": [
+              "weight"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_weight` ON `${TABLE_NAME}` (`weight`)"
+          },
+          {
+            "name": "index_user_data_height",
+            "unique": false,
+            "columnNames": [
+              "height"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_height` ON `${TABLE_NAME}` (`height`)"
+          },
+          {
+            "name": "index_user_data_age",
+            "unique": false,
+            "columnNames": [
+              "age"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_age` ON `${TABLE_NAME}` (`age`)"
+          },
+          {
+            "name": "index_user_data_weeklyGoalMinute",
+            "unique": false,
+            "columnNames": [
+              "weeklyGoalMinute"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_weeklyGoalMinute` ON `${TABLE_NAME}` (`weeklyGoalMinute`)"
+          },
+          {
+            "name": "index_user_data_weeklyGoalHour",
+            "unique": false,
+            "columnNames": [
+              "weeklyGoalHour"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_weeklyGoalHour` ON `${TABLE_NAME}` (`weeklyGoalHour`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "exercise_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `sportType` TEXT, `startDate` INTEGER, `endDate` INTEGER, `calories` INTEGER NOT NULL, FOREIGN KEY(`userId`) REFERENCES `user_data`(`uid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "exerciseId",
+            "columnName": "exerciseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sportType",
+            "columnName": "sportType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "startDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "endDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "calories",
+            "columnName": "calories",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "exerciseId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_exercise_data_exerciseId",
+            "unique": false,
+            "columnNames": [
+              "exerciseId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_exerciseId` ON `${TABLE_NAME}` (`exerciseId`)"
+          },
+          {
+            "name": "index_exercise_data_userId",
+            "unique": false,
+            "columnNames": [
+              "userId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_userId` ON `${TABLE_NAME}` (`userId`)"
+          },
+          {
+            "name": "index_exercise_data_sportType",
+            "unique": false,
+            "columnNames": [
+              "sportType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_sportType` ON `${TABLE_NAME}` (`sportType`)"
+          },
+          {
+            "name": "index_exercise_data_startDate",
+            "unique": false,
+            "columnNames": [
+              "startDate"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_startDate` ON `${TABLE_NAME}` (`startDate`)"
+          },
+          {
+            "name": "index_exercise_data_endDate",
+            "unique": false,
+            "columnNames": [
+              "endDate"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_endDate` ON `${TABLE_NAME}` (`endDate`)"
+          },
+          {
+            "name": "index_exercise_data_calories",
+            "unique": false,
+            "columnNames": [
+              "calories"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_calories` ON `${TABLE_NAME}` (`calories`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "user_data",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "userId"
+            ],
+            "referencedColumns": [
+              "uid"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5c66a2e87df1aca98333f807281cebf3')"
+    ]
+  }
+}
