@@ -23,9 +23,9 @@ public class CustomGraph extends View  {
     public static final int MONTHS_OF_YEAR = 12;
     public static final int BAR_GRAPH = 1;
     public static final int LINE_GRAPH = 2;
-    private static final int X_OFFSET = 100;
-    private static final int Y_TOP_OFFSET = 100;
-    private static final int Y_BOTTOM_OFFSET = 50;
+    private final int xOffset = 100;
+    private final int yTopOffset = 100;
+    private final int yBottomOffset = 50;
     private LocalDateTime date;
     private Boolean isInit = false;
     private Boolean drawDailyGraph = true;
@@ -73,17 +73,17 @@ public class CustomGraph extends View  {
 
     private void init(){
         initPaints();
-        graphMaxValue = 10;
+        setGraphType(BAR_GRAPH);
+        setGraphTimePeriod(DAYS_OF_WEEK);
         viewWidth = getWidth();
         viewHeight = getHeight();
-        origoX = X_OFFSET;
-        origoY = viewHeight - Y_BOTTOM_OFFSET;
-        graphHeight = viewHeight - Y_TOP_OFFSET - Y_BOTTOM_OFFSET;
-        graphWidth = viewWidth - X_OFFSET - X_OFFSET;
+        origoX = xOffset;
+        origoY = viewHeight - yBottomOffset;
+        graphHeight = viewHeight - yTopOffset - yBottomOffset;
+        graphWidth = viewWidth - xOffset * 2;
         isInit = true;
         date = LocalDateTime.now();
         path = new Path();
-        path.moveTo(origoX, origoY);
     }
 
     public void setGraphType(int number){
@@ -93,10 +93,9 @@ public class CustomGraph extends View  {
         else if(number == LINE_GRAPH){
             graphType = LINE_GRAPH;
         }
-        setGraphStyle(DAYS_OF_WEEK);
     }
 
-    public void setGraphStyle(int style){
+    public void setGraphTimePeriod(int style){
         if(style == DAYS_OF_WEEK){
             drawDailyGraph = true;
             drawMonthlyGraph = false;
@@ -116,7 +115,7 @@ public class CustomGraph extends View  {
 
     private void drawAxis() {
         //y-axis
-        canvas.drawLine(origoX, origoY, origoX, Y_TOP_OFFSET -50, axisPaint);
+        canvas.drawLine(origoX, origoY, origoX, yTopOffset-50, axisPaint);
         //x-axis
         canvas.drawLine(origoX, origoY, viewWidth - origoX, origoY, axisPaint);
         canvas.drawText("Tunnit", 30, 30, textPaint);
@@ -128,16 +127,19 @@ public class CustomGraph extends View  {
         if(drawDailyGraph) endForLoop = DAYS_OF_WEEK;
         else if(drawMonthlyGraph) endForLoop = MONTHS_OF_YEAR;
 
-        canvas.drawText(String.valueOf(date.getYear()), viewWidth /2, 30, textPaint);
+        int x = viewWidth /2;
+        int y = 30;
+        String year = String.valueOf(date.getYear());
+        canvas.drawText(year, x, y, textPaint);
         int currentXPosition = origoX + rectWidth;
         path.moveTo(currentXPosition, origoY);
 
         //Draw bars for days of week or months of year.
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime datapointDate = LocalDateTime.now();
         for(int i = 0; i < endForLoop; i++){
-            if(drawDailyGraph) date = this.date.plusDays(i);
-            else if(drawMonthlyGraph) date = this.date.plusMonths(i);
-            drawDataPointAndText(currentXPosition, date);
+            if(drawDailyGraph) datapointDate = this.date.plusDays(i);
+            else if(drawMonthlyGraph) datapointDate = this.date.plusMonths(i);
+            drawDataPointAndText(currentXPosition, datapointDate);
             currentXPosition += rectWidth *2;
         }
         if(graphType == LINE_GRAPH){

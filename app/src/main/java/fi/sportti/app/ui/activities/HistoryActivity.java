@@ -26,7 +26,7 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        graph = findViewById(R.id.history_exercise_graph);
+        graph = findViewById(R.id.history_customgraph_exercise_hours);
         /*
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -54,13 +54,13 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     public void showDailyGraph(View view){
-        graph.setGraphStyle(CustomGraph.DAYS_OF_WEEK);
+        graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         graph.setDataMap(mDailyDataMap);
         graph.postInvalidate();
     }
 
     public void showMonthlyGraph(View view){
-        graph.setGraphStyle(CustomGraph.MONTHS_OF_YEAR);
+        graph.setGraphTimePeriod(CustomGraph.MONTHS_OF_YEAR);
         graph.setDataMap(mMonthlyDataMap);
         graph.postInvalidate();
     }
