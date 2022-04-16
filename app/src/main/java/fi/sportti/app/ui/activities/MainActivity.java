@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         userList = new ArrayList<>();
         //Setup our acces to database
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         mainViewModel.getAllUsers().observe(this, users -> userList = users);
         Log.d(TAG, "onCreate() launched");
         initialStartUp();

@@ -29,6 +29,9 @@ public interface ExerciseDao {
     @Query("SELECT * FROM exercise_data WHERE userId=(SELECT uid FROM user_data WHERE :currentUser LIKE uid)")
     LiveData<List<Exercise>> getAllExercisesById(int currentUser);
 
+    @Query("DELETE FROM exercise_data")
+    void deleteAllExercises();
+
     @Update(onConflict = OnConflictStrategy.IGNORE)
     void updateExercise(Exercise updatedExercise);
 

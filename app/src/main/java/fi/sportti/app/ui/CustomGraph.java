@@ -8,12 +8,17 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -26,16 +31,16 @@ public class CustomGraph extends View  {
     private final int xOffset = 100;
     private final int yTopOffset = 100;
     private final int yBottomOffset = 50;
-    private LocalDateTime date;
+    private ZonedDateTime date;
     private Boolean isInit = false;
     private Boolean drawDailyGraph = true;
     private Boolean drawMonthlyGraph = false;
     private Path path;
     private Paint axisPaint, barPaint, linePaint, textPaint, greyPaint;
     private Canvas canvas;
-    private int graphType, graphMaxValue, rectWidth, viewWidth, viewHeight, origoX, origoY, graphHeight, graphWidth;
+    private int graphType, graphTimePeriod, graphMaxValue, rectWidth, viewWidth, viewHeight, origoX, origoY, graphHeight, graphWidth;
     private double oneHourHeight;
-    private HashMap<LocalDateTime, Long> dataMap;
+    private HashMap<ZonedDateTime, Long> dataMap;
 
     public CustomGraph(Context context) {
         super(context);
@@ -72,18 +77,18 @@ public class CustomGraph extends View  {
     }
 
     private void init(){
+        date = ZonedDateTime.now();
         initPaints();
-        setGraphType(BAR_GRAPH);
-        setGraphTimePeriod(DAYS_OF_WEEK);
         viewWidth = getWidth();
         viewHeight = getHeight();
         origoX = xOffset;
         origoY = viewHeight - yBottomOffset;
         graphHeight = viewHeight - yTopOffset - yBottomOffset;
-        graphWidth = viewWidth - xOffset * 2;
+        graphWidth = viewWidth - (xOffset * 2);
         isInit = true;
-        date = LocalDateTime.now();
         path = new Path();
+        setGraphType(BAR_GRAPH);
+        setGraphTimePeriod(DAYS_OF_WEEK);
     }
 
     public void setGraphType(int number){
@@ -95,22 +100,25 @@ public class CustomGraph extends View  {
         }
     }
 
+    public int getGraphTimePeriod(){
+        return graphTimePeriod;
+    }
+
     public void setGraphTimePeriod(int style){
         if(style == DAYS_OF_WEEK){
             drawDailyGraph = true;
             drawMonthlyGraph = false;
+            graphTimePeriod = DAYS_OF_WEEK;
             graphMaxValue = 10;
             rectWidth = graphWidth / (DAYS_OF_WEEK * 2);
         }
         else if(style == MONTHS_OF_YEAR){
             drawDailyGraph = false;
             drawMonthlyGraph = true;
+            graphTimePeriod = MONTHS_OF_YEAR;
             graphMaxValue = 200;
             rectWidth = graphWidth / (MONTHS_OF_YEAR * 2);
         }
-        date = LocalDateTime.now();
-        setCorrectStartDateForGraph();
-        oneHourHeight = 1.0 * graphHeight / graphMaxValue;
     }
 
     private void drawAxis() {
@@ -122,6 +130,7 @@ public class CustomGraph extends View  {
     }
 
     private void drawGraph(){
+        oneHourHeight = 1.0 * graphHeight / graphMaxValue;
         setCorrectStartDateForGraph();
         int endForLoop = 0;
         if(drawDailyGraph) endForLoop = DAYS_OF_WEEK;
@@ -135,7 +144,7 @@ public class CustomGraph extends View  {
         path.moveTo(currentXPosition, origoY);
 
         //Draw bars for days of week or months of year.
-        LocalDateTime datapointDate = LocalDateTime.now();
+        ZonedDateTime datapointDate = date;
         for(int i = 0; i < endForLoop; i++){
             if(drawDailyGraph) datapointDate = this.date.plusDays(i);
             else if(drawMonthlyGraph) datapointDate = this.date.plusMonths(i);
@@ -152,17 +161,18 @@ public class CustomGraph extends View  {
         int year = date.getYear();
         int monthOfYear = date.getMonthValue();
         int currentDayOfWeek = date.getDayOfWeek().getValue();
+        ZoneId zone = date.getZone();
         if(drawDailyGraph){
-            date = LocalDateTime.of(year, monthOfYear, date.getDayOfMonth(), 12, 0, 0, 0);
-            date = date.minusDays(currentDayOfWeek-1);
+            date = ZonedDateTime.of(year, monthOfYear, date.getDayOfMonth(), 12, 0, 0, 0, zone);
+            date = date.minusDays(currentDayOfWeek-1); //Set date to first day of week.
         }
         else if(drawMonthlyGraph){
-            date = LocalDateTime.of(year, monthOfYear, 1, 12, 0, 0 ,0);
-            date = date.minusMonths(monthOfYear-1);
+            date = ZonedDateTime.of(year, monthOfYear, 1, 12, 0, 0 ,0, zone);
+            date = date.minusMonths(monthOfYear-1); //Set date to first month of year.
         }
     }
 
-    private void drawDataPointAndText(int xPos, LocalDateTime date){
+    private void drawDataPointAndText(int xPos, ZonedDateTime date){
         String text = getTextForBar(date);
         long hour = 0;
         if(dataMap.containsKey(date)){
@@ -223,7 +233,7 @@ public class CustomGraph extends View  {
         }
     }
 
-    public void setDataMap(HashMap<LocalDateTime, Long> dataMap) {
+    public void setDataMap(HashMap<ZonedDateTime, Long> dataMap) {
         this.dataMap = dataMap;
     }
 
@@ -245,7 +255,7 @@ public class CustomGraph extends View  {
         }
     }
 
-    private String getTextForBar(LocalDateTime date){
+    private String getTextForBar(ZonedDateTime date){
         String text = "";
         if(drawDailyGraph){
             text = date.getDayOfMonth() + "." + date.getMonthValue();

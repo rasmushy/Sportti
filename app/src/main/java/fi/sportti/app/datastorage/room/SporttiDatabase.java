@@ -2,7 +2,9 @@ package fi.sportti.app.datastorage.room;
 
 
 import android.content.Context;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -11,6 +13,7 @@ import androidx.room.TypeConverters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 @Database(entities = {User.class, Exercise.class}, version = 1)
 @TypeConverters({TypeConversionUtilities.class})
 public abstract class SporttiDatabase extends RoomDatabase {
