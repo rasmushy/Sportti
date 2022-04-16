@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 import fi.sportti.app.R;
@@ -17,31 +18,38 @@ import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.User;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
+
+
+//Custom Adapter to display exercises on history page.
 public class ExerciseAdapter extends ArrayAdapter<Exercise> {
 
-    public ExerciseAdapter(Context context, ArrayList<Exercise> list){
-        super(context, 0, list);
+    private int resourceLayout;
+
+    public ExerciseAdapter(Context context, int resource, ArrayList<Exercise> list){
+        super(context, resource, list);
+        resourceLayout = resource;
     }
-
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
         Exercise exercise = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.exercise_on_history_listview, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(resourceLayout, parent, false);
         }
-        // Lookup view for data population
         TextView sportName = (TextView) convertView.findViewById(R.id.exercise_sport_name);
         TextView startDate = (TextView) convertView.findViewById(R.id.exercise_start_date);
         TextView duration = (TextView) convertView.findViewById(R.id.exercise_duration);
-        // Populate the data into the template view using the data object
         sportName.setText(exercise.getSportType());
-        startDate.setText(exercise.getStartDate().toString());
+        startDate.setText(getDateAsText(exercise));
         duration.setText(String.valueOf(exercise.getDuration()));
-        // Return the completed view to render on screen
         return convertView;
+    }
+
+
+    private String getDateAsText(Exercise exercise){
+        ZonedDateTime date = exercise.getStartDate();
+        return date.getDayOfMonth() + "." + date.getMonthValue() + "." + date.getYear();
     }
 
 }

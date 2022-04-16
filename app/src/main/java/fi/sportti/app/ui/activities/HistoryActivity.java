@@ -44,13 +44,18 @@ public class HistoryActivity extends AppCompatActivity {
         graph = findViewById(R.id.history_customgraph_exercise_hours);
         graph.setGraphType(CustomGraph.LINE_GRAPH);
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
+
+
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
                 Log.d(TAG, "onChanged: Exercise list changed");
                 updateGraph();
                 exerciseListView.setAdapter(null);
-                exerciseListView.setAdapter(new ExerciseAdapter(getApplicationContext(), (ArrayList)exercises));
+                exerciseListView.setAdapter(new ExerciseAdapter(
+                        getApplicationContext(),
+                        R.layout.exercise_on_history_listview,
+                        (ArrayList)exercises));
             }
         });
 
