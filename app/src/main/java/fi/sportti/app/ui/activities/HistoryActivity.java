@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Random;
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.ui.CustomGraph;
+import fi.sportti.app.ui.adapters.ExerciseAdapter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -27,6 +30,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private MainViewModel mainViewModel;
     private CustomGraph graph;
+    private ListView exerciseListView;
     private HashMap<ZonedDateTime, Long> dailyDataMap;
     private HashMap<ZonedDateTime, Long> monthlyDataMap;
 
@@ -36,16 +40,20 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        exerciseListView = findViewById(R.id.history_listview_exercises);
         graph = findViewById(R.id.history_customgraph_exercise_hours);
-        graph.setGraphType(CustomGraph.BAR_GRAPH);
+        graph.setGraphType(CustomGraph.LINE_GRAPH);
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
                 Log.d(TAG, "onChanged: Exercise list changed");
                 updateGraph();
+                exerciseListView.setAdapter(null);
+                exerciseListView.setAdapter(new ExerciseAdapter(getApplicationContext(), (ArrayList)exercises));
             }
         });
+
 
 
        // createTestExercises();

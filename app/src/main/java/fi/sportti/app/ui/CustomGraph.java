@@ -14,10 +14,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 
@@ -71,7 +68,7 @@ public class CustomGraph extends View  {
         }
         drawAxis();
         if(dataMap != null){
-            drawGraph();
+            drawDataPoints();
             drawHorizontalMarks();
         }
     }
@@ -87,7 +84,6 @@ public class CustomGraph extends View  {
         graphWidth = viewWidth - (xOffset * 2);
         isInit = true;
         path = new Path();
-        setGraphType(BAR_GRAPH);
         setGraphTimePeriod(DAYS_OF_WEEK);
     }
 
@@ -129,7 +125,7 @@ public class CustomGraph extends View  {
         canvas.drawText("Tunnit", 30, 30, textPaint);
     }
 
-    private void drawGraph(){
+    private void drawDataPoints(){
         oneHourHeight = 1.0 * graphHeight / graphMaxValue;
         setCorrectStartDateForGraph();
         int endForLoop = 0;
@@ -140,6 +136,7 @@ public class CustomGraph extends View  {
         int y = 30;
         String year = String.valueOf(date.getYear());
         canvas.drawText(year, x, y, textPaint);
+        //Set correct start position on graph for data points.
         int currentXPosition = origoX + rectWidth;
         path.moveTo(currentXPosition, origoY);
 
@@ -149,7 +146,8 @@ public class CustomGraph extends View  {
             if(drawDailyGraph) datapointDate = this.date.plusDays(i);
             else if(drawMonthlyGraph) datapointDate = this.date.plusMonths(i);
             drawDataPointAndText(currentXPosition, datapointDate);
-            currentXPosition += rectWidth *2;
+            //Move xPosition to next data point's position.
+            currentXPosition += rectWidth * 2;
         }
         if(graphType == LINE_GRAPH){
             canvas.drawPath(path, linePaint);
@@ -199,6 +197,7 @@ public class CustomGraph extends View  {
 
     private void drawLine(long hour, int xPos){
         int newY = origoY - (int)(oneHourHeight * hour);
+
         path.lineTo(xPos, newY);
         path.moveTo(xPos, newY);
         int radius = 13;
@@ -206,29 +205,25 @@ public class CustomGraph extends View  {
     }
 
     private void drawHorizontalMarks() {
-        greyPaint.setStrokeWidth(3);
-        int maxValue = 10;
-        if(drawDailyGraph) maxValue = 10;
-        else if(drawMonthlyGraph) maxValue = 200;
-        /*Always draw 5 horizontal lines on graph.
+        /* Always draw 5 horizontal lines on graph.
          * If maxValue is 10, draw lines for 2, 4, 6, 8 and 10.
-         * If maxValue is 200, draw lines for 40, 80, 120, 160, 200.
-         * Etc...*/
-        int stepSize = maxValue/5;
-        int currentY = origoY - (int)(oneHourHeight *stepSize);
-        for (int i = stepSize; i <= maxValue; i += stepSize) {
+         * If maxValue is 200, draw lines for 40, 80, 120, 160, 200. Etc..*/
+        int stepSize = graphMaxValue / 5;
+        int currentY = origoY - (int)(oneHourHeight * stepSize);
+        for (int i = stepSize; i <= graphMaxValue; i += stepSize) {
             int startX = origoX;
             int startY = currentY;
             int endX = origoX + graphWidth;
             int endY = startY;
             canvas.drawLine(startX, startY, endX, endY, greyPaint);
             int xPositionForText;
-            if(i >= 100) xPositionForText = origoX-90;
-            else if(i >= 10) xPositionForText = origoX-70;
-            else xPositionForText = origoX-50;
+            if(i >= 100) xPositionForText = origoX - 90;
+            else if(i >= 10) xPositionForText = origoX - 70;
+            else xPositionForText = origoX - 50;
 
             //Add +10 to currentY so text aligns better with lines.
             canvas.drawText(String.valueOf(i), xPositionForText, currentY+10, textPaint);
+            //Move Y coordinate to next line's position.
             currentY -= oneHourHeight *stepSize;
         }
     }
@@ -277,6 +272,7 @@ public class CustomGraph extends View  {
 
         greyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         greyPaint.setColor(Color.rgb(128, 128, 128));
+        greyPaint.setStrokeWidth(3);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStrokeWidth(1);

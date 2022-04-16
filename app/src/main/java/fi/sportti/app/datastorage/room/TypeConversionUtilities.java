@@ -24,6 +24,7 @@ public class TypeConversionUtilities {
     public static ZonedDateTime zonedDateFromUnixTime(long unixTime) {
         ZoneId timeZone = ZoneId.systemDefault();
         Instant instant = Instant.ofEpochMilli(unixTime * 1000);
+
         return instant.atZone(timeZone);
     }
 
