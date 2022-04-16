@@ -5,15 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -27,7 +30,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class HistoryActivity extends AppCompatActivity {
     public static final String TAG = "testailua";
-
+    public static String SELECTED_EXERCISE = "selected_exercise_on_history_activity";
     private MainViewModel mainViewModel;
     private CustomGraph graph;
     private ListView exerciseListView;
@@ -50,6 +53,12 @@ public class HistoryActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Exercise> exercises) {
                 Log.d(TAG, "onChanged: Exercise list changed");
+                exercises.sort(new Comparator<Exercise>() {
+                    @Override
+                    public int compare(Exercise exercise, Exercise t1) {
+                        return t1.getStartDate().compareTo(exercise.getStartDate());
+                    }
+                });
                 updateGraph();
                 exerciseListView.setAdapter(null);
                 exerciseListView.setAdapter(new ExerciseAdapter(
@@ -59,7 +68,16 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
+        exerciseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(HistoryActivity.this, ExerciseDetailsActivity.class);
+                intent.putExtra(SELECTED_EXERCISE, i);
 
+                startActivity(intent);
+
+            }
+        });
 
        // createTestExercises();
         //mainViewModel.deleteAllExercises();

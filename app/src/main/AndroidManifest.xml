@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sportti">
         <activity
+            android:name=".ui.activities.ExerciseDetailsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.activities.HistoryActivity"/>
+        <activity
             android:name=".ui.activities.HistoryActivity"
             android:exported="false" />
         <activity
