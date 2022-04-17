@@ -9,10 +9,8 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -117,18 +115,18 @@ public class MainViewModel extends AndroidViewModel {
 
 
 
-    public HashMap<ZonedDateTime, Long> getHoursForGraph(int type){
+    public HashMap<ZonedDateTime, Long> getExerciseTimesForGraph(int type){
         List<Exercise> list = listAllExercises.getValue();
         HashMap<ZonedDateTime, Long> result = new HashMap<>();
         if(list != null){
-            long hours;
+            long minutes;
             ZonedDateTime newDate;
             int day = 0;
             int month = 0;
             int year = 0;
             ZoneId zone = ZoneId.systemDefault();
             for(Exercise e : list){
-                hours = e.getDuration();
+                minutes = e.getDurationInMinutes();
                 day = e.getStartDate().getDayOfMonth();
                 month = e.getStartDate().getMonthValue();
                 year = e.getStartDate().getYear();
@@ -140,10 +138,10 @@ public class MainViewModel extends AndroidViewModel {
                 }
                 if (result.containsKey(newDate)) {
                     long value = result.get(newDate);
-                    value += hours;
+                    value += minutes;
                     result.replace(newDate, value);
                 } else {
-                    result.put(newDate, hours);
+                    result.put(newDate, minutes);
                 }
             }
         }

@@ -50,7 +50,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 sportName.setText(exercise.getSportType());
                 startDate.setText(exercise.getStartDate().toString());
                 endDate.setText(exercise.getEndDate().toString());
-                duration.setText(String.valueOf(exercise.getDuration()));
+                duration.setText(String.valueOf(exercise.getDurationInMinutes()));
             }
         });
 

@@ -8,7 +8,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -32,10 +31,12 @@ public class CustomGraph extends View  {
     private Boolean isInit = false;
     private Boolean drawDailyGraph = true;
     private Boolean drawMonthlyGraph = false;
+    private Boolean skippedFirstLineFromOrigo = false;
     private Path path;
     private Paint axisPaint, barPaint, linePaint, textPaint, greyPaint;
     private Canvas canvas;
-    private int graphType, graphTimePeriod, graphMaxValue, rectWidth, viewWidth, viewHeight, origoX, origoY, graphHeight, graphWidth;
+    private int graphType, graphTimePeriod, graphMaxValue, rectWidth, viewWidth, viewHeight,
+                origoX, origoY, graphHeight, graphWidth;
     private double oneHourHeight;
     private HashMap<ZonedDateTime, Long> dataMap;
 
@@ -67,9 +68,13 @@ public class CustomGraph extends View  {
             path.moveTo(origoX, origoY);
         }
         drawAxis();
+        skippedFirstLineFromOrigo = false;
         if(dataMap != null){
+            oneHourHeight = 1.0 * graphHeight / graphMaxValue;
+            setCorrectStartDateForGraph();
             drawDataPoints();
             drawHorizontalMarks();
+            drawGraphHeader();
         }
     }
 
@@ -127,83 +132,78 @@ public class CustomGraph extends View  {
     }
 
     private void drawDataPoints(){
-        oneHourHeight = 1.0 * graphHeight / graphMaxValue;
-        setCorrectStartDateForGraph();
-        int endForLoop = 0;
-        if(drawDailyGraph) endForLoop = DAYS_OF_WEEK;
-        else if(drawMonthlyGraph) endForLoop = MONTHS_OF_YEAR;
-
-        int x = viewWidth /2;
-        int y = 30;
-        String year = String.valueOf(date.getYear());
-        canvas.drawText(year, x, y, textPaint);
         //Set correct start position on graph for data points.
         int currentXPosition = origoX + rectWidth;
         path.moveTo(currentXPosition, origoY);
 
-        //Draw bars for days of week or months of year.
-        ZonedDateTime datapointDate = date;
-        for(int i = 0; i < endForLoop; i++){
-            if(drawDailyGraph) datapointDate = this.date.plusDays(i);
-            else if(drawMonthlyGraph) datapointDate = this.date.plusMonths(i);
-            drawDataPointAndText(currentXPosition, datapointDate);
-            //Move xPosition to next data point's position.
-            currentXPosition += rectWidth * 2;
+        //Draw data points for days of week or months of year.
+        if(drawDailyGraph){
+            drawDataPointsForWeek();
         }
+        else if(drawMonthlyGraph){
+            drawDataPointsForYear();
+        }
+
         if(graphType == LINE_GRAPH){
             canvas.drawPath(path, linePaint);
         }
     }
 
-    private void setCorrectStartDateForGraph(){
-        //Set date to first day of current week or first month of year.
-
-        int year = date.getYear();
-        int monthOfYear = date.getMonthValue();
-        int currentDayOfWeek = date.getDayOfWeek().getValue();
-        ZoneId zone = date.getZone();
-        if(drawDailyGraph){
-            date = ZonedDateTime.of(year, monthOfYear, date.getDayOfMonth(), 12, 0, 0, 0, zone);
-            date = date.minusDays(currentDayOfWeek-1); //Set date to first day of week.
+    private void drawDataPointsForWeek(){
+        int currentXPosition = origoX + rectWidth;
+        for(int i = 0; i < DAYS_OF_WEEK; i++){
+            drawDataPointAndText(currentXPosition, date.plusDays(i));
+            //Move xPosition to next data point's position.
+            currentXPosition += rectWidth * 2;
         }
-        else if(drawMonthlyGraph){
-            date = ZonedDateTime.of(year, monthOfYear, 1, 12, 0, 0 ,0, zone);
-            date = date.minusMonths(monthOfYear-1); //Set date to first month of year.
+    }
+
+    private void drawDataPointsForYear(){
+        int currentXPosition = origoX + rectWidth;
+        for(int i = 0; i < MONTHS_OF_YEAR; i++){
+            drawDataPointAndText(currentXPosition, date.plusMonths(i));
+            //Move xPosition to next data point's position.
+            currentXPosition += rectWidth * 2;
         }
     }
 
     private void drawDataPointAndText(int xPos, ZonedDateTime date){
-        String text = getTextForBar(date);
-        long hour = 0;
+        long minutes = 0;
         if(dataMap.containsKey(date)){
-            hour = dataMap.get(date);
+            minutes = dataMap.get(date);
         }
         if(graphType == BAR_GRAPH){
-            drawBar(hour, xPos);
+            drawBar(minutes, xPos);
         }
         else if(graphType == LINE_GRAPH){
-            drawLine(hour, xPos);
+            drawLine(minutes, xPos);
         }
-        canvas.drawText(text, xPos, origoY + 50, textPaint);
-        canvas.drawText(String.valueOf(hour), xPos, origoY - 30, textPaint);
+        String text = getTextForDataPoint(date);
+        canvas.drawText(text, xPos-40, origoY + 50, textPaint);
+        canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
     }
 
-    private void drawBar(long hour, int xPos){
+    private void drawBar(long minutes, int xPos){
         Rect mBar = new Rect();
         mBar.left = xPos;
         mBar.right = mBar.left + rectWidth;
         mBar.bottom = origoY;
-        mBar.top = origoY - (int)(oneHourHeight * hour);
+        mBar.top = origoY - (int)(oneHourHeight * (1.0 * minutes / 60));
         canvas.drawRect(mBar, barPaint);
     }
 
-    private void drawLine(long hour, int xPos){
-        int newY = origoY - (int)(oneHourHeight * hour);
-
-        path.lineTo(xPos, newY);
+    private void drawLine(long minutes, int xPos){
+        int newY = origoY - (int)(oneHourHeight * (1.0 * minutes / 60));
+        if(skippedFirstLineFromOrigo){
+            path.lineTo(xPos, newY);
+        }
+        else {
+            skippedFirstLineFromOrigo = true;
+        }
         path.moveTo(xPos, newY);
         int radius = 13;
         canvas.drawCircle(xPos, newY, radius, barPaint);
+
     }
 
     private void drawHorizontalMarks() {
@@ -218,15 +218,48 @@ public class CustomGraph extends View  {
             int endX = origoX + graphWidth;
             int endY = startY;
             canvas.drawLine(startX, startY, endX, endY, greyPaint);
-            int xPositionForText;
-            if(i >= 100) xPositionForText = origoX - 90;
-            else if(i >= 10) xPositionForText = origoX - 70;
-            else xPositionForText = origoX - 50;
 
+            int xPositionForText;
+            //Different xPosition based on number size so number aligns better to axis.
+            if(i >= 100){
+                xPositionForText = origoX - 90;
+            }
+            else if(i >= 10){
+                xPositionForText = origoX - 70;
+            }
+            else{
+                xPositionForText = origoX - 60;
+            }
             //Add +10 to currentY so text aligns better with lines.
             canvas.drawText(String.valueOf(i), xPositionForText, currentY+10, textPaint);
             //Move Y coordinate to next line's position.
             currentY -= oneHourHeight *stepSize;
+        }
+    }
+
+    private void drawGraphHeader(){
+        //Draw current year at top of graph.
+        int x = viewWidth /2;
+        int y = 30;
+        String year = String.valueOf(date.getYear());
+        canvas.drawText(year, x, y, textPaint);
+    }
+
+    private void setCorrectStartDateForGraph(){
+        //Set date to first day of current week or first month of year.
+        int year = date.getYear();
+        int monthOfYear = date.getMonthValue();
+        int currentDayOfWeek = date.getDayOfWeek().getValue();
+        ZoneId zone = date.getZone();
+        if(drawDailyGraph){
+            date = ZonedDateTime.of(year, monthOfYear, date.getDayOfMonth(), 12, 0, 0, 0, zone);
+            //Set date to first day of week.
+            date = date.minusDays(currentDayOfWeek-1);
+        }
+        else if(drawMonthlyGraph){
+            date = ZonedDateTime.of(year, monthOfYear, 1, 12, 0, 0 ,0, zone);
+            //Set date to first month of year.
+            date = date.minusMonths(monthOfYear-1);
         }
     }
 
@@ -252,7 +285,7 @@ public class CustomGraph extends View  {
         }
     }
 
-    private String getTextForBar(ZonedDateTime date){
+    private String getTextForDataPoint(ZonedDateTime date){
         String text = "";
         if(drawDailyGraph){
             text = date.getDayOfMonth() + "." + date.getMonthValue();

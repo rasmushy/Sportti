@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.datastorage.room.User;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 
@@ -42,7 +41,7 @@ public class ExerciseAdapter extends ArrayAdapter<Exercise> {
         TextView duration = (TextView) convertView.findViewById(R.id.exercise_duration);
         sportName.setText(exercise.getSportType());
         startDate.setText(getDateAsText(exercise));
-        duration.setText(String.valueOf(exercise.getDuration()));
+        duration.setText(String.valueOf(exercise.getDurationInMinutes()));
         return convertView;
     }
 

@@ -157,8 +157,8 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void updateGraph(){
-        monthlyDataMap = mainViewModel.getHoursForGraph(MainViewModel.MONTHLY_HOURS);
-        dailyDataMap = mainViewModel.getHoursForGraph(MainViewModel.DAILY_HOURS);
+        monthlyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.MONTHLY_HOURS);
+        dailyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.DAILY_HOURS);
         if(graph.getGraphTimePeriod() == CustomGraph.DAYS_OF_WEEK){
             graph.setDataMap(dailyDataMap);
         }
