@@ -1,11 +1,16 @@
 package fi.sportti.app.ui.utilities;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class TimeConversionUtilities {
+
 
     public static long localDateTimeToUnix(@NonNull LocalDateTime localDateTime) {
         ZoneId timeZone = ZoneId.systemDefault();

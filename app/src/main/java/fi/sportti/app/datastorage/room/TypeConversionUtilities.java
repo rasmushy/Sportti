@@ -1,6 +1,9 @@
 package fi.sportti.app.datastorage.room;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
@@ -14,12 +17,14 @@ import java.util.Date;
  */
 
 // Typeconversion utilities for SporttiDatabase
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class TypeConversionUtilities {
 
     @TypeConverter
     public static ZonedDateTime zonedDateFromUnixTime(long unixTime) {
         ZoneId timeZone = ZoneId.systemDefault();
-        Instant instant = Instant.ofEpochMilli(unixTime);
+        Instant instant = Instant.ofEpochMilli(unixTime * 1000);
+
         return instant.atZone(timeZone);
     }
 

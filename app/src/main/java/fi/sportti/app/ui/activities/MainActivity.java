@@ -5,11 +5,15 @@
 
 package fi.sportti.app.ui.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 /*
  * @author rasmushy
  */
-
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity"; // TAG for Log.d
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         userList = new ArrayList<>();
         //Setup our acces to database
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         mainViewModel.getAllUsers().observe(this, users -> userList = users);
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
@@ -71,5 +76,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static MainViewModel getMainViewModel() {
         return mainViewModel;
+    }
+
+    public void openHistoryActivity(View view){
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
     }
 }
