@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     private TextView sportName;
     private TextView startDate;
     private TextView endDate;
-    private TextView duration;
+    private TextView durationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +32,9 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise_details);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         sportName = findViewById(R.id.exercisedetails_textview_sport_name);
-        startDate = findViewById(R.id.exercisedetails_textview_start_date);
-        endDate = findViewById(R.id.exercisedetails_textview_end_date);
-        duration = findViewById(R.id.exercisedetails_textview_duration);
+        startDate = findViewById(R.id.exercisedetails_textview_start_date_value);
+        endDate = findViewById(R.id.exercisedetails_textview_end_date_value);
+        durationTextView = findViewById(R.id.exercisedetails_textview_duration_value);
         Bundle b = getIntent().getExtras();
         int index = b.getInt(HistoryActivity.SELECTED_EXERCISE);
 
@@ -48,11 +49,56 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 });
                 Exercise exercise = exercises.get(index);
                 sportName.setText(exercise.getSportType());
-                startDate.setText(exercise.getStartDate().toString());
-                endDate.setText(exercise.getEndDate().toString());
-                duration.setText(String.valueOf(exercise.getDurationInMinutes()));
+                String start = getDateAndTimeAsText(exercise.getStartDate());
+                String end = getDateAndTimeAsText(exercise.getEndDate());
+                startDate.setText(start);
+                endDate.setText(end);
+                int duration = exercise.getDurationInMinutes();
+                String durationAsText = formatDuration(duration);
+                durationTextView.setText(durationAsText);
             }
         });
 
+    }
+
+    private String getDateAndTimeAsText(ZonedDateTime date){
+        StringBuilder sb = new StringBuilder();
+        sb.append(date.getDayOfMonth() + ".");
+        sb.append(date.getMonthValue() + ".");
+        sb.append(date.getYear() + " ");
+        sb.append(date.getHour() + ":");
+        int minute = date.getMinute();
+        if(minute >= 10){
+            sb.append(minute);
+        }
+        else {
+            sb.append("0" + minute);
+        }
+
+        return sb.toString();
+    }
+
+    private String formatDuration(int duration){
+        String result = "";
+        if(duration == 60){
+            result = "1h";
+        }
+        else if(duration >= 60){
+            int hours = duration / 60;
+            int minutes = duration - (hours*60);
+            if(hours == 1){
+                result = "1h";
+            }
+            else {
+                result += hours + "h ";
+            }
+            if(minutes > 0){
+                result += minutes + "min";
+            }
+        }
+        else {
+            result = duration + " min";
+        }
+        return result;
     }
 }

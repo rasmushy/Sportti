@@ -115,11 +115,11 @@ public class MainViewModel extends AndroidViewModel {
 
 
 
-    public HashMap<ZonedDateTime, Long> getExerciseTimesForGraph(int type){
+    public HashMap<ZonedDateTime, Integer> getExerciseTimesForGraph(int type){
         List<Exercise> list = listAllExercises.getValue();
-        HashMap<ZonedDateTime, Long> result = new HashMap<>();
+        HashMap<ZonedDateTime, Integer> result = new HashMap<>();
         if(list != null){
-            long minutes;
+            int minutes;
             ZonedDateTime newDate;
             int day = 0;
             int month = 0;
@@ -137,7 +137,7 @@ public class MainViewModel extends AndroidViewModel {
                     newDate = ZonedDateTime.of(year, month, 1, 12, 0, 0, 0, zone);
                 }
                 if (result.containsKey(newDate)) {
-                    long value = result.get(newDate);
+                    int value = result.get(newDate);
                     value += minutes;
                     result.replace(newDate, value);
                 } else {

@@ -103,7 +103,7 @@ public class Exercise {
     }
 
 
-    public long getDurationInMinutes(){
-        return ChronoUnit.MINUTES.between(startDate, endDate);
+    public int getDurationInMinutes(){
+        return (int)ChronoUnit.MINUTES.between(startDate, endDate);
     }
 }

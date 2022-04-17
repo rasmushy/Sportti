@@ -40,14 +40,13 @@ public class ExerciseAdapter extends ArrayAdapter<Exercise> {
         TextView startDate = (TextView) convertView.findViewById(R.id.exercise_start_date);
         TextView duration = (TextView) convertView.findViewById(R.id.exercise_duration);
         sportName.setText(exercise.getSportType());
-        startDate.setText(getDateAsText(exercise));
+        startDate.setText(getDateAsText(exercise.getStartDate()));
         duration.setText(String.valueOf(exercise.getDurationInMinutes()));
         return convertView;
     }
 
 
-    private String getDateAsText(Exercise exercise){
-        ZonedDateTime date = exercise.getStartDate();
+    private String getDateAsText(ZonedDateTime date){
         return date.getDayOfMonth() + "." + date.getMonthValue() + "." + date.getYear();
     }
 

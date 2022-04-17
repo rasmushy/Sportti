@@ -37,8 +37,8 @@ public class HistoryActivity extends AppCompatActivity {
     private CustomGraph graph;
     private ListView exerciseListView;
     private Switch changeTimePeriodSwitch;
-    private HashMap<ZonedDateTime, Long> dailyDataMap;
-    private HashMap<ZonedDateTime, Long> monthlyDataMap;
+    private HashMap<ZonedDateTime, Integer> dailyDataMap;
+    private HashMap<ZonedDateTime, Integer> monthlyDataMap;
 
 
     @Override

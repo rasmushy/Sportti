@@ -38,7 +38,7 @@ public class CustomGraph extends View  {
     private int graphType, graphTimePeriod, graphMaxValue, rectWidth, viewWidth, viewHeight,
                 origoX, origoY, graphHeight, graphWidth;
     private double oneHourHeight;
-    private HashMap<ZonedDateTime, Long> dataMap;
+    private HashMap<ZonedDateTime, Integer> dataMap;
 
     public CustomGraph(Context context) {
         super(context);
@@ -168,7 +168,7 @@ public class CustomGraph extends View  {
     }
 
     private void drawDataPointAndText(int xPos, ZonedDateTime date){
-        long minutes = 0;
+        int minutes = 0;
         if(dataMap.containsKey(date)){
             minutes = dataMap.get(date);
         }
@@ -183,17 +183,19 @@ public class CustomGraph extends View  {
         canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
     }
 
-    private void drawBar(long minutes, int xPos){
+    private void drawBar(int minutes, int xPos){
         Rect mBar = new Rect();
         mBar.left = xPos;
         mBar.right = mBar.left + rectWidth;
         mBar.bottom = origoY;
-        mBar.top = origoY - (int)(oneHourHeight * (1.0 * minutes / 60));
+        double hours = 1.0 * minutes / 60;
+        mBar.top = origoY - (int)(oneHourHeight * hours);
         canvas.drawRect(mBar, barPaint);
     }
 
-    private void drawLine(long minutes, int xPos){
-        int newY = origoY - (int)(oneHourHeight * (1.0 * minutes / 60));
+    private void drawLine(int minutes, int xPos){
+        double hours = 1.0 * minutes / 60;
+        int newY = origoY - (int)(oneHourHeight * hours);
         if(skippedFirstLineFromOrigo){
             path.lineTo(xPos, newY);
         }
@@ -263,7 +265,7 @@ public class CustomGraph extends View  {
         }
     }
 
-    public void setDataMap(HashMap<ZonedDateTime, Long> dataMap) {
+    public void setDataMap(HashMap<ZonedDateTime, Integer> dataMap) {
         this.dataMap = dataMap;
     }
 
