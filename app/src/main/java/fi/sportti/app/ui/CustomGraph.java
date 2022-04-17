@@ -115,6 +115,7 @@ public class CustomGraph extends View  {
             graphMaxValue = 200;
             rectWidth = graphWidth / (MONTHS_OF_YEAR * 2);
         }
+        date = ZonedDateTime.now();
     }
 
     private void drawAxis() {
@@ -156,6 +157,7 @@ public class CustomGraph extends View  {
 
     private void setCorrectStartDateForGraph(){
         //Set date to first day of current week or first month of year.
+
         int year = date.getYear();
         int monthOfYear = date.getMonthValue();
         int currentDayOfWeek = date.getDayOfWeek().getValue();

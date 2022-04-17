@@ -9,10 +9,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class HistoryActivity extends AppCompatActivity {
     private MainViewModel mainViewModel;
     private CustomGraph graph;
     private ListView exerciseListView;
+    private Switch changeTimePeriodSwitch;
     private HashMap<ZonedDateTime, Long> dailyDataMap;
     private HashMap<ZonedDateTime, Long> monthlyDataMap;
 
@@ -44,9 +47,11 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         exerciseListView = findViewById(R.id.history_listview_exercises);
+        changeTimePeriodSwitch = findViewById(R.id.history_switch_toggle_graph_timeperiod);
         graph = findViewById(R.id.history_customgraph_exercise_hours);
         graph.setGraphType(CustomGraph.LINE_GRAPH);
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
+
 
 
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
@@ -68,14 +73,50 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
+
+        //Idea on how to implement swipe listener https://www.youtube.com/watch?v=vNJyU-XW8_Y
+        GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onDown(MotionEvent event){
+                return true;
+            }
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                float x1 = e1.getX();
+                float x2 = e2.getX();
+                float xDelta = Math.abs(x2 - x1);
+                if(x1 > x2 && xDelta > 100){
+                    Log.d(TAG, "onFling: swiped left");
+                    showNext();
+                }
+                else if(x1 < x2 && xDelta > 100){
+                    Log.d(TAG, "onFling: swiped right");
+                    showPrevious();
+                }
+                return true;
+            }
+        });
+
+
+        graph.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // pass the events to the gesture detector
+                // a return value of true means the detector is handling it
+                // a return value of false means the detector didn't
+                // recognize the event
+                return gestureDetector.onTouchEvent(event);
+
+            }
+        });
+
+
         exerciseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(HistoryActivity.this, ExerciseDetailsActivity.class);
                 intent.putExtra(SELECTED_EXERCISE, i);
-
                 startActivity(intent);
-
             }
         });
 
@@ -84,23 +125,32 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
-    public void showPrevious(View view){
+    public void changeTimePeriod(View view){
+        if(changeTimePeriodSwitch.isChecked()){
+            showMonthlyGraph();
+        }
+        else {
+            showDailyGraph();
+        }
+    }
+
+    public void showPrevious(){
         graph.showPreviousPeriod();
         graph.postInvalidate();
     }
 
-    public void showNext(View view){
+    public void showNext(){
         graph.showNextPeriod();
         graph.postInvalidate();
     }
 
-    public void showDailyGraph(View view){
+    public void showDailyGraph(){
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         graph.setDataMap(dailyDataMap);
         graph.postInvalidate();
     }
 
-    public void showMonthlyGraph(View view){
+    public void showMonthlyGraph(){
         graph.setGraphTimePeriod(CustomGraph.MONTHS_OF_YEAR);
         graph.setDataMap(monthlyDataMap);
         graph.postInvalidate();
