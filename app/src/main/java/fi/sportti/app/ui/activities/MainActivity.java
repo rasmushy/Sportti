@@ -6,6 +6,7 @@
 package fi.sportti.app.ui.activities;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +25,14 @@ import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /*
- * @author rasmushy
+ * @author rasmushy, lassib
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
+
+    //Variables for exercise pop up
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
 
     private static final String TAG = "MainActivity"; // TAG for Log.d
 
@@ -78,8 +84,31 @@ public class MainActivity extends AppCompatActivity {
         return mainViewModel;
     }
 
+    public void openStartExerciseActivity(View view){
+        Intent intent = new Intent(this, NewRecordedExerciseActivity.class);
+        startActivity(intent);
+    }
+
+    public void openSaveExerciseActivity(View view){
+        Intent intent = new Intent(this, NewManualExerciseActivity.class);
+        startActivity(intent);
+    }
+
     public void openHistoryActivity(View view){
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
+    }
+
+    public void openProfileActivity(View view){
+        //method here
+    }
+
+    public void selectExerciseTypePopUp(View view){
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
+
+        dialogBuilder.setView(selectExercisePopUpView);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }
