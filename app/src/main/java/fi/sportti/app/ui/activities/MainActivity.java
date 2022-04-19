@@ -8,11 +8,10 @@ package fi.sportti.app.ui.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.view.View;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
@@ -29,16 +28,16 @@ public class MainActivity extends AppCompatActivity {
     private static MainViewModel mainViewModel;
 
     private User user;
-    private List<User> userList;
+//    private List<User> userList; ********commented out because we are not using it atm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        userList = new ArrayList<>();
-        //Setup our acces to database
+//        userList = new ArrayList<>(); ********commented out because we are not using it atm
+        //Setup our access to database
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.getAllUsers().observe(this, users -> userList = users);
+//        mainViewModel.getAllUsers().observe(this, users -> userList = users); ********commented out because we are not using it atm
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
     }
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "initialStartUp() launched");
         if (mainViewModel.getFirstUser() != null) {
             Log.d(TAG, "initialStartUp() if statement not null");
-            Log.d(TAG, "initialStartup() userList value: " + userList.toString());
+//            Log.d(TAG, "initialStartup() userList value: " + userList.toString()); ********commented out because we are not using it atm
             //Lets make another user and compare it to our first user in db
             User plainUser = new User();
             //Get our db's first user
@@ -67,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
         // Insert blank user
         user = new User();
         mainViewModel.insertUser(user);
+    }
+
+    public void buttonPressed(View caller) {
+        if (caller.getId() == R.id.main_button_record_exercise) {
+            Intent nextActivity = new Intent(MainActivity.this, NewRecordedExerciseActivity.class);
+            startActivity(nextActivity);
+        } else if (caller.getId() == R.id.main_button_manual_exercise) {
+            Intent nextActivity = new Intent(MainActivity.this, NewManualExerciseActivity.class);
+            startActivity(nextActivity);
+        }
     }
 
     public static MainViewModel getMainViewModel() {

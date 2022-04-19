@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="exercise_type_list">
+        <item>Walking</item>
+        <item>Running</item>
+        <item>Cycling</item>
+        <item>Yoga</item>
+        <item>Golf</item>
+        <item>Weight lifting</item>
+        <item>Crossfit</item>
+        <item>Other</item>
+    </string-array>
+</resources>

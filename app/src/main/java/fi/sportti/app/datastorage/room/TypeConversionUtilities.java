@@ -2,7 +2,6 @@ package fi.sportti.app.datastorage.room;
 
 import androidx.annotation.NonNull;
 import androidx.room.TypeConverter;
-import androidx.room.TypeConverters;
 
 import java.time.Instant;
 import java.time.ZoneId;
