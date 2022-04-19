@@ -2,18 +2,23 @@ package fi.sportti.app.datastorage.room;
 
 import static androidx.room.ForeignKey.CASCADE;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 /*
  * @author rasmushy
  * Entity class for User created Exercises
  */
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 @Entity(tableName = "exercise_data", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "uid", childColumns = "userId", onDelete = CASCADE, onUpdate = CASCADE))
 public class Exercise {
 
@@ -95,5 +100,10 @@ public class Exercise {
 
     public void setCalories(int calories) {
         this.calories = calories;
+    }
+
+
+    public int getDurationInMinutes(){
+        return (int)ChronoUnit.MINUTES.between(startDate, endDate);
     }
 }

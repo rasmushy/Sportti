@@ -2,9 +2,11 @@ package fi.sportti.app.datastorage.room;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
@@ -12,11 +14,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class SporttiDatabaseController {
     private UserDao userDao;
     private ExerciseDao exerciseDao;
     private LiveData<List<User>> listAllUsers;
     private LiveData<List<Exercise>> listAllExercises;
+
 
     public SporttiDatabaseController(Application application) {
         SporttiDatabase db = SporttiDatabase.getDatabase(application);
@@ -101,6 +105,10 @@ public class SporttiDatabaseController {
 
     public void deleteExercise(Exercise uselessExercise) {
         SporttiDatabase.executor.execute(() -> exerciseDao.deleteExercise(uselessExercise));
+    }
+
+    public void deleteAllExercises(){
+        SporttiDatabase.executor.execute(() -> exerciseDao.deleteAllExercises());
     }
 
 }

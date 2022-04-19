@@ -1,11 +1,15 @@
 package fi.sportti.app.ui.utilities;
 
+import android.os.Build;
+
 import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.time.ZonedDateTime;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class TimeConversionUtilities {
 
     public static long zonedDateTimeToUnix(@NonNull ZonedDateTime zonedDateTime) {

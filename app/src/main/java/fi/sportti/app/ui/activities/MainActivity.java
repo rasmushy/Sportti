@@ -5,13 +5,19 @@
 
 package fi.sportti.app.ui.activities;
 
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
@@ -28,16 +34,17 @@ public class MainActivity extends AppCompatActivity {
     private static MainViewModel mainViewModel;
 
     private User user;
-//    private List<User> userList; ********commented out because we are not using it atm
+    private List<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        userList = new ArrayList<>(); ********commented out because we are not using it atm
-        //Setup our access to database
+        userList = new ArrayList<>();
+        //Setup our acces to database
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-//        mainViewModel.getAllUsers().observe(this, users -> userList = users); ********commented out because we are not using it atm
+
+        mainViewModel.getAllUsers().observe(this, users -> userList = users);
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
     }
@@ -51,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "initialStartUp() launched");
         if (mainViewModel.getFirstUser() != null) {
             Log.d(TAG, "initialStartUp() if statement not null");
-//            Log.d(TAG, "initialStartup() userList value: " + userList.toString()); ********commented out because we are not using it atm
+            Log.d(TAG, "initialStartup() userList value: " + userList.toString());
             //Lets make another user and compare it to our first user in db
             User plainUser = new User();
             //Get our db's first user
@@ -68,6 +75,15 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.insertUser(user);
     }
 
+    public static MainViewModel getMainViewModel() {
+        return mainViewModel;
+    }
+
+    public void openHistoryActivity(View view) {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
+    }
+
     public void buttonPressed(View caller) {
         if (caller.getId() == R.id.main_button_record_exercise) {
             Intent nextActivity = new Intent(MainActivity.this, NewRecordedExerciseActivity.class);
@@ -76,9 +92,5 @@ public class MainActivity extends AppCompatActivity {
             Intent nextActivity = new Intent(MainActivity.this, NewManualExerciseActivity.class);
             startActivity(nextActivity);
         }
-    }
-
-    public static MainViewModel getMainViewModel() {
-        return mainViewModel;
     }
 }
