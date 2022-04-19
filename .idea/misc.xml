@@ -3,6 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_exercise_details.xml" value="0.32760416666666664" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_history.xml" value="0.32760416666666664" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_main.xml" value="0.32760416666666664" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_new_manual_exercise.xml" value="0.32760416666666664" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_new_recorded_exercise.xml" value="0.32760416666666664" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/exercise_on_history_listview.xml" value="0.32760416666666664" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_select_new_exercise_type.xml" value="0.32760416666666664" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_main.xml" value="0.35989583333333336" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_new_manual_exercise.xml" value="0.35989583333333336" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_new_recorded_exercise.xml" value="0.35989583333333336" />
