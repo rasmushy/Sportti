@@ -10,31 +10,43 @@ import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 
+/*
+ * @author Rasmus Hyyppä
+ * Controller for keeping up timer for recorded exercise
+ * It saves timer data to shared preferences
+ */
+
 public class RecordController {
+
+    private static final String TAG = "RecordController";
 
     private static final String PREFERENCES = "fi.sportti.app.preferences";
     private static final String START_TIME_KEY = "fi.sportti.app.startKey";
     private static final String STOP_TIME_KEY = "fi.sportti.app.stopKey";
     private static final String COUNTING_KEY = "fi.sportti.app.countingKey";
-    private static final String TAG = "RecordController";
 
     private SharedPreferences sharedPreferences;
     private final DateTimeFormatter dateTimeFormatter; //Date format to save time into string key's
     private boolean timerCounting;
     private int timerStartCount;
+
     private ZonedDateTime startTime;
     private ZonedDateTime stopTime;
 
     public RecordController(Context context) {
+
+        //Initialize
         startTime = ZonedDateTime.now();
         stopTime = ZonedDateTime.now();
         timerStartCount = 0;
+
         this.sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         this.dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+
         //Are we counting?
         timerCounting = sharedPreferences.getBoolean(COUNTING_KEY, false);
 
-        //Get date from string constants
+        //Get date from string constants (SharedPreferences), so time will be updated
         String startString = sharedPreferences.getString(START_TIME_KEY, null);
         if (startString != null) {
             try {
@@ -54,8 +66,8 @@ public class RecordController {
                 e.printStackTrace();
             }
         }
-
     }
+
 
     public ZonedDateTime getStartTime() {
         return this.startTime;
@@ -103,11 +115,15 @@ public class RecordController {
 
     public void setTimerCounting(Boolean value) {
         if (value) {
-            timerStartCount++;
+            timerStartCount++; //Counter that makes sure we have activated timer at least once.
         }
         timerCounting = value;
         SharedPreferences.Editor prefEditor = sharedPreferences.edit();
         prefEditor.putBoolean(COUNTING_KEY, value);
         prefEditor.apply();
+    }
+
+    public void zeroTimerStartCount() {
+        this.timerStartCount = 0;
     }
 }

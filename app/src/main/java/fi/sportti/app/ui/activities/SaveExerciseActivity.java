@@ -1,14 +1,16 @@
 package fi.sportti.app.ui.activities;
 
+import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateToUnixTime;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.getUnixTimeDifference;
-import static fi.sportti.app.ui.utilities.TimeConversionUtilities.zonedDateTimeToUnix;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFromLong;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -18,6 +20,13 @@ import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
+
+/*
+ * @author Rasmus Hyyppä
+ * Activity for user to save recorded exercise.
+ */
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class SaveExerciseActivity extends AppCompatActivity {
 
     private ZonedDateTime zonedStartTime;
@@ -26,7 +35,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
     private String exerciseName;
     private TextView sportType, duration, calories, startDate;
     private MainViewModel mainViewModel;
-    private User user;
+    private User user; //Current user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         zonedStartTime = ZonedDateTime.parse(exerciseStartDate);
         String exerciseEndDate = exerciseDataArray[2];
         ZonedDateTime zonedDateEnd = ZonedDateTime.parse(exerciseEndDate);
-        Long totalDurationLong = getUnixTimeDifference(zonedDateTimeToUnix(zonedStartTime), zonedDateTimeToUnix(zonedDateEnd));
+        Long totalDurationLong = getUnixTimeDifference(zonedDateToUnixTime(zonedStartTime), zonedDateToUnixTime(zonedDateEnd));
         totalDuration = timeStringFromLong(totalDurationLong);
         totalCalories = exerciseDataArray[3];
         updateUI();

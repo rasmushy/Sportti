@@ -10,4 +10,6 @@
     <string name="place_holder_time">00:00:00</string>
     <string name="startexercise_textview_title_text">Duration</string>
     <string name="place_holder_exercise_name">Exercise name loading&#8230;</string>
+    <string name="channel_name">Exercise</string>
+    <string name="channel_description">Exercise recording is active</string>
 </resources>

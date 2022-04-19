@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.utilities;
+package fi.sportti.app.ui.adapters;
 
 
 import android.widget.ArrayAdapter;
@@ -12,6 +12,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import fi.sportti.app.R;
+
+/*
+ * @author Rasmus Hyyppä
+ * Custom adapter for listing exercise types.
+ */
 
 public class ExerciseTypeAdapter extends ArrayAdapter<String> {
 

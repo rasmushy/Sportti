@@ -19,6 +19,11 @@ import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.SporttiDatabaseController;
 import fi.sportti.app.datastorage.room.User;
 
+/*
+ * @author Rasmus Hyyppä
+ * Main view model to distance our database from ui.
+ */
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainViewModel extends AndroidViewModel {
     public static final String TAG = "testailua";
@@ -109,31 +114,29 @@ public class MainViewModel extends AndroidViewModel {
         databaseController.deleteExercise(uselessExercise);
     }
 
-    public void deleteAllExercises(){
+    public void deleteAllExercises() {
         databaseController.deleteAllExercises();
     }
 
 
-
-    public HashMap<ZonedDateTime, Integer> getExerciseTimesForGraph(int type){
+    public HashMap<ZonedDateTime, Integer> getExerciseTimesForGraph(int type) {
         List<Exercise> list = listAllExercises.getValue();
         HashMap<ZonedDateTime, Integer> result = new HashMap<>();
-        if(list != null){
+        if (list != null) {
             int minutes;
             ZonedDateTime newDate;
             int day = 0;
             int month = 0;
             int year = 0;
             ZoneId zone = ZoneId.systemDefault();
-            for(Exercise e : list){
+            for (Exercise e : list) {
                 minutes = e.getDurationInMinutes();
                 day = e.getStartDate().getDayOfMonth();
                 month = e.getStartDate().getMonthValue();
                 year = e.getStartDate().getYear();
-                if(type == DAILY_HOURS){
+                if (type == DAILY_HOURS) {
                     newDate = ZonedDateTime.of(year, month, day, 12, 0, 0, 0, zone);
-                }
-                else {
+                } else {
                     newDate = ZonedDateTime.of(year, month, 1, 12, 0, 0, 0, zone);
                 }
                 if (result.containsKey(newDate)) {
@@ -147,7 +150,6 @@ public class MainViewModel extends AndroidViewModel {
         }
         return result;
     }
-
 
 
 }

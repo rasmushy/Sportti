@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         //Variables for exercise pop up
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
-
         dialogBuilder.setView(selectExercisePopUpView);
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
