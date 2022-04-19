@@ -2,23 +2,26 @@ package fi.sportti.app.ui.utilities;
 
 import android.os.Build;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import android.annotation.SuppressLint;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import androidx.annotation.RequiresApi;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class TimeConversionUtilities {
-
-
-    public static long localDateTimeToUnix(@NonNull LocalDateTime localDateTime) {
-        ZoneId timeZone = ZoneId.systemDefault();
-        return localDateTime.now().atZone(timeZone).toEpochSecond();
-    }
 
     public static long getUnixTimeDifference(long fromTime, long toTime) {
         return Math.abs(toTime - fromTime); // Using Math.Abs so time returned is not negative value
     }
 
+    public static String timeStringFromLong(Long ms) {
+        Long seconds = (ms / 1000) % 60;
+        Long minutes = (ms / (1000 * 60) % 60);
+        Long hours = (ms / (1000 * 60 * 60) % 24);
+        return makeTimeString(hours, minutes, seconds);
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String makeTimeString(Long hours, Long minutes, Long seconds) {
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
 }

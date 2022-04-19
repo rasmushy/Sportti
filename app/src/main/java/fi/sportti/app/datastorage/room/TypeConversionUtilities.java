@@ -5,7 +5,6 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.TypeConverter;
-import androidx.room.TypeConverters;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -22,16 +21,12 @@ public class TypeConversionUtilities {
 
     @TypeConverter
     public static ZonedDateTime zonedDateFromUnixTime(long unixTime) {
-        ZoneId timeZone = ZoneId.systemDefault();
-        Instant instant = Instant.ofEpochMilli(unixTime * 1000);
-
-        return instant.atZone(timeZone);
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(unixTime), ZoneId.systemDefault());
     }
 
     @TypeConverter
-    public static long zonedDateToDate(@NonNull ZonedDateTime date) {
-        ZoneId timeZone = ZoneId.systemDefault();
-        return date.toInstant().atZone(timeZone).toEpochSecond();
+    public static long zonedDateToUnixTime(@NonNull ZonedDateTime date) {
+        return date.toInstant().toEpochMilli();
     }
 
     @TypeConverter

@@ -9,6 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sportti">
+
+        <activity
+            android:name=".ui.activities.SaveExerciseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.StartExerciseActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.activities.ExerciseDetailsActivity"
             android:exported="false"
@@ -18,16 +25,26 @@
             android:exported="false" />
         <activity
             android:name=".ui.activities.NewManualExerciseActivity"
-            android:exported="false" />
+            android:label="@string/new_exercise"
+            android:parentActivityName=".ui.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
         <activity
             android:name=".ui.activities.NewRecordedExerciseActivity"
-            android:exported="false" />
+            android:label="@string/new_exercise"
+            android:parentActivityName=".ui.activities.MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
         <activity
             android:name=".ui.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

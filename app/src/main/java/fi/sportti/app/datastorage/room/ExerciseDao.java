@@ -11,7 +11,7 @@ import androidx.room.Update;
 import java.util.List;
 
 /*
- * @author rasmushy
+ * @author Rasmus Hyyppä
  * Dao for Exercise entities
  */
 
