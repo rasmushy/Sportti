@@ -6,25 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="244dp"
+        android:layout_height="230dp"
+        android:background="#19000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+    <Button
+        android:id="@+id/main_button_new_exercise"
+        android:layout_width="250dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="40dp"
+        android:onClick="selectExerciseTypePopUp"
+        android:text="New exercise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <Button
         android:id="@+id/main_button_show_history"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="250dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="20dp"
         android:onClick="openHistoryActivity"
         android:text="History"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/main_button_new_exercise" />
+
+    <Button
+        android:id="@+id/main_button_profile"
+        android:layout_width="250dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="20dp"
+        android:onClick="openProfileActivity"
+        android:text="Profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_button_show_history" />
+
 
     <Button
         android:id="@+id/main_button_record_exercise"

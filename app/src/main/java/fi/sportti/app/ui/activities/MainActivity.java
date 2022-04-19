@@ -5,8 +5,8 @@
 
 package fi.sportti.app.ui.activities;
 
-
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,9 +24,9 @@ import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /*
- * @author rasmushy
+ * @author rasmushy, lassib
  */
-
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity"; // TAG for Log.d
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userList = new ArrayList<>();
-        //Setup our acces to database
+        //Setup our access to database
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mainViewModel.getAllUsers().observe(this, users -> userList = users);
@@ -79,18 +79,41 @@ public class MainActivity extends AppCompatActivity {
         return mainViewModel;
     }
 
-    public void openHistoryActivity(View view) {
+
+    /*
+     *@author Lassi Bågman
+     * Methods for buttons
+     */
+    public void openStartExerciseActivity(View view){
+        Intent intent = new Intent(this, NewRecordedExerciseActivity.class);
+        startActivity(intent);
+    }
+
+    public void openSaveExerciseActivity(View view){
+        Intent intent = new Intent(this, NewManualExerciseActivity.class);
+        startActivity(intent);
+    }
+
+    public void openHistoryActivity(View view){
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 
-    public void buttonPressed(View caller) {
-        if (caller.getId() == R.id.main_button_record_exercise) {
-            Intent nextActivity = new Intent(MainActivity.this, NewRecordedExerciseActivity.class);
-            startActivity(nextActivity);
-        } else if (caller.getId() == R.id.main_button_manual_exercise) {
-            Intent nextActivity = new Intent(MainActivity.this, NewManualExerciseActivity.class);
-            startActivity(nextActivity);
-        }
+    public void openProfileActivity(View view){
+        //method here
+    }
+
+    /*
+     *@author Lassi Bågman
+     * Method for pop up
+     */
+    public void selectExerciseTypePopUp(View view){
+        //Variables for exercise pop up
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
+
+        dialogBuilder.setView(selectExercisePopUpView);
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 }

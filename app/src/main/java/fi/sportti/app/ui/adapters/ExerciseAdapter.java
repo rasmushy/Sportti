@@ -39,15 +39,42 @@ public class ExerciseAdapter extends ArrayAdapter<Exercise> {
         TextView sportName = (TextView) convertView.findViewById(R.id.exercise_sport_name);
         TextView startDate = (TextView) convertView.findViewById(R.id.exercise_start_date);
         TextView duration = (TextView) convertView.findViewById(R.id.exercise_duration);
+        TextView calories = (TextView) convertView.findViewById(R.id.exercise_calories);
         sportName.setText(exercise.getSportType());
         startDate.setText(getDateAsText(exercise.getStartDate()));
-        duration.setText(String.valueOf(exercise.getDurationInMinutes()));
+        String durationAsText = formatDuration(exercise.getDurationInMinutes());
+        duration.setText(durationAsText);
+        calories.setText(exercise.getCalories() + " kcal");
         return convertView;
     }
 
 
     private String getDateAsText(ZonedDateTime date){
         return date.getDayOfMonth() + "." + date.getMonthValue() + "." + date.getYear();
+    }
+
+    private String formatDuration(int duration){
+        String result = "";
+        if(duration == 60){
+            result = "1h";
+        }
+        else if(duration >= 60){
+            int hours = duration / 60;
+            int minutes = duration - (hours*60);
+            if(hours == 1){
+                result = "1h";
+            }
+            else {
+                result += hours + "h ";
+            }
+            if(minutes > 0){
+                result += minutes + "min";
+            }
+        }
+        else {
+            result = duration + " min";
+        }
+        return result;
     }
 
 }

@@ -17,6 +17,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 
+/*Own class for creating custom views so we can draw graphs.
+* Basic idea how to build own custom Views learnt from this article
+* https://medium.com/@mayurjajoomj/custom-graphs-custom-view-android-862e16813cc*/
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CustomGraph extends View  {
     public static final String TAG = "testailua";
@@ -31,7 +35,6 @@ public class CustomGraph extends View  {
     private Boolean isInit = false;
     private Boolean drawDailyGraph = true;
     private Boolean drawMonthlyGraph = false;
-    private Boolean skippedFirstLineFromOrigo = false;
     private Path path;
     private Paint axisPaint, barPaint, linePaint, textPaint, greyPaint;
     private Canvas canvas;
@@ -68,7 +71,6 @@ public class CustomGraph extends View  {
             path.moveTo(origoX, origoY);
         }
         drawAxis();
-        skippedFirstLineFromOrigo = false;
         if(dataMap != null){
             oneHourHeight = 1.0 * graphHeight / graphMaxValue;
             setCorrectStartDateForGraph();
@@ -76,6 +78,11 @@ public class CustomGraph extends View  {
             drawHorizontalMarks();
             drawGraphHeader();
         }
+    }
+
+    @Override
+    public boolean performClick(){
+        return super.performClick();
     }
 
     private void init(){
@@ -132,10 +139,6 @@ public class CustomGraph extends View  {
     }
 
     private void drawDataPoints(){
-        //Set correct start position on graph for data points.
-        int currentXPosition = origoX + rectWidth;
-        path.moveTo(currentXPosition, origoY);
-
         //Draw data points for days of week or months of year.
         if(drawDailyGraph){
             drawDataPointsForWeek();
@@ -143,7 +146,7 @@ public class CustomGraph extends View  {
         else if(drawMonthlyGraph){
             drawDataPointsForYear();
         }
-
+        //At end draw full path/line from Path object.
         if(graphType == LINE_GRAPH){
             canvas.drawPath(path, linePaint);
         }
@@ -172,36 +175,30 @@ public class CustomGraph extends View  {
         if(dataMap.containsKey(date)){
             minutes = dataMap.get(date);
         }
+        double hours = 1.0 * minutes / 60;
         if(graphType == BAR_GRAPH){
-            drawBar(minutes, xPos);
+            drawBar(hours, xPos);
         }
         else if(graphType == LINE_GRAPH){
-            drawLine(minutes, xPos);
+            drawLine(hours, xPos);
         }
         String text = getTextForDataPoint(date);
         canvas.drawText(text, xPos-40, origoY + 50, textPaint);
         canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
     }
 
-    private void drawBar(int minutes, int xPos){
+    private void drawBar(double hours, int xPos){
         Rect mBar = new Rect();
         mBar.left = xPos;
         mBar.right = mBar.left + rectWidth;
         mBar.bottom = origoY;
-        double hours = 1.0 * minutes / 60;
         mBar.top = origoY - (int)(oneHourHeight * hours);
         canvas.drawRect(mBar, barPaint);
     }
 
-    private void drawLine(int minutes, int xPos){
-        double hours = 1.0 * minutes / 60;
+    private void drawLine(double hours, int xPos){
         int newY = origoY - (int)(oneHourHeight * hours);
-        if(skippedFirstLineFromOrigo){
-            path.lineTo(xPos, newY);
-        }
-        else {
-            skippedFirstLineFromOrigo = true;
-        }
+        path.lineTo(xPos, newY);
         path.moveTo(xPos, newY);
         int radius = 13;
         canvas.drawCircle(xPos, newY, radius, barPaint);

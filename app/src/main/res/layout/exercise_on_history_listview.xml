@@ -34,7 +34,17 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
-        android:textSize="16sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exercise_sport_name" />
+
+    <TextView
+        android:id="@+id/exercise_calories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="TextView"
+        android:textSize="17sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercise_duration"
+        app:layout_constraintStart_toEndOf="@+id/exercise_duration" />
 </androidx.constraintlayout.widget.ConstraintLayout>

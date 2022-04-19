@@ -49,23 +49,21 @@ public class HistoryActivity extends AppCompatActivity {
         exerciseListView = findViewById(R.id.history_listview_exercises);
         changeTimePeriodSwitch = findViewById(R.id.history_switch_toggle_graph_timeperiod);
         graph = findViewById(R.id.history_customgraph_exercise_hours);
-        graph.setGraphType(CustomGraph.LINE_GRAPH);
+        graph.setGraphType(CustomGraph.BAR_GRAPH);
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
-
-
 
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
                 Log.d(TAG, "onChanged: Exercise list changed");
+                updateGraph();
+                //Sort exercises based on date so they are in correct order to display on listview.
                 exercises.sort(new Comparator<Exercise>() {
                     @Override
                     public int compare(Exercise exercise, Exercise t1) {
                         return t1.getStartDate().compareTo(exercise.getStartDate());
                     }
                 });
-                updateGraph();
-                exerciseListView.setAdapter(null);
                 exerciseListView.setAdapter(new ExerciseAdapter(
                         getApplicationContext(),
                         R.layout.exercise_on_history_listview,
@@ -73,8 +71,8 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
-
-        //Idea on how to implement swipe listener https://www.youtube.com/watch?v=vNJyU-XW8_Y
+        //Swipe listener to change weeks/years on graph.
+        //Basic idea on how to implement swipe listener https://www.youtube.com/watch?v=vNJyU-XW8_Y
         GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener(){
             @Override
             public boolean onDown(MotionEvent event){
@@ -82,35 +80,33 @@ public class HistoryActivity extends AppCompatActivity {
             }
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                //Get two x coordinates from MotionEvents and based on their difference determine if user swiped View and in which direction.
                 float x1 = e1.getX();
                 float x2 = e2.getX();
                 float xDelta = Math.abs(x2 - x1);
-                if(x1 > x2 && xDelta > 100){
-                    Log.d(TAG, "onFling: swiped left");
-                    showNext();
-                }
-                else if(x1 < x2 && xDelta > 100){
-                    Log.d(TAG, "onFling: swiped right");
-                    showPrevious();
+                if(xDelta > 100){
+                    if(x1 > x2){
+                        Log.d(TAG, "onFling: swiped left");
+                        showNext();
+                    }
+                    else if(x1 < x2){
+                        Log.d(TAG, "onFling: swiped right");
+                        showPrevious();
+                    }
                 }
                 return true;
             }
         });
 
-
+        //Pass all events to GestureDetector which will handle it.
         graph.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // pass the events to the gesture detector
-                // a return value of true means the detector is handling it
-                // a return value of false means the detector didn't
-                // recognize the event
                 return gestureDetector.onTouchEvent(event);
-
             }
         });
 
-
+        //ClickListener to open exercise details activity.
         exerciseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
