@@ -150,16 +150,10 @@ public class StartExerciseActivity extends AppCompatActivity {
         startButton.setText(R.string.button_text_start);
         resetButton.setText(R.string.button_text_reset);
 
-        trackLocationSwitch.setClickable(true);
-        if(trackLocationSwitch.isChecked()){
-            stopTrackingLocation();
-            RouteContainer.getInstance().resetRoute();
-        }
     }
 
     //Stops timer
     private void stopTimer() {
-        Log.d(TAG, "stopTimer called");
         recordController.setTimerCounting(false);
         if (recordController.getTimerStartCount() > 0) {
             startButton.setText(R.string.button_text_resume);
@@ -170,7 +164,6 @@ public class StartExerciseActivity extends AppCompatActivity {
     //Starts timer
     private void startTimer() {
         //If our timer is not yet active, create it.
-        Log.d(TAG, "startTimer called");
         if (timer == null) {
             timer = new Timer();
             timer.scheduleAtFixedRate(new RecordTask(), 0, 500);
@@ -188,7 +181,6 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     //Method for start(resume)/stop button
     private void startStopAction() {
-        Log.d(TAG, "startStopAction called ");
         if (recordController.getTimerCounting()) {
             recordController.setStopTime(ZonedDateTime.now());
             if(trackLocationSwitch.isChecked()){
@@ -213,6 +205,11 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     //Method for reset/end button
     private void resetEndAction() {
+        trackLocationSwitch.setClickable(true);
+        if(trackLocationSwitch.isChecked()){
+            stopTrackingLocation();
+            RouteContainer.getInstance().resetRoute();
+        }
         if (recordController.getTimerCounting()) {
             resetAction();
         } else {

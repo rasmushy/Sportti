@@ -18,9 +18,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +39,12 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
-
+    private static final int PERMISSION_READ_PHONE_STATE = 101;
     private static final String TAG = "MainActivity"; // TAG for Log.d
     private static MainViewModel mainViewModel;
     private User user;
     private AlertDialog dialog;
+    private AlertDialog informationAboutPermissions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,34 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },PERMISSION_READ_PHONE_STATE);
+//            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+//            final View informationView = getLayoutInflater().inflate(R.layout.informative_ui_before_asking_permissions, null);
+//            dialogBuilder.setView(informationView);
+//            informationAboutPermissions = dialogBuilder.create();
+//            informationAboutPermissions.show();
+
+
+        }
+
+    }
+
+    public void closeInformationPopUp(View view){
+
+//        if(informationAboutPermissions != null){
+//            informationAboutPermissions.dismiss();
+//            Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                public void run() {
+//
+//
+//                }
+//            }, 1000);
+//
+//        }
     }
 
 
@@ -127,5 +158,22 @@ public class MainActivity extends AppCompatActivity {
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    @Override
+    //This method is called by Android when user responds to permission request.
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == PERMISSION_READ_PHONE_STATE){
+            if(!permissionGranted(grantResults)){
+                Toast toast = Toast.makeText(getBaseContext(), "Maps are not available.", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 }

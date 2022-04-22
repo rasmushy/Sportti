@@ -7,9 +7,12 @@ import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFrom
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,7 +65,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SaveExerciseActivity extends AppCompatActivity {
-
+    private static final int PERMISSION_READ_PHONE_STATE = 101;
     private static final String TAG = "SaveExerciseActivity";
 
     private MainViewModel mainViewModel;
@@ -81,20 +84,16 @@ public class SaveExerciseActivity extends AppCompatActivity {
         MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_save_exercise);
         Log.d(TAG, "OnCreate()");
-
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
-
         exerciseDataList = new ArrayList<>();
         mainViewModel = MainActivity.getMainViewModel();
         getRecordedData();
-
         user = mainViewModel.getFirstUser();
 
         mMapView = (MapView) findViewById(R.id.map);
-
-        mMapView.setVisibility(View.VISIBLE);
-        if(RouteContainer.getInstance().hasRoute()){
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
             mMapView.onCreate(savedInstanceState);
             mMapView.getMapAsync(new OnMapReadyCallback() {
                 @Override
@@ -128,10 +127,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     polyline.addAll(coordinates);
                     polyline.width(3);
                     polyline.color(Color.BLUE);
-
                     mapboxMap.addPolyline(polyline);
-
-
                 }
             });
         }
@@ -146,8 +142,6 @@ public class SaveExerciseActivity extends AppCompatActivity {
         super.onResume();
         mMapView.onResume();
     }
-
-
 
     @Override
     protected void onDestroy() {

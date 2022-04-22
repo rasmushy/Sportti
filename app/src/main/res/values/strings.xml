@@ -17,6 +17,7 @@
     <string name="comment">Comment:</string>
     <string name="save_exercise">Save exercise</string>
     <string name="delete">Delete</string>
+    <string name="informative_message_for_permissions">Sportti asks permission to make and manage phone calls in order to display maps on App.</string>
 
 
 </resources>

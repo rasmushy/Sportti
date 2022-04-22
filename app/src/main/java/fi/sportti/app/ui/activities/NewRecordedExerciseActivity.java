@@ -39,7 +39,6 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_recorded_exercise);
 
-        Log.d(TAG, "NewRecordedExerciseActivity onCreate:");
         //Find views
 
         exerciseListView = findViewById(R.id.recordexercise_listview_all_exercises);

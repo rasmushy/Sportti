@@ -85,13 +85,14 @@ public class LocationTracking extends Service {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
         }
 
+        //Code on how to create notification for foreground service found from https://stackoverflow.com/questions/47531742/startforeground-fail-after-upgrade-to-android-8-1
         String NOTIFICATION_CHANNEL_ID = "Sportti Foreground Service ID";
         String channelName = "My Background Service";
         NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
         chan.setLightColor(Color.BLUE);
         chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //assert manager != null;
+        assert manager != null;
         manager.createNotificationChannel(chan);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);

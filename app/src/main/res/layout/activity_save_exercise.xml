@@ -82,15 +82,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/saveexercise_textview_exercise_date" />
 
-        <com.mapquest.mapping.maps.MapView
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/saveexercise_textview_calories_burned"
-            app:mapquest_app_key="urnwLsvuxm8IpPSp7zVGCVL9teuV8tJV" />
+    <com.mapquest.mapping.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/saveexercise_guideline_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:mapquest_app_key="urnwLsvuxm8IpPSp7zVGCVL9teuV8tJV" />
 
 
 
