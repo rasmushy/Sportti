@@ -13,8 +13,9 @@ import androidx.room.PrimaryKey;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-/*
+/**
  * @author rasmushy
+ * @version 0.1
  * Entity class for User created Exercises
  */
 
@@ -41,16 +42,28 @@ public class Exercise {
     @ColumnInfo(name = "calories", index = true)
     private int calories;
 
-//    @ColumnInfo(name = "distance")
-//    private double distance;
+    @ColumnInfo(name = "avgHeartRate", index = true)
+    private int avgHeartRate;
 
-    public Exercise(String sportType, int userId, ZonedDateTime startDate, ZonedDateTime endDate, int calories) {
+    @ColumnInfo(name = "route", index = true)
+    private String route;
+
+    @ColumnInfo(name = "distance", index = true)
+    private double distance;
+
+    @ColumnInfo(name = "comment", index = true)
+    private String comment;
+
+    public Exercise(String sportType, int userId, ZonedDateTime startDate, ZonedDateTime endDate, int calories, int avgHeartRate, String route, double distance, String comment) {
         this.sportType = sportType;
         this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.calories = calories;
-//        this.distance = distance;
+        this.avgHeartRate = avgHeartRate;
+        this.route = route;
+        this.distance = distance;
+        this.comment = comment;
     }
 
     //Getters & Setters for Exercise entities
@@ -64,10 +77,6 @@ public class Exercise {
 
     public int getUserId() {
         return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getSportType() {
@@ -102,8 +111,39 @@ public class Exercise {
         this.calories = calories;
     }
 
+    public int getAvgHeartRate() {
+        return avgHeartRate;
+    }
 
-    public int getDurationInMinutes(){
-        return (int)ChronoUnit.MINUTES.between(startDate, endDate);
+    public void setAvgHeartRate(int avgHeartRate) {
+        this.avgHeartRate = avgHeartRate;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public int getDurationInMinutes() {
+        return (int) ChronoUnit.MINUTES.between(startDate, endDate);
     }
 }
