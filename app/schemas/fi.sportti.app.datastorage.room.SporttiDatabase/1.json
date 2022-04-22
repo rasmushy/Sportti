@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5c66a2e87df1aca98333f807281cebf3",
+    "identityHash": "3c0a730343cb2082d08b5eeff96aa321",
     "entities": [
       {
         "tableName": "user_data",
@@ -126,7 +126,7 @@
       },
       {
         "tableName": "exercise_data",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `sportType` TEXT, `startDate` INTEGER, `endDate` INTEGER, `calories` INTEGER NOT NULL, FOREIGN KEY(`userId`) REFERENCES `user_data`(`uid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `sportType` TEXT, `startDate` INTEGER, `endDate` INTEGER, `calories` INTEGER NOT NULL, `avgHeartRate` INTEGER NOT NULL, `route` TEXT, `distance` REAL NOT NULL, `comment` TEXT, FOREIGN KEY(`userId`) REFERENCES `user_data`(`uid`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "exerciseId",
@@ -163,6 +163,30 @@
             "columnName": "calories",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "avgHeartRate",
+            "columnName": "avgHeartRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "route",
+            "columnName": "route",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distance",
+            "columnName": "distance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -225,6 +249,42 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_calories` ON `${TABLE_NAME}` (`calories`)"
+          },
+          {
+            "name": "index_exercise_data_avgHeartRate",
+            "unique": false,
+            "columnNames": [
+              "avgHeartRate"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_avgHeartRate` ON `${TABLE_NAME}` (`avgHeartRate`)"
+          },
+          {
+            "name": "index_exercise_data_route",
+            "unique": false,
+            "columnNames": [
+              "route"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_route` ON `${TABLE_NAME}` (`route`)"
+          },
+          {
+            "name": "index_exercise_data_distance",
+            "unique": false,
+            "columnNames": [
+              "distance"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_distance` ON `${TABLE_NAME}` (`distance`)"
+          },
+          {
+            "name": "index_exercise_data_comment",
+            "unique": false,
+            "columnNames": [
+              "comment"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_comment` ON `${TABLE_NAME}` (`comment`)"
           }
         ],
         "foreignKeys": [
@@ -245,7 +305,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5c66a2e87df1aca98333f807281cebf3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3c0a730343cb2082d08b5eeff96aa321')"
     ]
   }
 }

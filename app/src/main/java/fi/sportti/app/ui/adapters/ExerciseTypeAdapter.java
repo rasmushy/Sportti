@@ -13,18 +13,19 @@ import java.util.List;
 
 import fi.sportti.app.R;
 
-/*
+/**
  * @author Rasmus Hyyppä
+ * @version 0.1
  * Custom adapter for listing exercise types.
  */
 
 public class ExerciseTypeAdapter extends ArrayAdapter<String> {
 
-    private final List<String> exerciseList;
+    private final int textViewResourceId;
 
     public ExerciseTypeAdapter(Context context, int textViewResourceId, List<String> exerciseList) {
         super(context, textViewResourceId, exerciseList);
-        this.exerciseList = exerciseList;
+        this.textViewResourceId = textViewResourceId;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -32,10 +33,10 @@ public class ExerciseTypeAdapter extends ArrayAdapter<String> {
 
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.recordexercise_listview_item, null);
+            v = inflater.inflate(textViewResourceId, null);
         }
 
-        String exerciseType = exerciseList.get(position);
+        String exerciseType = getItem(position);
 
         if (exerciseType != null) {
             TextView sportNameTextView = (TextView) v.findViewById(R.id.recordexercise_listview_textview_exercise_name);

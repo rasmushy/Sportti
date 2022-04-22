@@ -14,6 +14,7 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -36,8 +37,9 @@ import fi.sportti.app.datastorage.sharedpreferences.RecordController;
 import fi.sportti.app.location.LocationTracking;
 import fi.sportti.app.location.RouteContainer;
 
-/*
+/**
  * @author Rasmus Hyyppä
+ * @version 0.1
  * Application running while you exercise to collect data from it.
  * It provides user a timer count up with reset possibility, it also sends notification to user
  * This activity includes private class TimerTask: "RecordTask"
@@ -224,17 +226,20 @@ public class StartExerciseActivity extends AppCompatActivity {
             stopTimer();
 
             //We use previously selected exercise type as sportType
+            //Variable types are currently set as they are in Exercise class
             int calorieAmount = 0; //pretty useless training? TODO: calorie calculations
             Log.d(TAG, "calorieAmount after calculations: " + calorieAmount);
+            int avgHeartRate = 0;
+            String route = ""; //TODO: route related stuff
+            double distance = 0.0; // TODO: distance related stuff
+            String comment = "";
 
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
-            String[] dataForIntent = {
-                    exerciseType,
-                    recordController.getStartTime().toString(),
-                    recordController.getStopTime().toString(),
-                    Integer.toString(calorieAmount)};
+
+            String[] dataForIntent = {exerciseType, recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, Double.toString(distance), comment};
+
             //Time to send all recorded data into SaveExerciseActivity
-            Intent intentForSaveActivity = new Intent(StartExerciseActivity.this, SaveExerciseActivity.class);
+            Intent intentForSaveActivity = new Intent(this, SaveExerciseActivity.class);
             intentForSaveActivity.putExtra(REPLY_RECORDED_EXERCISE, dataForIntent);
             startActivity(intentForSaveActivity);
             exitRecordingExercise();
@@ -258,7 +263,7 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-
+    //If timer has started ask user do they really want to exit else stop timer and exit
     @Override
     public void onBackPressed() {
         if (recordController.getTimerStartCount() > 0) {
@@ -279,7 +284,7 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-
+    //On pause send notification that we are still running timer
     @Override
     public void onPause() {
         super.onPause();

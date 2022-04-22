@@ -11,7 +11,7 @@
         android:id="@+id/recordexercise_textview_duration_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/startexercise_textview_title_text"
+        android:text="@string/duration"
         android:textAlignment="center"
         android:textSize="34sp" />
 
