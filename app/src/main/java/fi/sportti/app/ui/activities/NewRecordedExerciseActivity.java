@@ -17,8 +17,10 @@ import java.util.List;
 import fi.sportti.app.R;
 import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
 
-/*
+/**
+ *
  * @author Rasmus Hyyppä
+ * @version 0.1
  * User wants to record exercise, here we choose what type of exercise we are planning to do
  */
 
@@ -36,19 +38,21 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_recorded_exercise);
-        Log.d(TAG, "OnCreate()");
-        //Find views
+
         exerciseListView = findViewById(R.id.recordexercise_listview_all_exercises);
+
         //Exercise list from resources. Best way seems to be translating it from string arr to list.
         exerciseTypeList = Arrays.asList(getResources().getStringArray(R.array.exercise_type_list));
+
         //Create ArrayAdapter that fills listview
-        ExerciseTypeAdapter adapter = new ExerciseTypeAdapter(this, R.layout.recordexercise_listview_item, exerciseTypeList);
+        ExerciseTypeAdapter adapter = new ExerciseTypeAdapter(this, R.layout.recordexercise_listview_layout, exerciseTypeList);
+
+        //Set our adapter to listview
         exerciseListView.setAdapter(adapter);
+
+        //When user clicks one of the list items, it will select them as a sport type.
         exerciseListView.setOnItemClickListener((parent, view, position, id) -> {
-            //When user clicks one of the list items, it will select them as a sport type.
-            Log.d(TAG, "selected item position: " + exerciseListView.getItemAtPosition(position));
             exerciseType = exerciseListView.getItemAtPosition(position).toString();
-            Log.d(TAG, "exerciseType: " + exerciseType);
         });
     }
 
