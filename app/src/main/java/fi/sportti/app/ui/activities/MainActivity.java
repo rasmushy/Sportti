@@ -5,16 +5,22 @@
 
 package fi.sportti.app.ui.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +28,7 @@ import java.util.Objects;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
+import fi.sportti.app.location.LocationTracking;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
@@ -45,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
     }
+
 
     /*
      * @author Rasmus Hyyppä
@@ -110,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.setView(selectExercisePopUpView);
         dialog = dialogBuilder.create();
         dialog.show();
+
     }
 
     @Override

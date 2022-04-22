@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
     compileSdk 32
-    buildToolsVersion "30.0.3"
+    //buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "fi.sportti.app"
@@ -12,7 +13,7 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-        //multiDexEnabled true
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // @author Rasmus Hyyppä, Room Schema export https://stackoverflow.com/questions/44322178/room-schema-export-directory-is-not-provided-to-the-annotation-processor-so-we
@@ -65,8 +66,9 @@ dependencies {
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    implementation 'com.google.android.gms:play-services-location:19.0.1' // for Location
-    implementation('com.mapquest:mapping-android-sdk:2.0.10')   // for Mapping SDK MapView
+    // for Location
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.mapquest:mapping-android-sdk:2.0.10'  // for Mapping SDK MapView
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

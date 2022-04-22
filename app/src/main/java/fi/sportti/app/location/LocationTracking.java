@@ -2,10 +2,14 @@ package fi.sportti.app.location;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
@@ -15,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -54,8 +59,8 @@ public class LocationTracking extends Service {
                 stopSelf();
             }
         }
-        return START_STICKY;
-       //return super.onStartCommand(intent, flags, startId);
+        //return START_STICKY;
+       return super.onStartCommand(intent, flags, startId);
     }
 
     private void startTracking(){
@@ -80,18 +85,36 @@ public class LocationTracking extends Service {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
         }
 
-        String channelID = "Foreground Service ID343434";
-        Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        Notification notification =
-                new Notification.Builder(this, channelID)
-                        .setContentTitle("Sportti")
-                        .setContentText("Tracking location")
-                        .setSmallIcon(R.drawable.ic_launcher_background)
-                        .setContentIntent(pendingIntent)
-                        .build();
+        String NOTIFICATION_CHANNEL_ID = "Sportti Foreground Service ID";
+        String channelName = "My Background Service";
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //assert manager != null;
+        manager.createNotificationChannel(chan);
 
-        startForeground(1005, notification);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Sportti")
+                .setContentText("Tracking location")
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+
+
+//        String channelID = "Foreground Service ID";
+//        Intent notificationIntent = new Intent(this, MainActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+//        Notification notification =
+//                new Notification.Builder(this, channelID)
+//                        .setContentTitle("Sportti")
+//                        .setContentText("Tracking location")
+//                        .setSmallIcon(R.drawable.ic_launcher_background)
+//                        .setContentIntent(pendingIntent)
+//                        .build();
+        startForeground(1001, notification);
 
     }
 
