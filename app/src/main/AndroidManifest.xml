@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fi.sportti.app">
-
     <!-- Always include this permission -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include only if your app benefits from precise location access. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -15,6 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sportti">
+        <activity
+            android:name=".ui.activities.MapActivity"
+            android:exported="false" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -29,7 +31,7 @@
         <activity
             android:name=".ui.activities.ExerciseDetailsActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.HistoryActivity"/>
+            android:parentActivityName=".ui.activities.HistoryActivity" />
         <activity
             android:name=".ui.activities.HistoryActivity"
             android:exported="false" />
@@ -45,7 +47,6 @@
             android:name=".ui.activities.NewRecordedExerciseActivity"
             android:label="@string/new_exercise"
             android:parentActivityName=".ui.activities.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
@@ -55,6 +56,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
