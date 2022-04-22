@@ -20,7 +20,7 @@ public class RouteContainer {
         return instance;
     }
 
-    public void createNewRoute(){
+    public void resetRoute(){
         sb = new StringBuilder();
         locationList = new ArrayList<>();
     }
@@ -52,5 +52,9 @@ public class RouteContainer {
         sb.append(location.getLatitude() + "&" + location.getLongitude() + "_");
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         locationList.add(latLng);
+    }
+
+    public boolean hasRoute(){
+        return locationList.isEmpty();
     }
 }

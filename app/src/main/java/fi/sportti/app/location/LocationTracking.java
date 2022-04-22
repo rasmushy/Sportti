@@ -24,10 +24,11 @@ import com.google.android.gms.location.LocationServices;
 
 import fi.sportti.app.ui.activities.MainActivity;
 import fi.sportti.app.R;
+import fi.sportti.app.ui.activities.StartExerciseActivity;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationTracking extends Service {
-
+    private static final String TAG = "TESTI"; // TAG for Log.d
     public static final String STOP_TRACKING = "STOP";
     public static final String START_TRACKING = "START";
     public static boolean serviceRunning = false;
@@ -41,15 +42,20 @@ public class LocationTracking extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
+
         if(intent != null && intent.getAction() != null){
             if(intent.getAction().equals(START_TRACKING)){
                 startTracking();
             }
             else if(intent.getAction().equals(STOP_TRACKING)){
                 stopTracking();
+                serviceRunning = false;
+                stopForeground(true);
+                stopSelf();
             }
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
+       //return super.onStartCommand(intent, flags, startId);
     }
 
     private void startTracking(){
@@ -74,8 +80,8 @@ public class LocationTracking extends Service {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
         }
 
-        String channelID = "Foreground Service ID";
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        String channelID = "Foreground Service ID343434";
+        Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification =
                 new Notification.Builder(this, channelID)
@@ -84,17 +90,16 @@ public class LocationTracking extends Service {
                         .setSmallIcon(R.drawable.ic_launcher_background)
                         .setContentIntent(pendingIntent)
                         .build();
-        startForeground(1001, notification);
+
+        startForeground(1005, notification);
+
     }
 
     private void stopTracking(){
-        serviceRunning = false;
         Log.d("TESTI", "onStartCommand: STOPPING FOREGROUND SERVICE ");
         if(fusedLocationProviderClient != null){
             fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
         }
-        stopForeground(true);
-        stopSelf();
     }
 
     private void processResult(LocationResult locationResult){

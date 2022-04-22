@@ -2,23 +2,27 @@ package fi.sportti.app.ui.activities;
 
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFromLong;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.time.Instant;
@@ -29,6 +33,8 @@ import java.util.TimerTask;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.sharedpreferences.RecordController;
+import fi.sportti.app.location.LocationTracking;
+import fi.sportti.app.location.RouteContainer;
 
 /*
  * @author Rasmus Hyyppä
@@ -39,16 +45,18 @@ import fi.sportti.app.datastorage.sharedpreferences.RecordController;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class StartExerciseActivity extends AppCompatActivity {
-
     public static final String REPLY_RECORDED_EXERCISE = "fi.sportti.app.REPLY_RECORDED_EXERCISE";
     public static final String CHANNEL_ID = "Sportti";
 
-    private static final String TAG = "StartExerciseActivity";
+    private static final int PERMISSION_FINE_LOCATION = 100;
+    private static final int PERMISSION_READ_PHONE_STATE = 101;
+    private static final String TAG = "TESTI";
 
     private static volatile RecordController recordController;
 
     private TextView totalTimeTextView, exerciseTypeTextView;
     private Button startButton, resetButton;
+    private Switch trackLocationSwitch;
 
     private Timer timer;
 
@@ -66,15 +74,26 @@ public class StartExerciseActivity extends AppCompatActivity {
         exerciseTypeTextView = findViewById(R.id.recordexercise_textview_sport_name);
         startButton = findViewById(R.id.recordexercise_button_start_exercise);
         resetButton = findViewById(R.id.recordexercise_button_reset_timer);
+        trackLocationSwitch = findViewById(R.id.recordexercise_switch_track_location);
 
         // Lets start up our recording controller
         startRecordingController();
 
         //Set up our sport type to textview
         Intent intentExerciseType = getIntent();
+        Log.d(TAG, "onCreate: ON LINE 84, getting extra");
         exerciseType = intentExerciseType.getStringExtra(NewRecordedExerciseActivity.REPLY_EXERCISE_TYPE);
         exerciseTypeTextView.setText(exerciseType);
 
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        Log.d("TESTI", "onDestroy called by system.");
+        Intent intent = new Intent(this, LocationTracking.class);
+        intent.setAction(LocationTracking.STOP_TRACKING);
+        getApplicationContext().startForegroundService(intent);
     }
 
 
@@ -107,13 +126,13 @@ public class StartExerciseActivity extends AppCompatActivity {
         public void run() {
             //Send notification for user
             if (sendNotification) {
-                setNotification();
+               setNotification();
             }
 
             //Get time if timer is running
             if (recordController.getTimerCounting()) {
                 Long timeCounter = Instant.now().toEpochMilli() - recordController.getStartTime().toInstant().toEpochMilli();
-                Log.d(TAG, "RecordTask run(): time in ms -> " + timeCounter);
+                //Log.d(TAG, "RecordTask run(): time in ms -> " + timeCounter);
                 totalTimeTextView.setText(timeStringFromLong(timeCounter));
             }
         }
@@ -128,10 +147,17 @@ public class StartExerciseActivity extends AppCompatActivity {
         totalTimeTextView.setText(timeStringFromLong(0L));
         startButton.setText(R.string.button_text_start);
         resetButton.setText(R.string.button_text_reset);
+
+        trackLocationSwitch.setClickable(true);
+        if(trackLocationSwitch.isChecked()){
+            stopTrackingLocation();
+            RouteContainer.getInstance().resetRoute();
+        }
     }
 
     //Stops timer
     private void stopTimer() {
+        Log.d(TAG, "stopTimer called");
         recordController.setTimerCounting(false);
         if (recordController.getTimerStartCount() > 0) {
             startButton.setText(R.string.button_text_resume);
@@ -142,6 +168,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     //Starts timer
     private void startTimer() {
         //If our timer is not yet active, create it.
+        Log.d(TAG, "startTimer called");
         if (timer == null) {
             timer = new Timer();
             timer.scheduleAtFixedRate(new RecordTask(), 0, 500);
@@ -159,8 +186,12 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     //Method for start(resume)/stop button
     private void startStopAction() {
+        Log.d(TAG, "startStopAction called ");
         if (recordController.getTimerCounting()) {
             recordController.setStopTime(ZonedDateTime.now());
+            if(trackLocationSwitch.isChecked()){
+                stopTrackingLocation();
+            }
             stopTimer();
         } else {
             if (recordController.getStopTime() != null) {
@@ -169,7 +200,12 @@ public class StartExerciseActivity extends AppCompatActivity {
             } else {
                 recordController.setStartTime(ZonedDateTime.now());
             }
+
+            if(trackLocationSwitch.isChecked()){
+                startTrackingLocation();
+            }
             startTimer();
+            trackLocationSwitch.setClickable(false);
         }
     }
 
@@ -192,7 +228,11 @@ public class StartExerciseActivity extends AppCompatActivity {
             Log.d(TAG, "calorieAmount after calculations: " + calorieAmount);
 
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
-            String[] dataForIntent = {exerciseType, recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount)};
+            String[] dataForIntent = {
+                    exerciseType,
+                    recordController.getStartTime().toString(),
+                    recordController.getStopTime().toString(),
+                    Integer.toString(calorieAmount)};
             //Time to send all recorded data into SaveExerciseActivity
             Intent intentForSaveActivity = new Intent(StartExerciseActivity.this, SaveExerciseActivity.class);
             intentForSaveActivity.putExtra(REPLY_RECORDED_EXERCISE, dataForIntent);
@@ -251,6 +291,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     // Copypasta: https://developer.android.com/training/notify-user/build-notification#java
     private void createNotificationChannel() {
+        Log.d(TAG, "createNotificationChannel: called");
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -268,6 +309,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     // Notification: https://developer.android.com/training/notify-user/build-notification#java
     private void setNotification() {
+        Log.d(TAG, "setNotification: called");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, CHANNEL_ID)
                 .setSmallIcon(com.google.android.material.R.drawable.notification_icon_background)
                 .setContentTitle(exerciseType)
@@ -279,5 +321,68 @@ public class StartExerciseActivity extends AppCompatActivity {
         notificationManager.notify(notificationID, builder.build());
         sendNotification = false; //boolean set to false so it will not spam notifications.
     }
+
+    public void checkPermissionToTrackLocation(View view){
+        //Check if app has permission to use device location.
+        if(trackLocationSwitch.isChecked()){
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },PERMISSION_FINE_LOCATION);
+            }
+        }
+    }
+
+    private void startTrackingLocation(){
+        //Check if app has permission to use device location.
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            startTrackingService();
+        }
+    }
+
+    public void stopTrackingLocation(){
+        if(LocationTracking.serviceRunning){
+            Intent intent = new Intent(this, LocationTracking.class);
+            intent.setAction(LocationTracking.STOP_TRACKING);
+//            startService(intent);
+            Context context = this;
+            context.startForegroundService(intent);
+//            getApplicationContext().startForegroundService(intent);
+        }
+    }
+
+    private void startTrackingService(){
+        if(!LocationTracking.serviceRunning){
+            Intent intent = new Intent(this, LocationTracking.class);
+            intent.setAction(LocationTracking.START_TRACKING);
+//            startService(intent);
+            Context context = this;
+            context.startForegroundService(intent);
+            //getApplicationContext().startForegroundService(intent);
+        }
+    }
+
+    @Override
+    //This method is called by Android when user responds to permission request.
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == PERMISSION_FINE_LOCATION){
+            if(permissionGranted(grantResults)){
+                //startTrackingLocation();
+            }
+        }
+        else if(requestCode == PERMISSION_READ_PHONE_STATE){
+            if(permissionGranted(grantResults)){
+                Intent intent = new Intent(this, SaveExerciseActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+
 
 }
