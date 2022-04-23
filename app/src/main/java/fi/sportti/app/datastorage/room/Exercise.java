@@ -146,4 +146,11 @@ public class Exercise {
     public int getDurationInMinutes() {
         return (int) ChronoUnit.MINUTES.between(startDate, endDate);
     }
+
+    public boolean hasRoute(){
+        if(route == null){
+            return false;
+        }
+        return !route.isEmpty();
+    }
 }

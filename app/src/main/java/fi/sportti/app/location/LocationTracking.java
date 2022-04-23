@@ -136,7 +136,7 @@ public class LocationTracking extends Service {
         //On older versions this ID is simply ignored.
         notification= new NotificationCompat.Builder(this, notificationChannelID)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.ic_baseline_location_on_24)
                 .setContentTitle("Sportti")
                 .setContentText(message)
                 .setPriority(NotificationManager.IMPORTANCE_MIN)
