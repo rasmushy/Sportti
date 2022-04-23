@@ -48,7 +48,6 @@ import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.location.RouteContainer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
@@ -76,7 +75,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
     String[] exerciseDataArray;
     private EditText userComment;
     private User user;
-    private MapView mMapView;
+    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,48 +90,17 @@ public class SaveExerciseActivity extends AppCompatActivity {
         getRecordedData();
         user = mainViewModel.getFirstUser();
 
-        mMapView = (MapView) findViewById(R.id.map);
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
-            mMapView.onCreate(savedInstanceState);
-            mMapView.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(MapboxMap mapboxMap) {
-                    Log.d("´TESTI", "onMapReady: MAP IS READY");
+        mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
+        mapView.onCreate(savedInstanceState);
 
-                    List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
-                    if(coordinates.isEmpty()){
-                        coordinates.add(new LatLng(60.2168,24.7104));
-                        coordinates.add(new LatLng(60.2144,24.7146));
-                        coordinates.add(new LatLng(60.2134,24.7193));
-                        coordinates.add(new LatLng(60.2137,24.7214));
-                        coordinates.add(new LatLng(60.2130,24.7236));
-                    }
-
-                    mMapView.setStreetMode();
-                    LatLng position = coordinates.get(0);
-                    CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(position, 12);
-                    mapboxMap.moveCamera(newPosition);
-                    MarkerOptions startMarker = new MarkerOptions();
-                    startMarker.position(coordinates.get(0));
-                    startMarker.setTitle("Alku");
-                    mapboxMap.addMarker(startMarker);
-
-                    MarkerOptions endMarker = new MarkerOptions();
-                    endMarker.position(coordinates.get(coordinates.size()-1));
-                    endMarker.setTitle("Loppu");
-                    mapboxMap.addMarker(endMarker);
-
-                    PolylineOptions polyline = new PolylineOptions();
-                    polyline.addAll(coordinates);
-                    polyline.width(3);
-                    polyline.color(Color.BLUE);
-                    mapboxMap.addPolyline(polyline);
-                }
-            });
+        if(RouteContainer.getInstance().hasRoute()){
+            //Check if app has READ_PHONE_STATE permission which is required to display map.
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+                setRouteOnMap();
+            }
         }
         else{
-            mMapView.setVisibility(View.INVISIBLE);
+            mapView.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -140,19 +108,19 @@ public class SaveExerciseActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        mapView.onResume();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+        mapView.onDestroy();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mMapView.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
 
     }
 
@@ -261,6 +229,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     Double.parseDouble(exerciseDataArray[6]),
                     exerciseDataArray[7]);
             mainViewModel.insertExercise(exercise); //Inserting exercise to database
+            RouteContainer.getInstance().resetRoute();
             Log.d(TAG, "savePressed() --> Exercise saved to database" +
                     "\n   type: " + exerciseDataArray[0] +
                     "\n   user id: " + userId +
@@ -313,9 +282,45 @@ public class SaveExerciseActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+        mapView.onPause();
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    private void setRouteOnMap(){
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
+                if(coordinates.isEmpty()){
+                    coordinates.add(new LatLng(60.2168,24.7104));
+                    coordinates.add(new LatLng(60.2144,24.7146));
+                    coordinates.add(new LatLng(60.2134,24.7193));
+                    coordinates.add(new LatLng(60.2137,24.7214));
+                    coordinates.add(new LatLng(60.2130,24.7236));
+                }
+
+                mapView.setStreetMode();
+                LatLng position = coordinates.get(0);
+                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(position, 12);
+                mapboxMap.moveCamera(newPosition);
+                MarkerOptions startMarker = new MarkerOptions();
+                startMarker.position(coordinates.get(0));
+                startMarker.setTitle("Alku");
+                mapboxMap.addMarker(startMarker);
+
+                MarkerOptions endMarker = new MarkerOptions();
+                endMarker.position(coordinates.get(coordinates.size()-1));
+                endMarker.setTitle("Loppu");
+                mapboxMap.addMarker(endMarker);
+
+                PolylineOptions polyline = new PolylineOptions();
+                polyline.addAll(coordinates);
+                polyline.width(3);
+                polyline.color(Color.BLUE);
+                mapboxMap.addPolyline(polyline);
+            }
+        });
     }
 }

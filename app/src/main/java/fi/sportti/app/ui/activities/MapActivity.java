@@ -36,7 +36,7 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_map);
-        mMapView = (MapView) findViewById(R.id.map);
+        mMapView = (MapView) findViewById(R.id.saveexercise_mapView_map_for_route);
 
 
         mMapView.onCreate(savedInstanceState);

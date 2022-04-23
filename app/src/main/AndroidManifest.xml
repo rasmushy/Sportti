@@ -29,6 +29,7 @@
             android:label="@string/save_exercise" />
         <activity
             android:name=".ui.activities.StartExerciseActivity"
+            android:launchMode="singleTop"
             android:exported="false"
             android:theme="@style/HiddenTitleTheme.Sportti" />
         <activity

@@ -83,7 +83,6 @@ public class StartExerciseActivity extends AppCompatActivity {
 
         //Set up our sport type to textview
         Intent intentExerciseType = getIntent();
-        Log.d(TAG, "onCreate: ON LINE 84, getting extra");
         exerciseType = intentExerciseType.getStringExtra(NewRecordedExerciseActivity.REPLY_EXERCISE_TYPE);
         exerciseTypeTextView.setText(exerciseType);
 
@@ -92,10 +91,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        Log.d("TESTI", "onDestroy called by system.");
-        Intent intent = new Intent(this, LocationTracking.class);
-        intent.setAction(LocationTracking.STOP_TRACKING);
-        getApplicationContext().startForegroundService(intent);
+        shutDownTrackingService();
     }
 
 
@@ -206,13 +202,16 @@ public class StartExerciseActivity extends AppCompatActivity {
     //Method for reset/end button
     private void resetEndAction() {
         trackLocationSwitch.setClickable(true);
-        if(trackLocationSwitch.isChecked()){
-            stopTrackingLocation();
-            RouteContainer.getInstance().resetRoute();
-        }
         if (recordController.getTimerCounting()) {
             resetAction();
+            if(trackLocationSwitch.isChecked()){
+                shutDownTrackingService();
+                RouteContainer.getInstance().resetRoute();
+            }
         } else {
+            if(trackLocationSwitch.isChecked()){
+                shutDownTrackingService();
+            }
             //First we check is there anything to be saved
             if (recordController.getStopTime() == null) {
                 return;
@@ -227,8 +226,10 @@ public class StartExerciseActivity extends AppCompatActivity {
             int calorieAmount = 0; //pretty useless training? TODO: calorie calculations
             Log.d(TAG, "calorieAmount after calculations: " + calorieAmount);
             int avgHeartRate = 0;
-            String route = ""; //TODO: route related stuff
-            double distance = 0.0; // TODO: distance related stuff
+            RouteContainer routeContainer = RouteContainer.getInstance();
+            String route = routeContainer.getRouteAsText();
+            double distance = routeContainer.getDistance();
+
             String comment = "";
 
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
@@ -349,26 +350,26 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-    public void stopTrackingLocation(){
+    private void stopTrackingLocation(){
         if(LocationTracking.serviceRunning){
             Intent intent = new Intent(this, LocationTracking.class);
             intent.setAction(LocationTracking.STOP_TRACKING);
-//            startService(intent);
             Context context = this;
             context.startForegroundService(intent);
-//            getApplicationContext().startForegroundService(intent);
         }
     }
 
     private void startTrackingService(){
-        if(!LocationTracking.serviceRunning){
-            Intent intent = new Intent(this, LocationTracking.class);
-            intent.setAction(LocationTracking.START_TRACKING);
-//            startService(intent);
-            Context context = this;
-            context.startForegroundService(intent);
-            //getApplicationContext().startForegroundService(intent);
-        }
+
+        Intent intent = new Intent(this, LocationTracking.class);
+        intent.setAction(LocationTracking.START_TRACKING);
+        Context context = this;
+        context.startForegroundService(intent);
+    }
+
+    private void shutDownTrackingService(){
+        Intent intent = new Intent(this, LocationTracking.class);
+        stopService(intent);
     }
 
     @Override

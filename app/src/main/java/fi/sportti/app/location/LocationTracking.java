@@ -6,10 +6,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
@@ -27,7 +25,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import fi.sportti.app.ui.activities.MainActivity;
 import fi.sportti.app.R;
 import fi.sportti.app.ui.activities.StartExerciseActivity;
 
@@ -36,42 +33,31 @@ public class LocationTracking extends Service {
     private static final String TAG = "TESTI"; // TAG for Log.d
     public static final String STOP_TRACKING = "STOP";
     public static final String START_TRACKING = "START";
+    public static final String SHUT_DOWN_TRACKING_SERVICE = "STOP_SERVICE";
     public static boolean serviceRunning = false;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallBack;
     private double currentLat = 0;
     private double currentLon = 0;
-    private double distance = 0;
-    private float[] results = new float[3];
+
+
+    private Notification notification;
+    private String trackingOnMessage = "Tracking location";
+    private String trackingPausedMessage = "Tracking location is paused.";
+
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
-
-        if(intent != null && intent.getAction() != null){
-            if(intent.getAction().equals(START_TRACKING)){
-                startTracking();
-            }
-            else if(intent.getAction().equals(STOP_TRACKING)){
-                stopTracking();
-                serviceRunning = false;
-                stopForeground(true);
-                stopSelf();
-            }
-        }
-        //return START_STICKY;
-       return super.onStartCommand(intent, flags, startId);
-    }
-
-    private void startTracking(){
-        serviceRunning = true;
-        Log.d("TESTI", "onStartCommand: STARTING FOREGROUND SERVICE ");
+    public void onCreate(){
+        super.onCreate();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(4000);
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
+        //Create callback which will be called everytime FusedLocationProviderClient updates phones location
+        //based on interval times set.
         locationCallBack = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
@@ -79,65 +65,97 @@ public class LocationTracking extends Service {
                 processResult(locationResult);
             }
         };
+        Log.d(TAG, "onCreate: Location tracking service created");
+    }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        stopTracking();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        if(intent != null && intent.getAction() != null){
+            String action = intent.getAction();
+            if(action.equals(START_TRACKING)){
+                serviceRunning = true;
+                startTracking();
+                createNotification(trackingOnMessage);
+                startForeground(1001, notification);
+            }
+            else if(action.equals(STOP_TRACKING)){
+                serviceRunning = true;
+                stopTracking();
+                createNotification(trackingPausedMessage);
+                startForeground(1001, notification);
+            }
+            else if(action.equals(SHUT_DOWN_TRACKING_SERVICE)){
+                serviceRunning = false;
+                stopTracking();
+                stopForeground(true);
+                stopSelf();
+            }
+        }
+        return START_NOT_STICKY;
+    }
+
+    private void startTracking(){
+        Log.d("TESTI", "onStartCommand: STARTING TRACKING ");
+        //Check that app has permission to location before requesting location updates.
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
         }
-
-        //Code on how to create notification for foreground service found from https://stackoverflow.com/questions/47531742/startforeground-fail-after-upgrade-to-android-8-1
-        String NOTIFICATION_CHANNEL_ID = "Sportti Foreground Service ID";
-        String channelName = "My Background Service";
-        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
-        chan.setLightColor(Color.BLUE);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        assert manager != null;
-        manager.createNotificationChannel(chan);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-        Notification notification = notificationBuilder.setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("Sportti")
-                .setContentText("Tracking location")
-                .setPriority(NotificationManager.IMPORTANCE_MIN)
-                .setCategory(Notification.CATEGORY_SERVICE)
-                .build();
-
-
-//        String channelID = "Foreground Service ID";
-//        Intent notificationIntent = new Intent(this, MainActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-//        Notification notification =
-//                new Notification.Builder(this, channelID)
-//                        .setContentTitle("Sportti")
-//                        .setContentText("Tracking location")
-//                        .setSmallIcon(R.drawable.ic_launcher_background)
-//                        .setContentIntent(pendingIntent)
-//                        .build();
-        startForeground(1001, notification);
-
     }
 
     private void stopTracking(){
-        Log.d("TESTI", "onStartCommand: STOPPING FOREGROUND SERVICE ");
         if(fusedLocationProviderClient != null){
             fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
         }
     }
 
+    private void createNotification(String message){
+        //Location tracking service will be started as foreground service. This service requires Notification.
+        //In the code below, this Notification is built.
+
+        //With Android Oreo versions or higher, notification has to be made with notification channel.
+        String notificationChannelID = "Sportti Notification Channel";
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            String channelName = "Sportti foreground tracking channel";
+            NotificationChannel channel = new NotificationChannel(notificationChannelID, channelName, NotificationManager.IMPORTANCE_MIN);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
+        Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        //Build Notification. Notification Channel ID is passed to constructor to support newer versions of Android (Oreo and newer).
+        //On older versions this ID is simply ignored.
+        notification= new NotificationCompat.Builder(this, notificationChannelID)
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Sportti")
+                .setContentText(message)
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setContentIntent(pendingIntent)
+                .build();
+    }
+
     private void processResult(LocationResult locationResult){
+        Log.d(TAG, "processResult: ");
         Location location = locationResult.getLastLocation();
-        if(currentLat != 0 && currentLat != 0){
-            Location.distanceBetween(currentLat, currentLon, location.getLatitude(), location.getLongitude(), results);
-            distance += results[0];
-        }
-        if(location.getLatitude() != currentLat && location.getLongitude() != currentLon){
-            currentLat = location.getLatitude();
-            currentLon = location.getLongitude();
+        double newLat = location.getLatitude();
+        double newLon = location.getLongitude();
+        if(newLat != currentLat || newLon != currentLon){
+            currentLat = newLat;
+            currentLon = newLon;
             RouteContainer.getInstance().addLocation(location);
+            Log.d(TAG, "Added new location to route");
         }
-        Log.d("TESTI", "lat: " + String.valueOf(location.getLatitude()) + ", lon: " + String.valueOf(location.getLongitude()));
+//        Log.d("TESTI", "lat: " + String.valueOf(location.getLatitude()) + ", lon: " + String.valueOf(location.getLongitude()));
     }
 
     @Nullable
