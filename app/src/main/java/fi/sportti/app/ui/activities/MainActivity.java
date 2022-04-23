@@ -19,33 +19,30 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
-/*
- * @author rasmushy, lassib
+/**
+ * @author lassib
  */
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity"; // TAG for Log.d
-
     private static MainViewModel mainViewModel;
-
     private User user;
-    private List<User> userList;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        userList = new ArrayList<>();
         //Setup our access to database
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-        mainViewModel.getAllUsers().observe(this, users -> userList = users);
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
     }
@@ -58,16 +55,15 @@ public class MainActivity extends AppCompatActivity {
     private void initialStartUp() {
         Log.d(TAG, "initialStartUp() launched");
         if (mainViewModel.getFirstUser() != null) {
-            Log.d(TAG, "initialStartUp() if statement not null");
-            Log.d(TAG, "initialStartup() userList value: " + userList.toString());
+            Log.d(TAG, "initialStartUp() if statement not null " + mainViewModel.getFirstUser().getUserName());
             //Lets make another user and compare it to our first user in db
             User plainUser = new User();
             //Get our db's first user
             user = mainViewModel.getFirstUser();
             //If they are not equal then we have user that added personal info's
-            if (!user.equals(plainUser)) {
-                Log.d(TAG, "InitialStartUp() welcomes user, hi!");
-                //TODO: Welcome our user
+            if (!Objects.equals(user, plainUser)) {
+                Log.d(TAG, "InitialStartUp() welcomes user, hi! " + user.getuid());
+                //TODO: Welcome our user in a textview or something
             }
             return;
         }
@@ -85,13 +81,12 @@ public class MainActivity extends AppCompatActivity {
      * Methods for buttons
      */
 
-
-    public void openHistoryActivity(View view){
+    public void openHistoryActivity(View view) {
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 
-    public void openProfileActivity(View view){
+    public void openProfileActivity(View view) {
         //method here
     }
 
@@ -99,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
      *@author Lassi Bågman
      * Method for pop up
      */
-    public void selectExerciseTypePopUp(View view){
+    public void selectExerciseTypePopUp(View view) {
         //Variables for exercise pop up
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
@@ -109,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         Button save = (Button) selectExercisePopUpView.findViewById(R.id.buttonSaveExercisePopUp);
 
         AlertDialog dialog = dialogBuilder.create();
+        dialog = dialogBuilder.create();
         dialog.show();
 
         start.setOnClickListener(new View.OnClickListener() {
@@ -128,5 +124,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (dialog != null) {
+            dialog.dismiss();
+        }
     }
 }

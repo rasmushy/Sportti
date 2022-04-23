@@ -4,19 +4,17 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.time.ZoneId;
 import java.util.Date;
 
-/*
- * @author rasmushy
+/**
+ * @author Rasmus Hyyppä
  * Entity class for user
  */
 
 @Entity(tableName = "user_data")
 public class User {
 
-    /*
-     * @author Rasmus Hyyppä
+    /**
      * Default values for user in constructor. This allows user to look around in app without
      * adding any personal information.
      */
@@ -51,10 +49,6 @@ public class User {
     //Setters & Getters for user
     public int getuid() {
         return this.uid;
-    }
-
-    public void setuid(int uId) {
-        this.uid = uId;
     }
 
     public void setUserName(String userName) {

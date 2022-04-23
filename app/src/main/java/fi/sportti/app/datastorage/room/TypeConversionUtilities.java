@@ -11,11 +11,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-/*
- * @author rasmushy
+/**
+ * @author Rasmus Hyyppä
+ * Type conversion utilities for SporttiDatabase
  */
 
-// Typeconversion utilities for SporttiDatabase
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class TypeConversionUtilities {
 

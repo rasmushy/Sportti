@@ -12,14 +12,16 @@
 
         <activity
             android:name=".ui.activities.SaveExerciseActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/save_exercise" />
         <activity
             android:name=".ui.activities.StartExerciseActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/HiddenTitleTheme.Sportti" />
         <activity
             android:name=".ui.activities.ExerciseDetailsActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.HistoryActivity"/>
+            android:parentActivityName=".ui.activities.HistoryActivity" />
         <activity
             android:name=".ui.activities.HistoryActivity"
             android:exported="false" />
@@ -35,11 +37,11 @@
             android:name=".ui.activities.NewRecordedExerciseActivity"
             android:label="@string/new_exercise"
             android:parentActivityName=".ui.activities.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
+        <!--MainActivity is landing page when you open application-->
         <activity
             android:name=".ui.activities.MainActivity"
             android:exported="true">

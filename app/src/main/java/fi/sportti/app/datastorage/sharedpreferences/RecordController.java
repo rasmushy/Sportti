@@ -10,7 +10,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 
-/*
+/**
  * @author Rasmus Hyyppä
  * Controller for keeping up timer for recorded exercise
  * It saves timer data to shared preferences
