@@ -17,7 +17,12 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 
-/*Own class for creating custom views so we can draw graphs.
+/**
+ *@author Jukka-Pekka Jaakkola
+ * Own class for creating custom views so we can draw graphs.
+ */
+
+/*
 * Basic idea how to build own custom Views learnt from this article
 * https://medium.com/@mayurjajoomj/custom-graphs-custom-view-android-862e16813cc*/
 
@@ -117,14 +122,14 @@ public class CustomGraph extends View  {
             drawDailyGraph = true;
             drawMonthlyGraph = false;
             graphTimePeriod = DAYS_OF_WEEK;
-            graphMaxValue = 10;
+            graphMaxValue = 5;
             rectWidth = graphWidth / (DAYS_OF_WEEK * 2);
         }
         else if(style == MONTHS_OF_YEAR){
             drawDailyGraph = false;
             drawMonthlyGraph = true;
             graphTimePeriod = MONTHS_OF_YEAR;
-            graphMaxValue = 200;
+            graphMaxValue = 100;
             rectWidth = graphWidth / (MONTHS_OF_YEAR * 2);
         }
         date = ZonedDateTime.now();

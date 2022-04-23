@@ -29,6 +29,10 @@ import fi.sportti.app.ui.CustomGraph;
 import fi.sportti.app.ui.adapters.ExerciseAdapter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
+/**
+ *@author Jukka-Pekka Jaakkola
+ */
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class HistoryActivity extends AppCompatActivity {
     public static final String TAG = "testailua";

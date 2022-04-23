@@ -31,6 +31,10 @@ import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.location.RouteContainer;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
+/**
+ *@author Jukka-Pekka Jaakkola
+ */
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ExerciseDetailsActivity extends AppCompatActivity {
 

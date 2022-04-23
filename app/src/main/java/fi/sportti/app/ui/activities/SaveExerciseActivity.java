@@ -64,7 +64,6 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SaveExerciseActivity extends AppCompatActivity {
-    private static final int PERMISSION_READ_PHONE_STATE = 101;
     private static final String TAG = "SaveExerciseActivity";
 
     private MainViewModel mainViewModel;

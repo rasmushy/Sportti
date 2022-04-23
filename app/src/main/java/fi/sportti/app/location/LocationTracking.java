@@ -28,12 +28,15 @@ import com.google.android.gms.location.LocationServices;
 import fi.sportti.app.R;
 import fi.sportti.app.ui.activities.StartExerciseActivity;
 
+/**
+ *@author Jukka-Pekka Jaakkola
+ */
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationTracking extends Service {
     private static final String TAG = "TESTI"; // TAG for Log.d
-    public static final String STOP_TRACKING = "STOP";
-    public static final String START_TRACKING = "START";
-    public static final String SHUT_DOWN_TRACKING_SERVICE = "STOP_SERVICE";
+    public static final String STOP_TRACKING = "fi.sportti.action.STOP_TRACKING";
+    public static final String START_TRACKING = "fi.sportti.action.START_TRACKING";
     public static boolean serviceRunning = false;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
@@ -89,12 +92,6 @@ public class LocationTracking extends Service {
                 stopTracking();
                 createNotification(trackingPausedMessage);
                 startForeground(1001, notification);
-            }
-            else if(action.equals(SHUT_DOWN_TRACKING_SERVICE)){
-                serviceRunning = false;
-                stopTracking();
-                stopForeground(true);
-                stopSelf();
             }
         }
         return START_NOT_STICKY;

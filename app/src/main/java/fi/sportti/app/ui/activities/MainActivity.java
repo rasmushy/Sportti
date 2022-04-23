@@ -55,35 +55,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
 
+        //At App startup ask for READ_PHONE_STATE permission which is required to display maps.
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },PERMISSION_READ_PHONE_STATE);
-//            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-//            final View informationView = getLayoutInflater().inflate(R.layout.informative_ui_before_asking_permissions, null);
-//            dialogBuilder.setView(informationView);
-//            informationAboutPermissions = dialogBuilder.create();
-//            informationAboutPermissions.show();
-
-
         }
-
     }
-
-    public void closeInformationPopUp(View view){
-
-//        if(informationAboutPermissions != null){
-//            informationAboutPermissions.dismiss();
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//
-//
-//                }
-//            }, 1000);
-//
-//        }
-    }
-
 
     /*
      * @author Rasmus Hyyppä
@@ -160,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     *@author Jukka-Pekka Jaakkola
+     */
     @Override
     //This method is called by Android when user responds to permission request.
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

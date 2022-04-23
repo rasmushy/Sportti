@@ -23,6 +23,10 @@ import java.util.List;
 import fi.sportti.app.R;
 import fi.sportti.app.location.RouteContainer;
 
+/**
+ *@author Jukka-Pekka Jaakkola
+ */
+
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class MapActivity extends AppCompatActivity {
 

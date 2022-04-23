@@ -228,7 +228,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             int avgHeartRate = 0;
             RouteContainer routeContainer = RouteContainer.getInstance();
             String route = routeContainer.getRouteAsText();
-            double distance = routeContainer.getDistance();
+            double distance = routeContainer.getRouteLength();
 
             String comment = "";
 
@@ -331,6 +331,11 @@ public class StartExerciseActivity extends AppCompatActivity {
         notificationManager.notify(notificationID, builder.build());
         sendNotification = false; //boolean set to false so it will not spam notifications.
     }
+
+
+    /*
+     *@author Jukka-Pekka Jaakkola
+     */
 
     public void checkPermissionToTrackLocation(View view){
         //Check if app has permission to use device location.
