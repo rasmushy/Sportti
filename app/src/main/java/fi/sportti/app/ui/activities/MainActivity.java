@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
      *@author Lassi Bågman
      * Method for pop up
      */
-    public void selectExerciseTypePopUp(View view) {
+    public void onClickNewExercise(View view) {
         //Variables for exercise pop up
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         Button save = (Button) selectExercisePopUpView.findViewById(R.id.buttonSaveExercisePopUp);
 
         AlertDialog dialog = dialogBuilder.create();
-        dialog = dialogBuilder.create();
         dialog.show();
 
         start.setOnClickListener(new View.OnClickListener() {
