@@ -7,12 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.NewManualExerciseActivity">
 
+    <Button
+        android:id="@+id/buttonPulse"
+        android:layout_width="150dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
+        android:onClick="openGiveAveragePulse"
+        android:text="Average pulse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCalories" />
+
     <TextView
-        android:id="@+id/textViewDistance2"
+        android:id="@+id/textViewPulse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="58dp"
         android:text="TextView"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonCalories"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCalories" />
+
+    <TextView
+        android:id="@+id/textViewCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="59dp"
+        android:text="TextView"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonCalories"
         app:layout_constraintTop_toBottomOf="@+id/textViewDistance" />
@@ -23,6 +48,7 @@
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
+        android:onClick="openGiveCalories"
         android:text="Calories"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -33,12 +59,14 @@
         android:id="@+id/textViewDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="59dp"
         android:text="TextView"
+        android:textSize="16sp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonDistance"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEndTime" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewDuration"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/buttonDistance"
@@ -46,12 +74,14 @@
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
+        android:onClick="openGiveDistance"
         android:text="Give distance"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonEndTime" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonDuration"
+        tools:visibility="visible" />
 
     <Spinner
         android:id="@+id/spinnerSelectActivity"
@@ -63,46 +93,49 @@
         app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.132" />
+        app:layout_constraintVertical_bias="0.100000024" />
 
     <TextView
-        android:id="@+id/textViewActivity"
+        android:id="@+id/textViewExercise"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Exercise"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerSelectActivity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewAddNewExercise"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Activity"
-        app:layout_constraintBottom_toTopOf="@+id/spinnerSelectActivity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.06"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <TextView
-        android:id="@+id/textViewAddNewActivity"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Add new activity"
+        android:text="Add new exercise"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.875"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.066" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/imageButtonAddNew"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:contentDescription="addNew"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/spinnerSelectActivity"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddNewExercise"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <Button
@@ -110,7 +143,8 @@
         android:layout_width="150dp"
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
+        android:onClick="openSelectStartTime"
         android:text="Select start time"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -119,42 +153,47 @@
         app:layout_constraintTop_toBottomOf="@+id/spinnerSelectActivity" />
 
     <Button
-        android:id="@+id/buttonEndTime"
+        android:id="@+id/buttonDuration"
         android:layout_width="150dp"
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
-        android:text="Select start time"
+        android:onClick="openSelectDuration"
+        android:text="Select duration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonStartTime" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonStartTime"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/textViewStartTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonStartTime"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.29" />
+        app:layout_constraintVertical_bias="0.23000002" />
 
     <TextView
-        android:id="@+id/textViewEndTime"
+        android:id="@+id/textViewDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="59dp"
         android:text="TextView"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonEndTime"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStartTime" />
+        app:layout_constraintStart_toEndOf="@+id/buttonDuration"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStartTime"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/buttonSaveExercise"
         android:layout_width="200dp"
-        android:layout_height="75dp"
+        android:layout_height="55dp"
         android:text="Save exercise"
         android:textAlignment="center"
         android:textSize="16sp"
@@ -162,6 +201,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.95" />
+
+    <EditText
+        android:id="@+id/editTextTextComment"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:ems="10"
+        android:hint="Comment here"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSaveExercise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPulse" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
