@@ -4,7 +4,12 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
-import android.util.Log;
+
+/**
+ * @author Jukka-Pekka Jaakkola
+ * Only purpose of this class is to create one Notification Channel for application on Android versions Oreo or higher.
+ * All other classes where Notifications are used, can use this same channel instead of creating their owns.
+ * */
 
 public class App extends Application {
 

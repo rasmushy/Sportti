@@ -367,7 +367,6 @@ public class StartExerciseActivity extends AppCompatActivity {
     }
 
     private void startTrackingService(){
-
         Intent intent = new Intent(this, LocationTracking.class);
         intent.setAction(LocationTracking.START_TRACKING);
         Context context = this;
@@ -384,14 +383,8 @@ public class StartExerciseActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == PERMISSION_FINE_LOCATION){
-            if(permissionGranted(grantResults)){
-                //startTrackingLocation();
-            }
-        }
-        else if(requestCode == PERMISSION_READ_PHONE_STATE){
-            if(permissionGranted(grantResults)){
-                Intent intent = new Intent(this, SaveExerciseActivity.class);
-                startActivity(intent);
+            if(!permissionGranted(grantResults)){
+                trackLocationSwitch.setChecked(false);
             }
         }
     }

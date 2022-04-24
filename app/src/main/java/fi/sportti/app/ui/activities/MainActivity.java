@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private static MainViewModel mainViewModel;
     private User user;
     private AlertDialog dialog;
-    private AlertDialog informationAboutPermissions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

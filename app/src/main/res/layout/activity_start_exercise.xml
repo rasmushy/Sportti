@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:onClick="checkPermissionToTrackLocation"
-        android:text="Track Location"
+        android:text="@string/recordexercise_switch_text"
         android:textSize="24sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -91,10 +91,10 @@ public class HistoryActivity extends AppCompatActivity {
                 float xDelta = Math.abs(x2 - x1);
                 if (xDelta > 100) {
                     if (x1 > x2) {
-                        Log.d(TAG, "onFling: swiped left");
+                        //User swiped left
                         showNext();
                     } else if (x1 < x2) {
-                        Log.d(TAG, "onFling: swiped right");
+                        //User swiped right
                         showPrevious();
                     }
                 }

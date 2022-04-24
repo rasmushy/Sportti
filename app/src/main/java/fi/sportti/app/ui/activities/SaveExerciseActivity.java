@@ -97,6 +97,9 @@ public class SaveExerciseActivity extends AppCompatActivity {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
                 setRouteOnMap();
             }
+            else{
+                mapView.setVisibility(View.INVISIBLE);
+            }
         }
         else{
             mapView.setVisibility(View.INVISIBLE);
@@ -292,26 +295,23 @@ public class SaveExerciseActivity extends AppCompatActivity {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
-                if(coordinates.isEmpty()){
-                    coordinates.add(new LatLng(60.2168,24.7104));
-                    coordinates.add(new LatLng(60.2144,24.7146));
-                    coordinates.add(new LatLng(60.2134,24.7193));
-                    coordinates.add(new LatLng(60.2137,24.7214));
-                    coordinates.add(new LatLng(60.2130,24.7236));
-                }
-
                 mapView.setStreetMode();
-                LatLng position = coordinates.get(0);
-                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(position, 12);
+                LatLng startPosition = coordinates.get(0);
+                LatLng endPosition = coordinates.get(coordinates.size()-1);
+                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
                 mapboxMap.moveCamera(newPosition);
+
+                String startMarkerText = getResources().getString(R.string.map_start_marker);
+                String endMarkerText = getResources().getString(R.string.map_end_marker);
+
                 MarkerOptions startMarker = new MarkerOptions();
                 startMarker.position(coordinates.get(0));
-                startMarker.setTitle("Alku");
+                startMarker.setTitle(startMarkerText);
                 mapboxMap.addMarker(startMarker);
 
                 MarkerOptions endMarker = new MarkerOptions();
-                endMarker.position(coordinates.get(coordinates.size()-1));
-                endMarker.setTitle("Loppu");
+                endMarker.position(endPosition);
+                endMarker.setTitle(endMarkerText);
                 mapboxMap.addMarker(endMarker);
 
                 PolylineOptions polyline = new PolylineOptions();

@@ -17,7 +17,39 @@
     <string name="comment">Comment:</string>
     <string name="save_exercise">Save exercise</string>
     <string name="delete">Delete</string>
-    <string name="informative_message_for_permissions">Sportti asks permission to make and manage phone calls in order to display maps on App.</string>
+
+     <!-- Record exercise -->
+    <string name="recordexercise_switch_text">Save route</string>
+
+    <!-- History page -->
+    <string name="history_days">Days</string>
+    <string name="history_months">Months</string>
+    <string name="history_old_exercises">Exercises</string>
+
+    <!-- Exercise details page -->
+    <string name="exercisedetails_sport_default_value">Sport</string>
+    <string name="exercisedetails_start_date">Start:</string>
+    <string name="exercisedetails_duration">Duration:</string>
+    <string name="exercisedetails_calories">Calories:</string>
+    <string name="exercisedetails_length">Length:</string>
+    <string name="exercisedetails_pulse">Average pulse:</string>
+
+    <!-- Location tracking notification texts -->
+    <string name="notification_location_tracking_title">Sportti</string>
+    <string name="notification_location_tracking_on_message">Tracking location</string>
+    <string name="notification_location_tracking_paused_message">Location tracking is paused</string>
+
+    <!-- Custom graph -->
+    <string name="customgraph_y_axis_name">Hours</string>
+
+    <!-- Text for maps -->
+    <string name="map_start_marker">Start</string>
+    <string name="map_end_marker">End</string>
+
+
+
+    <!-- Not used currently  -->
+ <string name="informative_message_for_permissions">Sportti asks permission to make and manage phone calls in order to display maps on App.</string>
 
 
 </resources>

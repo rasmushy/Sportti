@@ -25,6 +25,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.Locale;
+
 import fi.sportti.app.App;
 import fi.sportti.app.R;
 import fi.sportti.app.ui.activities.StartExerciseActivity;
@@ -45,10 +47,9 @@ public class LocationTracking extends Service {
     private double currentLat = 0;
     private double currentLon = 0;
 
-
     private Notification notification;
-    private String trackingOnMessage = "Tracking location";
-    private String trackingPausedMessage = "Tracking location is paused.";
+    private String trackingOnMessage;
+    private String trackingPausedMessage;
 
 
     @Override
@@ -59,6 +60,9 @@ public class LocationTracking extends Service {
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        trackingOnMessage = getResources().getString(R.string.notification_location_tracking_on_message);
+        trackingPausedMessage = getResources().getString(R.string.notification_location_tracking_paused_message);
 
         //Create callback which will be called everytime FusedLocationProviderClient updates phones location
         //based on interval times set.
@@ -99,7 +103,6 @@ public class LocationTracking extends Service {
     }
 
     private void startTracking(){
-        Log.d("TESTI", "onStartCommand: STARTING TRACKING ");
         //Check that app has permission to location before requesting location updates.
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -117,25 +120,17 @@ public class LocationTracking extends Service {
         //Location tracking service will be started as foreground service. This service requires Notification.
         //In the code below, this Notification is built.
 
-        //With Android Oreo versions or higher, notification has to be made with notification channel.
-//        String notificationChannelID = "Sportti Notification Channel";
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-//            String channelName = "Sportti foreground tracking channel";
-//            NotificationChannel channel = new NotificationChannel(notificationChannelID, channelName, NotificationManager.IMPORTANCE_MIN);
-//            NotificationManager manager = getSystemService(NotificationManager.class);
-//            manager.createNotificationChannel(channel);
-//        }
-
         //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
         Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         //Build Notification. Notification Channel ID is passed to constructor to support newer versions of Android (Oreo and newer).
         //On older versions this ID is simply ignored.
+        String title = getResources().getString(R.string.notification_location_tracking_title);
         notification= new NotificationCompat.Builder(this, App.NOTIFICATION_CHANNEL_ID)
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_baseline_location_on_24)
-                .setContentTitle("Sportti")
+                .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                 .setContentIntent(pendingIntent)
@@ -143,7 +138,6 @@ public class LocationTracking extends Service {
     }
 
     private void processResult(LocationResult locationResult){
-        Log.d(TAG, "processResult: ");
         Location location = locationResult.getLastLocation();
         double newLat = location.getLatitude();
         double newLon = location.getLongitude();

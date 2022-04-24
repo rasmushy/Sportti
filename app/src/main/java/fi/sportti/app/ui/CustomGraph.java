@@ -17,6 +17,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 
+import fi.sportti.app.R;
+
 /**
  *@author Jukka-Pekka Jaakkola
  * Own class for creating custom views so we can draw graphs.
@@ -140,7 +142,8 @@ public class CustomGraph extends View  {
         canvas.drawLine(origoX, origoY, origoX, yTopOffset-50, axisPaint);
         //x-axis
         canvas.drawLine(origoX, origoY, viewWidth - origoX, origoY, axisPaint);
-        canvas.drawText("Tunnit", 30, 30, textPaint);
+        String text = getResources().getString(R.string.customgraph_y_axis_name);
+        canvas.drawText(text, 30, 30, textPaint);
     }
 
     private void drawDataPoints(){
@@ -189,7 +192,7 @@ public class CustomGraph extends View  {
         }
         String text = getTextForDataPoint(date);
         canvas.drawText(text, xPos-40, origoY + 50, textPaint);
-        canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
+        //canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
     }
 
     private void drawBar(double hours, int xPos){

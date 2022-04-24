@@ -21,7 +21,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapquest.mapping.MapQuest;
 import com.mapquest.mapping.maps.MapView;
 
-import java.text.DecimalFormat;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -58,7 +57,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         durationTextView = findViewById(R.id.exercisedetails_textview_duration_value);
         caloriesTextView = findViewById(R.id.exercisedetails_textview_calories_value);
         pulseTextView = findViewById(R.id.exercisedetails_textview_pulse_value);
-        distanceTextView = findViewById(R.id.exercisedetails_textview_distance_value);
+        distanceTextView = findViewById(R.id.exercisedetails_textview_length_value);
         mapView = findViewById(R.id.exercisedetails_mapView_map_for_route);
         mapView.onCreate(savedInstanceState);
 
@@ -110,26 +109,22 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
             public void onMapReady(MapboxMap mapboxMap) {
                 String route = exercise.getRoute();
                 List<LatLng> coordinates = RouteContainer.getInstance().convertTextRouteToList(route);
-                if(coordinates.isEmpty()){
-                    coordinates.add(new LatLng(60.2168,24.7104));
-                    coordinates.add(new LatLng(60.2144,24.7146));
-                    coordinates.add(new LatLng(60.2134,24.7193));
-                    coordinates.add(new LatLng(60.2137,24.7214));
-                    coordinates.add(new LatLng(60.2130,24.7236));
-                }
-
                 mapView.setStreetMode();
-                LatLng position = coordinates.get(0);
-                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(position, 12);
+                LatLng startPosition = coordinates.get(0);
+                LatLng endPosition = coordinates.get(coordinates.size()-1);
+                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
                 mapboxMap.moveCamera(newPosition);
+
                 MarkerOptions startMarker = new MarkerOptions();
                 startMarker.position(coordinates.get(0));
-                startMarker.setTitle("Alku");
+                String startMarkerText = getResources().getString(R.string.map_start_marker);
+                String endMarkerText = getResources().getString(R.string.map_end_marker);
+                startMarker.setTitle(startMarkerText);
                 mapboxMap.addMarker(startMarker);
 
                 MarkerOptions endMarker = new MarkerOptions();
-                endMarker.position(coordinates.get(coordinates.size()-1));
-                endMarker.setTitle("Loppu");
+                endMarker.position(endPosition);
+                endMarker.setTitle(endMarkerText);
                 mapboxMap.addMarker(endMarker);
 
                 PolylineOptions polyline = new PolylineOptions();
@@ -157,6 +152,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
 
         return sb.toString();
     }
+
 
     private String formatDuration(int duration){
         String result = "";
