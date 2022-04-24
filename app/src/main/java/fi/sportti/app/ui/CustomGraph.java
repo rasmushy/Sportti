@@ -191,7 +191,7 @@ public class CustomGraph extends View  {
             drawLine(hours, xPos);
         }
         String text = getTextForDataPoint(date);
-        canvas.drawText(text, xPos-40, origoY + 50, textPaint);
+        canvas.drawText(text, xPos, origoY + 50, textPaint);
         //canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
     }
 
@@ -210,7 +210,6 @@ public class CustomGraph extends View  {
         path.moveTo(xPos, newY);
         int radius = 13;
         canvas.drawCircle(xPos, newY, radius, barPaint);
-
     }
 
     private void drawHorizontalMarks() {

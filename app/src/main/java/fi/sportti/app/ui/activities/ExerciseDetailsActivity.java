@@ -83,7 +83,6 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void setInformationOnScreen(Exercise exercise){

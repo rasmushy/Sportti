@@ -120,7 +120,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
-        // createTestExercises();
+//         createTestExercises();
         //mainViewModel.deleteAllExercises();
 
     }
