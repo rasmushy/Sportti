@@ -32,6 +32,7 @@ import java.time.ZonedDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fi.sportti.app.App;
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.sharedpreferences.RecordController;
 import fi.sportti.app.location.LocationTracking;
@@ -48,7 +49,7 @@ import fi.sportti.app.location.RouteContainer;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class StartExerciseActivity extends AppCompatActivity {
     public static final String REPLY_RECORDED_EXERCISE = "fi.sportti.app.REPLY_RECORDED_EXERCISE";
-    public static final String CHANNEL_ID = "Sportti";
+    //public static final String CHANNEL_ID = "Sportti";
 
     private static final int PERMISSION_FINE_LOCATION = 100;
     private static final int PERMISSION_READ_PHONE_STATE = 101;
@@ -70,7 +71,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_exercise);
-        createNotificationChannel();
+        //createNotificationChannel();
         //Initialize button's and text view's
         totalTimeTextView = findViewById(R.id.recordexercise_textview_time);
         exerciseTypeTextView = findViewById(R.id.recordexercise_textview_sport_name);
@@ -122,8 +123,9 @@ public class StartExerciseActivity extends AppCompatActivity {
     private class RecordTask extends TimerTask {
         @Override
         public void run() {
-            //Send notification for user
-            if (sendNotification) {
+            //Send notification for user. If location tracking is turned on,
+            // then location tracking service will show notification.
+            if (sendNotification && !trackLocationSwitch.isChecked()) {
                setNotification();
             }
 
@@ -299,32 +301,32 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-    // Copypasta: https://developer.android.com/training/notify-user/build-notification#java
-    private void createNotificationChannel() {
-        Log.d(TAG, "createNotificationChannel: called");
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
+//    // Copypasta: https://developer.android.com/training/notify-user/build-notification#java
+//    private void createNotificationChannel() {
+//        Log.d(TAG, "createNotificationChannel: called");
+//        // Create the NotificationChannel, but only on API 26+ because
+//        // the NotificationChannel class is new and not in the support library
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = getString(R.string.channel_name);
+//            String description = getString(R.string.channel_description);
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+//            channel.setDescription(description);
+//            // Register the channel with the system; you can't change the importance
+//            // or other notification behaviors after this
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//    }
 
     // Notification: https://developer.android.com/training/notify-user/build-notification#java
     private void setNotification() {
         Log.d(TAG, "setNotification: called");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, App.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(com.google.android.material.R.drawable.notification_icon_background)
                 .setContentTitle(exerciseType)
                 .setContentText("Sportti is running in the background")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_STOPWATCH);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(StartExerciseActivity.this);

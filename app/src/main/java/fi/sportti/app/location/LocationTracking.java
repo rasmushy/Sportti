@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import fi.sportti.app.App;
 import fi.sportti.app.R;
 import fi.sportti.app.ui.activities.StartExerciseActivity;
 
@@ -117,13 +118,13 @@ public class LocationTracking extends Service {
         //In the code below, this Notification is built.
 
         //With Android Oreo versions or higher, notification has to be made with notification channel.
-        String notificationChannelID = "Sportti Notification Channel";
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            String channelName = "Sportti foreground tracking channel";
-            NotificationChannel channel = new NotificationChannel(notificationChannelID, channelName, NotificationManager.IMPORTANCE_MIN);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
+//        String notificationChannelID = "Sportti Notification Channel";
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            String channelName = "Sportti foreground tracking channel";
+//            NotificationChannel channel = new NotificationChannel(notificationChannelID, channelName, NotificationManager.IMPORTANCE_MIN);
+//            NotificationManager manager = getSystemService(NotificationManager.class);
+//            manager.createNotificationChannel(channel);
+//        }
 
         //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
         Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
@@ -131,12 +132,12 @@ public class LocationTracking extends Service {
 
         //Build Notification. Notification Channel ID is passed to constructor to support newer versions of Android (Oreo and newer).
         //On older versions this ID is simply ignored.
-        notification= new NotificationCompat.Builder(this, notificationChannelID)
+        notification= new NotificationCompat.Builder(this, App.NOTIFICATION_CHANNEL_ID)
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_baseline_location_on_24)
                 .setContentTitle("Sportti")
                 .setContentText(message)
-                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .build();
     }
