@@ -32,7 +32,8 @@
             android:name=".ui.activities.StartExerciseActivity"
             android:launchMode="singleTop"
             android:exported="false"
-            android:theme="@style/HiddenTitleTheme.Sportti" />
+            android:theme="@style/HiddenTitleTheme.Sportti"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.ExerciseDetailsActivity"
             android:exported="false"

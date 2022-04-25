@@ -66,6 +66,7 @@ public class CustomGraph extends View  {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    //This method is called when graph is first created and everytime its updated with different values.
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -87,11 +88,13 @@ public class CustomGraph extends View  {
         }
     }
 
+    //In History Activity, swipe listener is added to graph and it required that this method is implemented in View.
     @Override
     public boolean performClick(){
         return super.performClick();
     }
 
+    //Called when graph is created for first time. Initialized variables used in graph.
     private void init(){
         date = ZonedDateTime.now();
         initPaints();
@@ -179,6 +182,7 @@ public class CustomGraph extends View  {
     }
 
     private void drawDataPointAndText(int xPos, ZonedDateTime date){
+        //Draws single data points and correct text below them.
         int minutes = 0;
         if(dataMap.containsKey(date)){
             minutes = dataMap.get(date);
@@ -302,6 +306,7 @@ public class CustomGraph extends View  {
         return text;
     }
 
+    //All different Paints used in drawing graph.
     private void initPaints(){
         barPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         barPaint.setColor(Color.rgb(173, 201, 139));
