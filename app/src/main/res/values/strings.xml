@@ -20,6 +20,7 @@
 
      <!-- Record exercise -->
     <string name="recordexercise_switch_text">Save route</string>
+    <string name="toast_location_services_not_enabled">Route cannot be saved because location services are disabled.</string>
 
     <!-- History page -->
     <string name="history_days">Days</string>
@@ -45,6 +46,7 @@
     <!-- Text for maps -->
     <string name="map_start_marker">Start</string>
     <string name="map_end_marker">End</string>
+    <string name="toast_maps_not_available">Maps are not available.</string>
 
 
 

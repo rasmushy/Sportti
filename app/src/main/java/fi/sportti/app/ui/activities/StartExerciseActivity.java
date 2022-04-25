@@ -11,12 +11,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.Activity;
 import android.content.Context;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +25,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -50,9 +61,9 @@ import fi.sportti.app.location.RouteContainer;
 public class StartExerciseActivity extends AppCompatActivity {
     public static final String REPLY_RECORDED_EXERCISE = "fi.sportti.app.REPLY_RECORDED_EXERCISE";
     //public static final String CHANNEL_ID = "Sportti";
-
     private static final int PERMISSION_FINE_LOCATION = 100;
     private static final int PERMISSION_READ_PHONE_STATE = 101;
+    private static final int ENABLE_LOCATION_SERVICES = 102;
     private static final String TAG = "TESTI";
 
     private static volatile RecordController recordController;
@@ -339,12 +350,33 @@ public class StartExerciseActivity extends AppCompatActivity {
      *@author Jukka-Pekka Jaakkola
      */
 
-    public void checkPermissionToTrackLocation(View view){
-        //Check if app has permission to use device location.
+    public void toggleLocationTracking(View view){
         if(trackLocationSwitch.isChecked()){
+            //Check if app has permission to use device location.
             if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                enableLocationServices();
+            }
+            else {
+                //Request result will be handled in onRequestPermissionsResult which is defined below.
                 requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },PERMISSION_FINE_LOCATION);
+            }
+        }
+    }
+
+    @Override
+    //This method is called by Android system when user responds to permission request.
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        //If user gave app permission to Location services, make sure that Location services are enabled.
+        if(requestCode == PERMISSION_FINE_LOCATION){
+            if(permissionGranted(grantResults)){
+                enableLocationServices();
+            }
+            //Else simply set locationTrackingSwitch off so app doesn't try to track route.
+            else {
+                trackLocationSwitch.setChecked(false);
             }
         }
     }
@@ -378,13 +410,48 @@ public class StartExerciseActivity extends AppCompatActivity {
         stopService(intent);
     }
 
+
+    //Code to check if location service is enabled is from Android developer documentation.
+    private void enableLocationServices(){
+        //Check if location services are enabled.
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: Location services are disabled. Asking user to turn them on.");
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(StartExerciseActivity.this, ENABLE_LOCATION_SERVICES);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+    }
+
     @Override
-    //This method is called by Android when user responds to permission request.
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == PERMISSION_FINE_LOCATION){
-            if(!permissionGranted(grantResults)){
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ENABLE_LOCATION_SERVICES){
+            // If user did not enable Location services on device
+            // turn trackLocationSwitch off and tell user that route cannot be saved.
+            if(resultCode != Activity.RESULT_OK){
                 trackLocationSwitch.setChecked(false);
+                String message = getResources().getString(R.string.toast_location_services_not_enabled);
+                Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG);
+                toast.show();
             }
         }
     }

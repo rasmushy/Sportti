@@ -40,7 +40,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_READ_PHONE_STATE = 101;
-    private static final String TAG = "TESTI"; // TAG for Log.d
+    private static final String TAG = "MainActivity"; // TAG for Log.d
     private static MainViewModel mainViewModel;
     private User user;
     private AlertDialog dialog;
@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == PERMISSION_READ_PHONE_STATE){
             if(!permissionGranted(grantResults)){
-                Toast toast = Toast.makeText(getBaseContext(), "Maps are not available.", Toast.LENGTH_SHORT);
+                String message = getResources().getString(R.string.toast_maps_not_available);
+                Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
