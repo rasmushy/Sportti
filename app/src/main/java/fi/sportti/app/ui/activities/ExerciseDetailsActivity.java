@@ -38,12 +38,13 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 public class ExerciseDetailsActivity extends AppCompatActivity {
 
     private MainViewModel mainViewModel;
-    private TextView sportName;
-    private TextView startDate;
-    private TextView durationTextView;
-    private TextView caloriesTextView;
-    private TextView pulseTextView;
-    private TextView distanceTextView;
+    private TextView sportNameTv;
+    private TextView startDateTv;
+    private TextView durationTv;
+    private TextView caloriesTv;
+    private TextView pulseTv;
+    private TextView distanceTv;
+    private TextView commentTv;
     private MapView mapView;
 
     @Override
@@ -52,13 +53,14 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_exercise_details);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        sportName = findViewById(R.id.exercisedetails_textview_sport_name);
-        startDate = findViewById(R.id.exercisedetails_textview_start_date_value);
-        durationTextView = findViewById(R.id.exercisedetails_textview_duration_value);
-        caloriesTextView = findViewById(R.id.exercisedetails_textview_calories_value);
-        pulseTextView = findViewById(R.id.exercisedetails_textview_pulse_value);
-        distanceTextView = findViewById(R.id.exercisedetails_textview_length_value);
+        sportNameTv = findViewById(R.id.exercisedetails_tv_sport_name);
+        startDateTv = findViewById(R.id.exercisedetails_tv_start_date_value);
+        durationTv = findViewById(R.id.exercisedetails_tv_duration_value);
+        caloriesTv = findViewById(R.id.exercisedetails_tv_calories_value);
+        pulseTv = findViewById(R.id.exercisedetails_tv_pulse_value);
+        distanceTv = findViewById(R.id.exercisedetails_tv_length_value);
         mapView = findViewById(R.id.exercisedetails_mapView_map_for_route);
+        commentTv = findViewById(R.id.exercisedetails_tv_comment_value);
         mapView.onCreate(savedInstanceState);
 
         Bundle b = getIntent().getExtras();
@@ -86,19 +88,22 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     }
 
     private void setInformationOnScreen(Exercise exercise){
-        sportName.setText(exercise.getSportType());
-        String start = getDateAndTimeAsText(exercise.getStartDate());
-        startDate.setText(start);
         int duration = exercise.getDurationInMinutes();
-        String durationAsText = formatDuration(duration);
-        durationTextView.setText(durationAsText);
-        String calories = exercise.getCalories() + " kcal";
         double distance = exercise.getDistance();
+        String sportName = exercise.getSportType();
+        String startDate = getDateAndTimeAsText(exercise.getStartDate());
+        String durationAsText = formatDuration(duration);
+        String calories = exercise.getCalories() + " kcal";
         String distanceAsText = String.format("%.2f", distance) + " km";
         String pulse = exercise.getAvgHeartRate() + " /min";
-        caloriesTextView.setText(calories);
-        distanceTextView.setText(distanceAsText);
-        pulseTextView.setText(pulse);
+        String comment = exercise.getComment();
+        sportNameTv.setText(sportName);
+        startDateTv.setText(startDate);
+        durationTv.setText(durationAsText);
+        caloriesTv.setText(calories);
+        distanceTv.setText(distanceAsText);
+        pulseTv.setText(pulse);
+        commentTv.setText(comment);
 
     }
 
@@ -109,27 +114,30 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 String route = exercise.getRoute();
                 List<LatLng> coordinates = RouteContainer.getInstance().convertTextRouteToList(route);
                 mapView.setStreetMode();
+
+                //Center camera at start location.
                 LatLng startPosition = coordinates.get(0);
                 LatLng endPosition = coordinates.get(coordinates.size()-1);
                 CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
                 mapboxMap.moveCamera(newPosition);
 
+                //Add markers
                 MarkerOptions startMarker = new MarkerOptions();
-                startMarker.position(coordinates.get(0));
+                startMarker.position(startPosition);
                 String startMarkerText = getResources().getString(R.string.map_start_marker);
                 String endMarkerText = getResources().getString(R.string.map_end_marker);
                 startMarker.setTitle(startMarkerText);
                 mapboxMap.addMarker(startMarker);
-
                 MarkerOptions endMarker = new MarkerOptions();
                 endMarker.position(endPosition);
                 endMarker.setTitle(endMarkerText);
                 mapboxMap.addMarker(endMarker);
 
-                PolylineOptions polyline = new PolylineOptions();
-                polyline.addAll(coordinates);
-                polyline.width(3);
-                polyline.color(Color.BLUE);
+                //Add route as polyline.
+                PolylineOptions polyline = new PolylineOptions()
+                        .addAll(coordinates)
+                        .width(3)
+                        .color(Color.BLUE);
                 mapboxMap.addPolyline(polyline);
             }
         });

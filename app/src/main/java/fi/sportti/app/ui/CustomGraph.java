@@ -43,7 +43,7 @@ public class CustomGraph extends View  {
     private Boolean drawDailyGraph = true;
     private Boolean drawMonthlyGraph = false;
     private Path path;
-    private Paint axisPaint, barPaint, linePaint, textPaint, greyPaint;
+    private Paint axisPaint, barPaint, linePaint, textPaint, horizontalLinesPaint;
     private Canvas canvas;
     private int graphType, graphTimePeriod, graphMaxValue, rectWidth, viewWidth, viewHeight,
                 origoX, origoY, graphHeight, graphWidth;
@@ -184,32 +184,32 @@ public class CustomGraph extends View  {
             minutes = dataMap.get(date);
         }
         double hours = 1.0 * minutes / 60;
+        int yPos = origoY - (int)(oneHourHeight * hours);
         if(graphType == BAR_GRAPH){
-            drawBar(hours, xPos);
+            drawBar(xPos, yPos);
         }
         else if(graphType == LINE_GRAPH){
-            drawLine(hours, xPos);
+            drawLine(xPos, yPos);
         }
         String text = getTextForDataPoint(date);
         canvas.drawText(text, xPos, origoY + 50, textPaint);
         //canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
     }
 
-    private void drawBar(double hours, int xPos){
-        Rect mBar = new Rect();
-        mBar.left = xPos;
-        mBar.right = mBar.left + rectWidth;
-        mBar.bottom = origoY;
-        mBar.top = origoY - (int)(oneHourHeight * hours);
-        canvas.drawRect(mBar, barPaint);
+    private void drawBar(int xPos, int yPos){
+        Rect bar = new Rect();
+        bar.left = xPos;
+        bar.right = bar.left + rectWidth;
+        bar.bottom = origoY;
+        bar.top = yPos;
+        canvas.drawRect(bar, barPaint);
     }
 
-    private void drawLine(double hours, int xPos){
-        int newY = origoY - (int)(oneHourHeight * hours);
-        path.lineTo(xPos, newY);
-        path.moveTo(xPos, newY);
+    private void drawLine(int xPos, int yPos){
+        path.lineTo(xPos, yPos);
+        path.moveTo(xPos, yPos);
         int radius = 13;
-        canvas.drawCircle(xPos, newY, radius, barPaint);
+        canvas.drawCircle(xPos, yPos, radius, barPaint);
     }
 
     private void drawHorizontalMarks() {
@@ -223,7 +223,7 @@ public class CustomGraph extends View  {
             int startY = currentY;
             int endX = origoX + graphWidth;
             int endY = startY;
-            canvas.drawLine(startX, startY, endX, endY, greyPaint);
+            canvas.drawLine(startX, startY, endX, endY, horizontalLinesPaint);
 
             int xPositionForText;
             //Different xPosition based on number size so number aligns better to axis.
@@ -245,7 +245,7 @@ public class CustomGraph extends View  {
 
     private void drawGraphHeader(){
         //Draw current year at top of graph.
-        int x = viewWidth /2;
+        int x = viewWidth /2 - xOffset;
         int y = 30;
         String year = String.valueOf(date.getYear());
         canvas.drawText(year, x, y, textPaint);
@@ -311,17 +311,18 @@ public class CustomGraph extends View  {
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(10);
 
-        greyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        greyPaint.setColor(Color.rgb(128, 128, 128));
-        greyPaint.setStrokeWidth(3);
+        horizontalLinesPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        horizontalLinesPaint.setColor(Color.rgb(200, 200, 200));
+        horizontalLinesPaint.setStyle(Paint.Style.STROKE);
+        horizontalLinesPaint.setStrokeWidth(2);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStrokeWidth(1);
         textPaint.setTextSize(40);
 
         axisPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        axisPaint.setColor(Color.rgb(200, 200, 200));
+        axisPaint.setColor(Color.rgb(180, 180, 180));
         axisPaint.setStyle(Paint.Style.STROKE);
-        axisPaint.setStrokeWidth(10);
+        axisPaint.setStrokeWidth(5);
     }
 }

@@ -96,7 +96,6 @@ public class RouteContainer {
         catch(Exception e){
             // In case there is error with parsing route, create new empty list and return it instead.
             result = new ArrayList<>();
-            Log.d(TAG, "convertTextRouteToList: " + e);
         }
         return result;
     }
@@ -108,11 +107,15 @@ public class RouteContainer {
     public void addLocation(Location location){
         double newLat = location.getLatitude();
         double newLon = location.getLongitude();
-        updateRouteLength(newLat, newLon);
-        sb.append(newLat + "&" + newLon + "_");
-        locationList.add(new LatLng(newLat, newLon));
-        currentLat = newLat;
-        currentLon = newLon;
+        if(newLat != currentLat || newLon != currentLon){
+            updateRouteLength(newLat, newLon);
+            sb.append(newLat + "&" + newLon + "_");
+            LatLng newLocation = new LatLng(newLat, newLon);
+            locationList.add(newLocation);
+            currentLat = newLat;
+            currentLon = newLon;
+            Log.d(TAG, "Added new location to route (" + locationList.size() + ")");
+        }
     }
 
     /**

@@ -79,6 +79,8 @@ public class StartExerciseActivity extends AppCompatActivity {
     private boolean sendNotification;
 
     @Override
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_exercise);
@@ -88,6 +90,7 @@ public class StartExerciseActivity extends AppCompatActivity {
         exerciseTypeTextView = findViewById(R.id.recordexercise_textview_sport_name);
         startButton = findViewById(R.id.recordexercise_button_start_exercise);
         resetButton = findViewById(R.id.recordexercise_button_reset_timer);
+        resetButton.setClickable(false);
         trackLocationSwitch = findViewById(R.id.recordexercise_switch_track_location);
 
         // Lets start up our recording controller
@@ -103,7 +106,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        shutDownTrackingService();
+        stopTrackingLocation();
     }
 
 
@@ -208,6 +211,7 @@ public class StartExerciseActivity extends AppCompatActivity {
                 startTrackingLocation();
             }
             startTimer();
+            resetButton.setClickable(true);
             trackLocationSwitch.setClickable(false);
         }
     }
@@ -215,16 +219,16 @@ public class StartExerciseActivity extends AppCompatActivity {
     //Method for reset/end button
     private void resetEndAction() {
         trackLocationSwitch.setClickable(true);
+        if(trackLocationSwitch.isChecked()){
+            stopTrackingLocation();
+        }
+
         if (recordController.getTimerCounting()) {
             resetAction();
             if(trackLocationSwitch.isChecked()){
-                shutDownTrackingService();
                 RouteContainer.getInstance().resetRoute();
             }
         } else {
-            if(trackLocationSwitch.isChecked()){
-                shutDownTrackingService();
-            }
             //First we check is there anything to be saved
             if (recordController.getStopTime() == null) {
                 return;
@@ -355,6 +359,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             //Check if app has permission to use device location.
             if (ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                //If it has, make sure that location services are enabled so location can be tracked.
                 enableLocationServices();
             }
             else {
@@ -382,34 +387,17 @@ public class StartExerciseActivity extends AppCompatActivity {
     }
 
     private void startTrackingLocation(){
-        //Check if app has permission to use device location.
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            startTrackingService();
-        }
+        Intent locationTrackingService = new Intent(this, LocationTracking.class);
+        Context context = this;
+        context.startForegroundService(locationTrackingService);
     }
 
     private void stopTrackingLocation(){
         if(LocationTracking.serviceRunning){
-            Intent intent = new Intent(this, LocationTracking.class);
-            intent.setAction(LocationTracking.STOP_TRACKING);
-            Context context = this;
-            context.startForegroundService(intent);
+            Intent locationTrackingService = new Intent(this, LocationTracking.class);
+            stopService(locationTrackingService);
         }
     }
-
-    private void startTrackingService(){
-        Intent intent = new Intent(this, LocationTracking.class);
-        intent.setAction(LocationTracking.START_TRACKING);
-        Context context = this;
-        context.startForegroundService(intent);
-    }
-
-    private void shutDownTrackingService(){
-        Intent intent = new Intent(this, LocationTracking.class);
-        stopService(intent);
-    }
-
 
     //Code to check if location service is enabled is from Android developer documentation.
     private void enableLocationServices(){

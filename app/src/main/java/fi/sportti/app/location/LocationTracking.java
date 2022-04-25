@@ -38,19 +38,12 @@ import fi.sportti.app.ui.activities.StartExerciseActivity;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationTracking extends Service {
     private static final String TAG = "TESTI"; // TAG for Log.d
-    public static final String STOP_TRACKING = "fi.sportti.action.STOP_TRACKING";
-    public static final String START_TRACKING = "fi.sportti.action.START_TRACKING";
     public static boolean serviceRunning = false;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallBack;
-    private double currentLat = 0;
-    private double currentLon = 0;
-
+    private RouteContainer routeContainer;
     private Notification notification;
-    private String trackingOnMessage;
-    private String trackingPausedMessage;
-
 
     @Override
     public void onCreate(){
@@ -60,9 +53,7 @@ public class LocationTracking extends Service {
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        trackingOnMessage = getResources().getString(R.string.notification_location_tracking_on_message);
-        trackingPausedMessage = getResources().getString(R.string.notification_location_tracking_paused_message);
+        routeContainer = RouteContainer.getInstance();
 
         //Create callback which will be called everytime FusedLocationProviderClient updates phones location
         //based on interval times set.
@@ -70,36 +61,28 @@ public class LocationTracking extends Service {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                processResult(locationResult);
+                Location location = locationResult.getLastLocation();
+                routeContainer.addLocation(location);
             }
         };
-        Log.d(TAG, "onCreate: Location tracking service created");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        serviceRunning = true;
+        startTracking();
+        createNotification();
+        startForeground(1001, notification);
+
+        //Tells Android System that it has to recreate this Service once it can, if for some reason it has to kill it.
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
         stopTracking();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
-        if(intent != null && intent.getAction() != null){
-            String action = intent.getAction();
-            if(action.equals(START_TRACKING)){
-                serviceRunning = true;
-                startTracking();
-                createNotification(trackingOnMessage);
-                startForeground(1001, notification);
-            }
-            else if(action.equals(STOP_TRACKING)){
-                serviceRunning = true;
-                stopTracking();
-                createNotification(trackingPausedMessage);
-                startForeground(1001, notification);
-            }
-        }
-        return START_NOT_STICKY;
+        serviceRunning = false;
     }
 
     private void startTracking(){
@@ -116,8 +99,8 @@ public class LocationTracking extends Service {
         }
     }
 
-    private void createNotification(String message){
-        //Location tracking service will be started as foreground service. This service requires Notification.
+    private void createNotification(){
+        //Location tracking service will be started as foreground service which requires Notification.
         //In the code below, this Notification is built.
 
         //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
@@ -126,8 +109,11 @@ public class LocationTracking extends Service {
 
         //Build Notification. Notification Channel ID is passed to constructor to support newer versions of Android (Oreo and newer).
         //On older versions this ID is simply ignored.
+        //Notification Channel itself is created in App class when application starts.
+
         String title = getResources().getString(R.string.notification_location_tracking_title);
-        notification= new NotificationCompat.Builder(this, App.NOTIFICATION_CHANNEL_ID)
+        String message = getResources().getString(R.string.notification_location_tracking_on_message);
+        notification = new NotificationCompat.Builder(this, App.NOTIFICATION_CHANNEL_ID)
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_baseline_location_on_24)
                 .setContentTitle(title)
@@ -135,19 +121,6 @@ public class LocationTracking extends Service {
                 .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .build();
-    }
-
-    private void processResult(LocationResult locationResult){
-        Location location = locationResult.getLastLocation();
-        double newLat = location.getLatitude();
-        double newLon = location.getLongitude();
-        if(newLat != currentLat || newLon != currentLon){
-            currentLat = newLat;
-            currentLon = newLon;
-            RouteContainer.getInstance().addLocation(location);
-            Log.d(TAG, "Added new location to route");
-        }
-//        Log.d("TESTI", "lat: " + String.valueOf(location.getLatitude()) + ", lon: " + String.valueOf(location.getLongitude()));
     }
 
     @Nullable

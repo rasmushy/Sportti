@@ -34,11 +34,11 @@
     <string name="exercisedetails_calories">Calories:</string>
     <string name="exercisedetails_length">Length:</string>
     <string name="exercisedetails_pulse">Average pulse:</string>
+    <string name="exercisedetails_comment">Comment:</string>
 
     <!-- Location tracking notification texts -->
     <string name="notification_location_tracking_title">Sportti</string>
     <string name="notification_location_tracking_on_message">Tracking location</string>
-    <string name="notification_location_tracking_paused_message">Location tracking is paused</string>
 
     <!-- Custom graph -->
     <string name="customgraph_y_axis_name">Hours</string>

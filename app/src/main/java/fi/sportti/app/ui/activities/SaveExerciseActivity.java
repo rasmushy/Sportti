@@ -296,28 +296,30 @@ public class SaveExerciseActivity extends AppCompatActivity {
             public void onMapReady(MapboxMap mapboxMap) {
                 List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
                 mapView.setStreetMode();
+
+                //Center camera at start location.
                 LatLng startPosition = coordinates.get(0);
                 LatLng endPosition = coordinates.get(coordinates.size()-1);
                 CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
                 mapboxMap.moveCamera(newPosition);
 
+                //Add markers
                 String startMarkerText = getResources().getString(R.string.map_start_marker);
                 String endMarkerText = getResources().getString(R.string.map_end_marker);
-
                 MarkerOptions startMarker = new MarkerOptions();
-                startMarker.position(coordinates.get(0));
+                startMarker.position(startPosition);
                 startMarker.setTitle(startMarkerText);
                 mapboxMap.addMarker(startMarker);
-
                 MarkerOptions endMarker = new MarkerOptions();
                 endMarker.position(endPosition);
                 endMarker.setTitle(endMarkerText);
                 mapboxMap.addMarker(endMarker);
 
-                PolylineOptions polyline = new PolylineOptions();
-                polyline.addAll(coordinates);
-                polyline.width(3);
-                polyline.color(Color.BLUE);
+                //Add route as polyline.
+                PolylineOptions polyline = new PolylineOptions()
+                    .addAll(coordinates)
+                    .width(3)
+                    .color(Color.BLUE);
                 mapboxMap.addPolyline(polyline);
             }
         });
