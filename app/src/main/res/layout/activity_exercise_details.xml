@@ -7,76 +7,145 @@
     tools:context=".ui.activities.ExerciseDetailsActivity">
 
     <TextView
-        android:id="@+id/exercisedetails_textview_sport_name"
+        android:id="@+id/exercisedetails_tv_sport_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="@string/exercisedetails_sport_default_value"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_end_date_value"
+        android:id="@+id/exercisedetails_tv_start_date_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_textview_end_date"
-        app:layout_constraintStart_toEndOf="@+id/exercisedetails_textview_end_date" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_start_date"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_start_date" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_start_date_value"
+        android:id="@+id/exercisedetails_tv_duration_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_textview_start_date"
-        app:layout_constraintStart_toEndOf="@+id/exercisedetails_textview_start_date" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_duration"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_duration" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_duration_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_textview_duration"
-        app:layout_constraintStart_toEndOf="@+id/exercisedetails_textview_duration" />
-
-    <TextView
-        android:id="@+id/exercisedetails_textview_start_date"
+        android:id="@+id/exercisedetails_tv_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Aloitus:"
+        android:text="@string/exercisedetails_start_date"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_textview_sport_name" />
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_sport_name" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_end_date"
+        android:id="@+id/exercisedetails_tv_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Lopetus:"
+        android:layout_marginTop="8dp"
+        android:text="@string/exercisedetails_duration"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_textview_start_date" />
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_start_date" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_duration"
+        android:id="@+id/exercisedetails_tv_calories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Kesto:"
+        android:layout_marginTop="8dp"
+        android:text="@string/exercisedetails_calories"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_textview_end_date" />
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_duration" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_length_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_length"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_length" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_pulse_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_pulse"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_pulse" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_calories_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_calories"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_calories" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/exercisedetails_length"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_pulse" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_pulse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/exercisedetails_pulse"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_calories" />
+
+    <com.mapquest.mapping.maps.MapView
+        android:id="@+id/exercisedetails_mapView_map_for_route"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:mapquest_app_key="urnwLsvuxm8IpPSp7zVGCVL9teuV8tJV" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/exercisedetails_comment"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_length" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_comment_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_comment"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_comment" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

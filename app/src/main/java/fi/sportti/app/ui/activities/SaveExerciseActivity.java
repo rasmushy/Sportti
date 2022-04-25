@@ -7,12 +7,17 @@ import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFrom
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,15 +26,33 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+
 import android.widget.TextView;
 
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.PolylineOptions;
+import com.mapbox.mapboxsdk.camera.CameraUpdate;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapquest.mapping.MapQuest;
+import com.mapquest.mapping.maps.MapView;
+
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
+
+
+import fi.sportti.app.datastorage.room.User;
+import fi.sportti.app.location.RouteContainer;
+
+import java.util.ArrayList;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
+
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 
@@ -41,7 +64,6 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SaveExerciseActivity extends AppCompatActivity {
-
     private static final String TAG = "SaveExerciseActivity";
 
     private MainViewModel mainViewModel;
@@ -51,19 +73,57 @@ public class SaveExerciseActivity extends AppCompatActivity {
     private List<String> exerciseDataList;
     String[] exerciseDataArray;
     private EditText userComment;
+    private User user;
+    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_save_exercise);
         Log.d(TAG, "OnCreate()");
-
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
-
         exerciseDataList = new ArrayList<>();
         mainViewModel = MainActivity.getMainViewModel();
         getRecordedData();
+        user = mainViewModel.getFirstUser();
+
+        mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
+        mapView.onCreate(savedInstanceState);
+
+        if(RouteContainer.getInstance().hasRoute()){
+            //Check if app has READ_PHONE_STATE permission which is required to display map.
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+                setRouteOnMap();
+            }
+            else{
+                mapView.setVisibility(View.INVISIBLE);
+            }
+        }
+        else{
+            mapView.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+
     }
 
     private void getRecordedData() {
@@ -171,6 +231,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     Double.parseDouble(exerciseDataArray[6]),
                     exerciseDataArray[7]);
             mainViewModel.insertExercise(exercise); //Inserting exercise to database
+            RouteContainer.getInstance().resetRoute();
             Log.d(TAG, "savePressed() --> Exercise saved to database" +
                     "\n   type: " + exerciseDataArray[0] +
                     "\n   user id: " + userId +
@@ -223,8 +284,44 @@ public class SaveExerciseActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+        mapView.onPause();
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    private void setRouteOnMap(){
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
+                mapView.setStreetMode();
+
+                //Center camera at start location.
+                LatLng startPosition = coordinates.get(0);
+                LatLng endPosition = coordinates.get(coordinates.size()-1);
+                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
+                mapboxMap.moveCamera(newPosition);
+
+                //Add markers
+                String startMarkerText = getResources().getString(R.string.map_start_marker);
+                String endMarkerText = getResources().getString(R.string.map_end_marker);
+                MarkerOptions startMarker = new MarkerOptions();
+                startMarker.position(startPosition);
+                startMarker.setTitle(startMarkerText);
+                mapboxMap.addMarker(startMarker);
+                MarkerOptions endMarker = new MarkerOptions();
+                endMarker.position(endPosition);
+                endMarker.setTitle(endMarkerText);
+                mapboxMap.addMarker(endMarker);
+
+                //Add route as polyline.
+                PolylineOptions polyline = new PolylineOptions()
+                    .addAll(coordinates)
+                    .width(3)
+                    .color(Color.BLUE);
+                mapboxMap.addPolyline(polyline);
+            }
+        });
     }
 }

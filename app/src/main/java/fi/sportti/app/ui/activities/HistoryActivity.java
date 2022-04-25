@@ -29,6 +29,10 @@ import fi.sportti.app.ui.CustomGraph;
 import fi.sportti.app.ui.adapters.ExerciseAdapter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
+/**
+ *@author Jukka-Pekka Jaakkola
+ */
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class HistoryActivity extends AppCompatActivity {
     public static final String TAG = "testailua";
@@ -87,10 +91,10 @@ public class HistoryActivity extends AppCompatActivity {
                 float xDelta = Math.abs(x2 - x1);
                 if (xDelta > 100) {
                     if (x1 > x2) {
-                        Log.d(TAG, "onFling: swiped left");
+                        //User swiped left
                         showNext();
                     } else if (x1 < x2) {
-                        Log.d(TAG, "onFling: swiped right");
+                        //User swiped right
                         showPrevious();
                     }
                 }
@@ -116,7 +120,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
-        // createTestExercises();
+//         createTestExercises();
         //mainViewModel.deleteAllExercises();
 
     }

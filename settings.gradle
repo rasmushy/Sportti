@@ -10,6 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
+        maven { url 'https://artifactory.cloud.mapquest.com/artifactory/et-android-binaries' }
     }
 }
 rootProject.name = "Sportti"
