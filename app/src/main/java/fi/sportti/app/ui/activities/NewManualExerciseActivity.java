@@ -29,7 +29,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     private EditText editTextComment;
     private int startTimeHour, startTimeMinute, distance, duration, calories, pulse;
     private long startDateLong;
-    private String startDate;
+    private String startDate, comment;
 
     private AlertDialog.Builder dialogBuilder;
     private Spinner spinnerSelectExercise;
@@ -283,6 +283,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     }
 
     private void saveExerciseData(){
-
+        comment = editTextComment.getText().toString();
     }
 }
