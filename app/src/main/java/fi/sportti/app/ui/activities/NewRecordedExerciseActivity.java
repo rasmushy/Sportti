@@ -62,7 +62,7 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
     public void continuePressed(View caller) {
         //Create Integer variable to check nulls
         Log.d(TAG, "continuePressed(), sportType is: " + ExerciseType.values()[exerciseType].getExerciseName());
-        if (exerciseType > 0) {
+        if (exerciseType >= 0) {
             Intent startExerciseActivity = new Intent(NewRecordedExerciseActivity.this, StartExerciseActivity.class);
             startExerciseActivity.putExtra(REPLY_EXERCISE_TYPE, exerciseType);
             startActivity(startExerciseActivity);
