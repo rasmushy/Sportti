@@ -41,11 +41,6 @@
         <activity
             android:name=".ui.activities.HistoryActivity"
             android:exported="false" />
-
-        <activity
-            android:name=".ui.activities.ProfileActivity"
-            android:exported="false" />
-
         <activity
             android:name=".ui.activities.NewManualExerciseActivity"
             android:label="@string/new_exercise"
