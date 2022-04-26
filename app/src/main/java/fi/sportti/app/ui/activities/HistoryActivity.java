@@ -25,7 +25,7 @@ import java.util.Random;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.ui.CustomGraph;
+import fi.sportti.app.ui.customViews.CustomGraph;
 import fi.sportti.app.ui.adapters.ExerciseAdapter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 

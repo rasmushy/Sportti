@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         userList = new ArrayList<>();
         //Setup our access to database
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+
+
 
         mainViewModel.getAllUsers().observe(this, users -> userList = users);
         Log.d(TAG, "onCreate() launched");
