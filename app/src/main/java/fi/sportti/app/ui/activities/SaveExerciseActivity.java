@@ -1,6 +1,7 @@
 package fi.sportti.app.ui.activities;
 
 import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateToUnixTime;
+import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.*;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.*;
 
 import androidx.annotation.RequiresApi;
@@ -43,6 +44,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.location.RouteContainer;
 
 import fi.sportti.app.R;
@@ -68,6 +70,11 @@ public class SaveExerciseActivity extends AppCompatActivity {
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
 
+    //User
+    private User user;
+    private ZonedDateTime zonedStartTime;
+    private ZonedDateTime zonedDateEnd;
+
     //Exercises
     private ListView exerciseListView;
     private List<String> exerciseDataList;
@@ -88,6 +95,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         openMapButton = findViewById(R.id.saveexercise_button_open_map);
         exerciseDataList = new ArrayList<>();
         mainViewModel = MainActivity.getMainViewModel();
+        user = mainViewModel.getFirstUser();
         dialogBuilder = new AlertDialog.Builder(this);
 
         getRecordedData();
@@ -119,8 +127,8 @@ public class SaveExerciseActivity extends AppCompatActivity {
         //Dates
         String exerciseStartDate = exerciseDataArray[1];
         String exerciseEndDate = exerciseDataArray[2];
-        ZonedDateTime zonedStartTime = ZonedDateTime.parse(exerciseStartDate);
-        ZonedDateTime zonedDateEnd = ZonedDateTime.parse(exerciseEndDate);
+        zonedStartTime = ZonedDateTime.parse(exerciseStartDate);
+        zonedDateEnd = ZonedDateTime.parse(exerciseEndDate);
         //Method to format date into prettier form
         exerciseStartDate = getDateAndTimeAsString(zonedStartTime);
 
@@ -173,7 +181,6 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     Button buttonSaveCalories = giveCaloriesPopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
                     SeekBar seekBarCalories = giveCaloriesPopUp.findViewById(R.id.seekBarCalories);
                     TextView textViewSeekBarCaloriesValue = giveCaloriesPopUp.findViewById(R.id.textViewSeekBarCaloriesValue);
-                    seekBarCalories.setMax(350);
                     textViewSeekBarCaloriesValue.setText(exerciseDataArray[3] + " calories");
                     seekBarCalories.setProgress(Integer.parseInt(exerciseDataArray[3]));
                     dialogBuilder.setView(giveCaloriesPopUp);
@@ -185,7 +192,6 @@ public class SaveExerciseActivity extends AppCompatActivity {
 
                         @Override
                         public void onStartTrackingTouch(SeekBar seekBar) {
-                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
                         }
 
                         @Override
@@ -211,9 +217,6 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     SeekBar seekBarPulse = giveAveragePulsePopUp.findViewById(R.id.seekBarPulse);
                     TextView textViewSeekBarPulseValue = giveAveragePulsePopUp.findViewById(R.id.textViewSeekBarPulseValue);
                     textViewSeekBarPulseValue.setText(exerciseDataArray[4] + " bpm");
-                    seekBarPulse.setMax(28);
-                    seekBarPulse.setMin(6);
-                    seekBarPulse.setProgress(Integer.parseInt(exerciseDataArray[4]));
                     dialogBuilder.setView(giveAveragePulsePopUp);
                     seekBarPulse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                         @Override
@@ -223,7 +226,6 @@ public class SaveExerciseActivity extends AppCompatActivity {
 
                         @Override
                         public void onStartTrackingTouch(SeekBar seekBar) {
-                            textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + " bpm");
                         }
 
                         @Override
@@ -236,6 +238,15 @@ public class SaveExerciseActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             textViewForData.setText(Integer.toString(seekBarPulse.getProgress() * 5 + 50));
                             exerciseDataArray[4] = Integer.toString(seekBarPulse.getProgress() * 5 + 50);
+
+                            if (seekBarPulse.getProgress() * 5 + 50 > 89 && seekBarPulse.getProgress() * 5 + 50 < 190) {
+                                View calorieView = exerciseListView.getChildAt(4);
+                                TextView textViewForCalories = calorieView.findViewById(R.id.saveexercise_listview_textview_data);
+                                int calories = getCaloriesWithVOMax(user, (seekBarPulse.getProgress() * 5 + 50), zonedStartTime, zonedDateEnd);
+                                Log.d(TAG, "textViewForCalories.setText " + calories);
+                                exerciseDataArray[3] = Integer.toString(calories);
+                                textViewForCalories.setText(Integer.toString(calories));
+                            }
                             dialog.dismiss();
                         }
                     });

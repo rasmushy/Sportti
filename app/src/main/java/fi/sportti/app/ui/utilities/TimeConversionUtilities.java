@@ -3,6 +3,7 @@ package fi.sportti.app.ui.utilities;
 import android.os.Build;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;

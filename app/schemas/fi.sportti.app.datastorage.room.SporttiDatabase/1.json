@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3c0a730343cb2082d08b5eeff96aa321",
+    "identityHash": "5f9b5773a431d6ec29276327a1cc45f5",
     "entities": [
       {
         "tableName": "user_data",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `maxHeartRate` INTEGER NOT NULL, `restHeartRate` INTEGER NOT NULL, `gender` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "uid",
@@ -17,6 +17,24 @@
           {
             "fieldPath": "userName",
             "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "maxHeartRate",
+            "columnName": "maxHeartRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "restHeartRate",
+            "columnName": "restHeartRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gender",
+            "columnName": "gender",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -75,6 +93,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_username` ON `${TABLE_NAME}` (`username`)"
+          },
+          {
+            "name": "index_user_data_gender",
+            "unique": false,
+            "columnNames": [
+              "gender"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_gender` ON `${TABLE_NAME}` (`gender`)"
           },
           {
             "name": "index_user_data_weight",
@@ -305,7 +332,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3c0a730343cb2082d08b5eeff96aa321')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5f9b5773a431d6ec29276327a1cc45f5')"
     ]
   }
 }
