@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/exercisedetails_duration"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/exercisedetails_calories"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/exercisedetails_length"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,29 +111,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/exercisedetails_pulse"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_calories" />
-
-    <com.mapquest.mapping.maps.MapView
-        android:id="@+id/exercisedetails_mapView_map_for_route"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:mapquest_app_key="urnwLsvuxm8IpPSp7zVGCVL9teuV8tJV" />
 
     <TextView
         android:id="@+id/exercisedetails_tv_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/exercisedetails_comment"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,5 +136,32 @@
         android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_comment"
         app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_comment" />
+
+    <Button
+        android:id="@+id/exercisedetails_button_delete_exercise"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#EF3B3B"
+        android:text="@string/exercisedetails_delete_exercise"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/exercisedetails_button_open_map"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="#5DA54A"
+        android:onClick="openMap"
+        android:text="@string/button_open_map"
+        app:layout_constraintBottom_toTopOf="@+id/exercisedetails_button_delete_exercise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

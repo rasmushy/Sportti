@@ -133,4 +133,28 @@ public class RouteContainer {
             routeLength += results[0] / 1000;
         }
     }
+
+    public void setRoute(String route){
+        if(route != null && !route.isEmpty()){
+            sb.append(route);
+            String[] locations = route.split("_");
+            for(String location : locations){
+                String[] coordinates = location.split("&");
+                double lat = Double.parseDouble(coordinates[0]);
+                double lon = Double.parseDouble(coordinates[1]);
+                locationList.add(new LatLng(lat, lon));
+                Log.d(TAG, "Added new location to route (" + locationList.size() + ")");
+                if(currentLat == 0 && currentLon == 0){
+                    currentLat = lat;
+                    currentLon = lon;
+                }
+                else {
+                    updateRouteLength(lat, lon);
+                    currentLat = lat;
+                    currentLon = lon;
+                }
+
+            }
+        }
+    }
 }
