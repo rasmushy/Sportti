@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/user_background">
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="@string/user_name"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="40dp"
+        tools:layout_editor_absoluteY="180dp" />
+
+    <TextView
+        android:id="@+id/user_gender"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="@string/user_gender"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="40dp"
+        tools:layout_editor_absoluteY="240dp" />
+
+    <TextView
+        android:id="@+id/user_birthday"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="@string/user_birthday"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="40dp"
+        tools:layout_editor_absoluteY="300dp" />
+
+    <TextView
+        android:id="@+id/user_weight"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="@string/user_weight"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="40dp"
+        tools:layout_editor_absoluteY="360dp" />
+
+    <TextView
+        android:id="@+id/user_height"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="@string/user_height"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="40dp"
+        tools:layout_editor_absoluteY="420dp" />
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="20dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/change_name"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="180dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_change_name"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:hint="@string/user_change_name" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/change_gender"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="240dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_change_gender"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:hint="@string/user_change_gender" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/change_birthday"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="300dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_change_birthday"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:hint="@string/user_change_birthday" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/change_weight"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="360dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_change_weight"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:hint="@string/user_change_weight" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/change_height"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="420dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user_set_height"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:hint="@string/user_change_height" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
