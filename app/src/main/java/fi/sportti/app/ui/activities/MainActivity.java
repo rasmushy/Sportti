@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openProfileActivity(View view){
-        //method here
+       Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     /*
