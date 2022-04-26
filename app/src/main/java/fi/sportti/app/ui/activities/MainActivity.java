@@ -33,7 +33,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
-
+    private static final int PERMISSION_READ_PHONE_STATE = 101;
     private static final String TAG = "MainActivity"; // TAG for Log.d
 
     private static MainViewModel mainViewModel;
