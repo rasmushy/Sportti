@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         int weeklyGoalInMinutes = user.getWeeklyGoalHour() * 60 + user.getWeeklyGoalMinute();
         //Calculate how many percentages user's total exercise time during current week is of weekly goal.
         //Set that information on screen and draw progress bar again with correct value.
@@ -186,10 +185,8 @@ public class MainActivity extends AppCompatActivity {
         int valueOnScreen = Math.round(multiplier * 100);
         weeklyGoalValueTv.setText(valueOnScreen + "%");
         weeklyGoalInfoTv.setText("You have completed " + valueOnScreen + "% of your weekly exercise goal!");
-
         progressBar.setMultiplier(multiplier);
         progressBar.postInvalidate();
-
     }
 
     private void checkAppPermissions(){

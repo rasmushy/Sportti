@@ -7,27 +7,27 @@
     tools:context=".ui.activities.MainActivity">
 
 
-
     <Button
         android:id="@+id/main_button_new_exercise"
         android:layout_width="250dp"
         android:layout_height="60dp"
-        android:layout_marginTop="24dp"
         android:onClick="selectExerciseTypePopUp"
         android:text="New exercise"
+        app:layout_constraintBottom_toTopOf="@+id/main_button_show_history"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
     <Button
         android:id="@+id/main_button_show_history"
         android:layout_width="250dp"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
         android:onClick="openHistoryActivity"
         android:text="History"
+        app:layout_constraintBottom_toTopOf="@+id/main_button_profile"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_button_new_exercise" />
 
@@ -35,10 +35,11 @@
         android:id="@+id/main_button_profile"
         android:layout_width="250dp"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
         android:onClick="openProfileActivity"
         android:text="Profile"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_button_show_history" />
 
@@ -46,16 +47,18 @@
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.5"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:background="@drawable/border"
+        android:backgroundTint="#C6DEF1"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -78,9 +81,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
             android:text="You have completed 25% of your weekly exercise goal!"
             android:textAlignment="center"
             android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/customProgressBar" />
@@ -90,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="25%"
-            android:textSize="45sp"
+            android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="@+id/customProgressBar"
             app:layout_constraintEnd_toEndOf="@+id/customProgressBar"
             app:layout_constraintStart_toStartOf="@+id/customProgressBar"

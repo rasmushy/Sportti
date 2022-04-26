@@ -110,7 +110,13 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         String durationAsText = formatDuration(duration);
         String calories = exercise.getCalories() + " kcal";
         String distanceAsText = String.format("%.2f", distance) + " km";
-        String pulse = exercise.getAvgHeartRate() + " /min";
+        String pulse;
+        if(exercise.getAvgHeartRate() == 0){
+            pulse = "-";
+        }
+        else {
+            pulse = exercise.getAvgHeartRate() + "/min";
+        }
         String comment = exercise.getComment();
         sportNameTv.setText(sportName);
         startDateTv.setText(startDate);
