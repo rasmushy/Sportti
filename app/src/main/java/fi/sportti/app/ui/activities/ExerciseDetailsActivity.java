@@ -2,18 +2,13 @@ package fi.sportti.app.ui.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -50,12 +45,12 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     private TextView pulseTv;
     private TextView distanceTv;
     private TextView commentTv;
-    private String route;
-    private Button openMapButton;
+    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_exercise_details);
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         sportNameTv = findViewById(R.id.exercisedetails_tv_sport_name);
@@ -64,8 +59,9 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         caloriesTv = findViewById(R.id.exercisedetails_tv_calories_value);
         pulseTv = findViewById(R.id.exercisedetails_tv_pulse_value);
         distanceTv = findViewById(R.id.exercisedetails_tv_length_value);
+        mapView = findViewById(R.id.exercisedetails_mapView_map_for_route);
         commentTv = findViewById(R.id.exercisedetails_tv_comment_value);
-        openMapButton = findViewById(R.id.exercisedetails_button_open_map);
+        mapView.onCreate(savedInstanceState);
 
         Bundle b = getIntent().getExtras();
         int index = b.getInt(HistoryActivity.SELECTED_EXERCISE);
@@ -80,27 +76,16 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                     }
                 });
                 Exercise exercise = exercises.get(index);
-                route = exercise.getRoute();
                 setInformationOnScreen(exercise);
                 if(exercise.hasRoute()){
-                    route = exercise.getRoute();
+                    showRouteOnMap(exercise);
                 }
                 else {
-                    openMapButton.setVisibility(View.INVISIBLE);
+                    mapView.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
-
-    public void openMap(View view){
-        //Check if app has READ_PHONE_STATE permission which is required to display map.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
-            Intent mapIntent = new Intent(this, MapActivity.class);
-            mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
-            startActivity(mapIntent);
-        }
-    }
-
 
     private void setInformationOnScreen(Exercise exercise){
         int duration = exercise.getDurationInMinutes();
@@ -120,6 +105,42 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         pulseTv.setText(pulse);
         commentTv.setText(comment);
 
+    }
+
+    private void showRouteOnMap(Exercise exercise){
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                String route = exercise.getRoute();
+                List<LatLng> coordinates = RouteContainer.getInstance().convertTextRouteToList(route);
+                mapView.setStreetMode();
+
+                //Center camera at start location.
+                LatLng startPosition = coordinates.get(0);
+                LatLng endPosition = coordinates.get(coordinates.size()-1);
+                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
+                mapboxMap.moveCamera(newPosition);
+
+                //Add markers
+                MarkerOptions startMarker = new MarkerOptions();
+                startMarker.position(startPosition);
+                String startMarkerText = getResources().getString(R.string.map_start_marker);
+                String endMarkerText = getResources().getString(R.string.map_end_marker);
+                startMarker.setTitle(startMarkerText);
+                mapboxMap.addMarker(startMarker);
+                MarkerOptions endMarker = new MarkerOptions();
+                endMarker.position(endPosition);
+                endMarker.setTitle(endMarkerText);
+                mapboxMap.addMarker(endMarker);
+
+                //Add route as polyline.
+                PolylineOptions polyline = new PolylineOptions()
+                        .addAll(coordinates)
+                        .width(3)
+                        .color(Color.BLUE);
+                mapboxMap.addPolyline(polyline);
+            }
+        });
     }
 
     private String getDateAndTimeAsText(ZonedDateTime date){

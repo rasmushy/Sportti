@@ -27,8 +27,7 @@ public class User {
         this.weeklyGoalMinute = 0;
         this.weeklyGoalHour = 2;
         this.age = new Date(0);
-        this.restHeartRate = 65;
-        this.maxHeartRate = 172;
+        this.restHeartRate = 0;
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -37,9 +36,7 @@ public class User {
 
     @ColumnInfo(name = "username", index = true)
     private String userName;
-
-    @ColumnInfo(name = "maxHeartRate")
-    private int maxHeartRate;
+    
     @ColumnInfo(name = "restHeartRate")
     private int restHeartRate;
     @ColumnInfo(name = "gender", index = true)
@@ -114,14 +111,6 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public int getMaxHeartRate() {
-        return maxHeartRate;
-    }
-
-    public void setMaxHeartRate(int maxHeartRate) {
-        this.maxHeartRate = maxHeartRate;
     }
 
     public int getRestHeartRate() {

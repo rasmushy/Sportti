@@ -24,9 +24,11 @@ public class CalorieConversionUtilities {
      * BMR = 10xWeight + 6.25xHeight - 5xAge + 5
      * For women:
      * BMR = 10xWeight + 6.25xHeight - 5xAge - 161
+     * <p>
+     * Currently not in use, this gives us daily energy consumption estimate
      *
      * @param user
-     * @return
+     * @return BMR as double
      */
     public static double getBasalMetabolicRate(@NonNull User user) {
         if (user.getGender().equals("Male")) {
@@ -61,7 +63,8 @@ public class CalorieConversionUtilities {
 
 
     /**
-     * Calorie calculation with VO2MAX
+     * Calorie calculation with Heart rate
+     * VO2MAX is more accurate, uses generic form if user has not set resting heart rate.
      *
      * @param user         Current user (for gender, weight and age)
      * @param avgHeartRate Average heart rate in exercise
@@ -70,15 +73,15 @@ public class CalorieConversionUtilities {
      * @return Estimated calories burned as integer value
      * @author Rasmus Hyyppä
      */
-    public static int getCaloriesWithVOMax(@NonNull User user, int avgHeartRate, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public static int getCaloriesWithHeartRate(@NonNull User user, int avgHeartRate, ZonedDateTime startDate, ZonedDateTime endDate) {
         // VO2MAX calculations: https://www.mdapp.co/vo2-max-calculator-for-aerobic-capacity-369/
         double calories = 0;
-        double vo2MAX = 15.3 * (user.getMaxHeartRate() / user.getRestHeartRate());
+        double maxHeartRate = 208 - (0.7 * getAgeFromDate(user.getAge()));
+        double vo2MAX = 15.3 * (maxHeartRate / user.getRestHeartRate());
         Log.d("getCaloriesWithVOMax() ", "vo2MAX is: " + vo2MAX);
-        Log.d("getCaloriesWithVOMax() ", "maxHR is: " + user.getMaxHeartRate());
-        Log.d("getCaloriesWithVOMax() ", "restHR is: " + user.getRestHeartRate());
-
-        if (user.getMaxHeartRate() != 172) {
+        Log.d("getCaloriesWithVOMax() ", "maxHR is: " + maxHeartRate);
+        if (user.getRestHeartRate() > 20) {
+            Log.d("getCaloriesWithVOMAX() ", "userRestHeartRate less than 20, calculating without vo2MAX.");
             if (user.getGender().equals("Male")) {
                 calories = ((-95.7735 + (0.634 * avgHeartRate)
                         + (0.404 * vo2MAX)

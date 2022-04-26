@@ -21,6 +21,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
@@ -130,11 +133,11 @@ public class MainActivity extends AppCompatActivity {
      * @author Jukka-Pekka Jaakkola
      */
 
-    private void checkAppPermissions() {
+    private void checkAppPermissions(){
         //At App startup check if app has READ_PHONE_STATE permission which is required to display maps.
         if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_READ_PHONE_STATE);
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },PERMISSION_READ_PHONE_STATE);
         }
     }
 
@@ -152,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean permissionGranted(int[] grantResults) {
+    private boolean permissionGranted(int[] grantResults){
         return grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 }

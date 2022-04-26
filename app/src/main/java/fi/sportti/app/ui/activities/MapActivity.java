@@ -3,7 +3,6 @@ package fi.sportti.app.ui.activities;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,50 +30,53 @@ import fi.sportti.app.location.RouteContainer;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class MapActivity extends AppCompatActivity {
 
-    public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
-    private MapView mapView;
+    private MapView mMapView;
     private MapboxMap mMapboxMap;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapQuest.start(getApplicationContext());
-        Intent intent = getIntent();
-        String route = intent.getExtras().getString(EXTRA_ROUTE);
         setContentView(R.layout.activity_map);
-        mapView = (MapView) findViewById(R.id.saveexercise_mapView_map_for_route);
+        mMapView = (MapView) findViewById(R.id.saveexercise_mapView_map_for_route);
 
 
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new OnMapReadyCallback() {
+        mMapView.onCreate(savedInstanceState);
+        mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-                List<LatLng> coordinates = RouteContainer.getInstance().convertTextRouteToList(route);
-                mapView.setStreetMode();
+                Log.d("´TESTI", "onMapReady: MAP IS READY");
+                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
+                if(coordinates.isEmpty()){
+                    coordinates.add(new LatLng(60.2168,24.7104));
+                    coordinates.add(new LatLng(60.2144,24.7146));
+                    coordinates.add(new LatLng(60.2134,24.7193));
+                    coordinates.add(new LatLng(60.2137,24.7214));
+                    coordinates.add(new LatLng(60.2130,24.7236));
+                }
 
-                //Center camera at start location.
-                LatLng startPosition = coordinates.get(0);
-                LatLng endPosition = coordinates.get(coordinates.size()-1);
-                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
+                mMapboxMap = mapboxMap;
+                mMapView.setStreetMode();
+                LatLng position = coordinates.get(0);
+                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(position, 12);
                 mapboxMap.moveCamera(newPosition);
-
-                //Add markers
-                String startMarkerText = getResources().getString(R.string.map_start_marker);
-                String endMarkerText = getResources().getString(R.string.map_end_marker);
                 MarkerOptions startMarker = new MarkerOptions();
-                startMarker.position(startPosition);
-                startMarker.setTitle(startMarkerText);
+                startMarker.position(coordinates.get(0));
+                startMarker.setTitle("Alku");
                 mapboxMap.addMarker(startMarker);
+
                 MarkerOptions endMarker = new MarkerOptions();
-                endMarker.position(endPosition);
-                endMarker.setTitle(endMarkerText);
+                endMarker.position(coordinates.get(coordinates.size()-1));
+                endMarker.setTitle("Loppu");
                 mapboxMap.addMarker(endMarker);
 
-                //Add route as polyline.
-                PolylineOptions polyline = new PolylineOptions()
-                        .addAll(coordinates)
-                        .width(3)
-                        .color(Color.BLUE);
+                PolylineOptions polyline = new PolylineOptions();
+                polyline.addAll(coordinates);
+                polyline.width(3);
+                polyline.color(Color.BLUE);
+
                 mapboxMap.addPolyline(polyline);
             }
         });
@@ -83,17 +85,17 @@ public class MapActivity extends AppCompatActivity {
 
     @Override
     public void onResume()
-    { super.onResume(); mapView.onResume(); }
+    { super.onResume(); mMapView.onResume(); }
 
     @Override
     public void onPause()
-    { super.onPause(); mapView.onPause(); }
+    { super.onPause(); mMapView.onPause(); }
 
     @Override
     protected void onDestroy()
-    { super.onDestroy(); mapView.onDestroy(); }
+    { super.onDestroy(); mMapView.onDestroy(); }
 
     @Override
     protected void onSaveInstanceState(Bundle outState)
-    { super.onSaveInstanceState(outState); mapView.onSaveInstanceState(outState); }
+    { super.onSaveInstanceState(outState); mMapView.onSaveInstanceState(outState); }
 }

@@ -31,8 +31,6 @@
     <string name="history_months">Months</string>
     <string name="history_old_exercises">Exercises</string>
 
-    <string name="button_open_map">Open map</string>
-
     <!-- Exercise details page -->
     <string name="exercisedetails_sport_default_value">Sport</string>
     <string name="exercisedetails_start_date">Start:</string>
@@ -41,7 +39,6 @@
     <string name="exercisedetails_length">Length:</string>
     <string name="exercisedetails_pulse">Average pulse:</string>
     <string name="exercisedetails_comment">Comment:</string>
-    <string name="exercisedetails_delete_exercise">Delete exercise</string>
 
     <!-- Location tracking notification texts -->
     <string name="notification_location_tracking_title">Sportti</string>

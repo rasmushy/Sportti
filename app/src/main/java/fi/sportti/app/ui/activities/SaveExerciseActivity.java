@@ -44,11 +44,12 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.location.RouteContainer;
 
 import fi.sportti.app.R;
-import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
 import fi.sportti.app.ui.viewmodels.MainViewModel;
@@ -80,8 +81,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
     private List<String> exerciseDataList;
     String[] exerciseDataArray;
     private EditText userComment;
-    private Button openMapButton;
-//    private MapView mapView;
+    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,32 +89,47 @@ public class SaveExerciseActivity extends AppCompatActivity {
         MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_save_exercise);
         Log.d(TAG, "OnCreate()");
-
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
-        openMapButton = findViewById(R.id.saveexercise_button_open_map);
         exerciseDataList = new ArrayList<>();
         mainViewModel = MainActivity.getMainViewModel();
+        getRecordedData();
         user = mainViewModel.getFirstUser();
         dialogBuilder = new AlertDialog.Builder(this);
 
-        getRecordedData();
+        mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
+        mapView.onCreate(savedInstanceState);
 
-        if (!RouteContainer.getInstance().hasRoute()) {
-            openMapButton.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    public void openMap(View view) {
         if (RouteContainer.getInstance().hasRoute()) {
             //Check if app has READ_PHONE_STATE permission which is required to display map.
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                String route = RouteContainer.getInstance().getRouteAsText();
-                Intent intent = new Intent(this, MapActivity.class);
-                intent.putExtra(MapActivity.EXTRA_ROUTE, route);
-                startActivity(intent);
+                setRouteOnMap();
+            } else {
+                mapView.setVisibility(View.INVISIBLE);
             }
+        } else {
+            mapView.setVisibility(View.INVISIBLE);
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+
     }
 
     private void getRecordedData() {
@@ -183,6 +198,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     TextView textViewSeekBarCaloriesValue = giveCaloriesPopUp.findViewById(R.id.textViewSeekBarCaloriesValue);
                     textViewSeekBarCaloriesValue.setText(exerciseDataArray[3] + " calories");
                     seekBarCalories.setProgress(Integer.parseInt(exerciseDataArray[3]));
+                    seekBarCalories.setMax(350);
                     dialogBuilder.setView(giveCaloriesPopUp);
                     seekBarCalories.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                         @Override
@@ -238,11 +254,10 @@ public class SaveExerciseActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             textViewForData.setText(Integer.toString(seekBarPulse.getProgress() * 5 + 50));
                             exerciseDataArray[4] = Integer.toString(seekBarPulse.getProgress() * 5 + 50);
-
                             if (seekBarPulse.getProgress() * 5 + 50 > 89 && seekBarPulse.getProgress() * 5 + 50 < 190) {
                                 View calorieView = exerciseListView.getChildAt(4);
                                 TextView textViewForCalories = calorieView.findViewById(R.id.saveexercise_listview_textview_data);
-                                int calories = getCaloriesWithVOMax(user, (seekBarPulse.getProgress() * 5 + 50), zonedStartTime, zonedDateEnd);
+                                int calories = getCaloriesWithHeartRate(user, (seekBarPulse.getProgress() * 5 + 50), zonedStartTime, zonedDateEnd);
                                 Log.d(TAG, "textViewForCalories.setText " + calories);
                                 exerciseDataArray[3] = Integer.toString(calories);
                                 textViewForCalories.setText(Integer.toString(calories));
@@ -340,38 +355,38 @@ public class SaveExerciseActivity extends AppCompatActivity {
         }
     }
 
-//    private void setRouteOnMap(){
-//        mapView.getMapAsync(new OnMapReadyCallback() {
-//            @Override
-//            public void onMapReady(MapboxMap mapboxMap) {
-//                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
-//                mapView.setStreetMode();
-//
-//                //Center camera at start location.
-//                LatLng startPosition = coordinates.get(0);
-//                LatLng endPosition = coordinates.get(coordinates.size()-1);
-//                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
-//                mapboxMap.moveCamera(newPosition);
-//
-//                //Add markers
-//                String startMarkerText = getResources().getString(R.string.map_start_marker);
-//                String endMarkerText = getResources().getString(R.string.map_end_marker);
-//                MarkerOptions startMarker = new MarkerOptions();
-//                startMarker.position(startPosition);
-//                startMarker.setTitle(startMarkerText);
-//                mapboxMap.addMarker(startMarker);
-//                MarkerOptions endMarker = new MarkerOptions();
-//                endMarker.position(endPosition);
-//                endMarker.setTitle(endMarkerText);
-//                mapboxMap.addMarker(endMarker);
-//
-//                //Add route as polyline.
-//                PolylineOptions polyline = new PolylineOptions()
-//                    .addAll(coordinates)
-//                    .width(3)
-//                    .color(Color.BLUE);
-//                mapboxMap.addPolyline(polyline);
-//            }
-//        });
-//    }
+    private void setRouteOnMap() {
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
+                mapView.setStreetMode();
+
+                //Center camera at start location.
+                LatLng startPosition = coordinates.get(0);
+                LatLng endPosition = coordinates.get(coordinates.size() - 1);
+                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
+                mapboxMap.moveCamera(newPosition);
+
+                //Add markers
+                String startMarkerText = getResources().getString(R.string.map_start_marker);
+                String endMarkerText = getResources().getString(R.string.map_end_marker);
+                MarkerOptions startMarker = new MarkerOptions();
+                startMarker.position(startPosition);
+                startMarker.setTitle(startMarkerText);
+                mapboxMap.addMarker(startMarker);
+                MarkerOptions endMarker = new MarkerOptions();
+                endMarker.position(endPosition);
+                endMarker.setTitle(endMarkerText);
+                mapboxMap.addMarker(endMarker);
+
+                //Add route as polyline.
+                PolylineOptions polyline = new PolylineOptions()
+                        .addAll(coordinates)
+                        .width(3)
+                        .color(Color.BLUE);
+                mapboxMap.addPolyline(polyline);
+            }
+        });
+    }
 }

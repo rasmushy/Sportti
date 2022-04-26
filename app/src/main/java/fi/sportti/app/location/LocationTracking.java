@@ -50,8 +50,8 @@ public class LocationTracking extends Service {
         super.onCreate();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(2000);
-        locationRequest.setFastestInterval(2000);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         routeContainer = RouteContainer.getInstance();
 
