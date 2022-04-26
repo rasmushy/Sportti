@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static MainViewModel mainViewModel;
 
     private User user;
+    private AlertDialog dialog;
     private List<User> userList;
 
     @Override
@@ -121,8 +122,16 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
         dialogBuilder.setView(selectExercisePopUpView);
-        AlertDialog dialog = dialogBuilder.create();
+        dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (dialog != null) {
+            dialog.dismiss();
+        }
     }
 
 
