@@ -21,6 +21,7 @@ public class User {
 
     public User() {
         this.userName = "username";
+        this.gender = "Male";
         this.height = 170;
         this.weight = 70;
         this.weeklyGoalMinute = 0;
@@ -35,6 +36,8 @@ public class User {
     @ColumnInfo(name = "username", index = true)
     private String userName;
 
+    @ColumnInfo(name = "gender", index = true)
+    private String gender;
     @ColumnInfo(name = "weight", index = true)
     private int weight;
     @ColumnInfo(name = "height", index = true)
@@ -99,4 +102,11 @@ public class User {
         return weeklyGoalHour;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 }

@@ -40,7 +40,7 @@ import com.mapquest.mapping.MapQuest;
 import com.mapquest.mapping.maps.MapView;
 
 import java.time.ZonedDateTime;
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -51,6 +51,7 @@ import java.util.ArrayList;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
+import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
 import fi.sportti.app.ui.viewmodels.MainViewModel;
@@ -138,6 +139,8 @@ public class SaveExerciseActivity extends AppCompatActivity {
         String exerciseEndDate = exerciseDataArray[2];
         ZonedDateTime zonedStartTime = ZonedDateTime.parse(exerciseStartDate);
         ZonedDateTime zonedDateEnd = ZonedDateTime.parse(exerciseEndDate);
+        //Method to format date into prettier form
+        exerciseStartDate = getDateAndTimeAsText(zonedStartTime);
 
         //Duration
         Long totalDurationLong = getUnixTimeDifference(zonedDateToUnixTime(zonedStartTime), zonedDateToUnixTime(zonedDateEnd));
@@ -170,24 +173,52 @@ public class SaveExerciseActivity extends AppCompatActivity {
         View headerView = inflater.inflate(R.layout.saveexercise_listview_header_view, null, false);
         exerciseListView.addHeaderView(headerView);
         exerciseListView.setAdapter(adapter);
-        //SetOnItemClickListener for avgheartrate
+
+        //Comment box for user initialized
+        userComment = exerciseListView.findViewById(R.id.saveexercise_listview_header_edittext);
+
+        //SetOnItemClickListener for Listview
         exerciseListView.setOnItemClickListener((adapterView, view, position, l) -> {
-            if (position == 5) {
-                //position == 5 -> Avg HeartRate
-                final NumberPicker heartRatePicker = new NumberPicker(this);
-                heartRatePicker.setMaxValue(200);
-                heartRatePicker.setMinValue(0);
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                dialogBuilder.setView(heartRatePicker)
-                        .setTitle("Average heart rate")
-                        .setMessage("Choose estimate:")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                setIntegerValueForTextView(view, heartRatePicker.getValue());
-                            }
-                        });
-                dialog = dialogBuilder.create();
-                dialog.show();
+            switch (position) {
+                case 1:
+                    //position == 1 -> Exercise Type
+                    Log.d(TAG, "exerciseListView clicked exercise type: " + position);
+                    break;
+                case 2:
+                    //position == 2 -> Start Date
+                    Log.d(TAG, "exerciseListView clicked start date: " + position);
+                    break;
+                case 3:
+                    //position == 3 -> Duration
+                    Log.d(TAG, "exerciseListView clicked duration: " + position);
+                    break;
+                case 4:
+                    //position == 4 -> Calories
+                    Log.d(TAG, "exerciseListView clicked calories: " + position);
+                    break;
+                case 5:
+                    //position == 5 -> Avg HeartRate
+                    final NumberPicker heartRatePicker = new NumberPicker(this);
+                    heartRatePicker.setMaxValue(200);
+                    heartRatePicker.setMinValue(0);
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                    dialogBuilder.setView(heartRatePicker)
+                            .setTitle("Average heart rate")
+                            .setMessage("Choose estimate:")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    setIntegerValueForTextView(view, heartRatePicker.getValue());
+                                }
+                            });
+                    dialog = dialogBuilder.create();
+                    dialog.show();
+                    break;
+                case 6:
+                    //position == 5 -> Distance
+                    Log.d(TAG, "exerciseListView clicked distance: " + position);
+                    break;
+                default:
+                    Log.d(TAG, "exerciseListView clicked position: " + position);
             }
         });
         //Comment box for user initialized
@@ -323,5 +354,21 @@ public class SaveExerciseActivity extends AppCompatActivity {
                 mapboxMap.addPolyline(polyline);
             }
         });
+    }
+
+    private String getDateAndTimeAsText(ZonedDateTime date) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(date.getDayOfMonth() + ".");
+        sb.append(date.getMonthValue() + ".");
+        sb.append(date.getYear() + " ");
+        sb.append(date.getHour() + ":");
+        int minute = date.getMinute();
+        if (minute >= 10) {
+            sb.append(minute);
+        } else {
+            sb.append("0" + minute);
+        }
+
+        return sb.toString();
     }
 }

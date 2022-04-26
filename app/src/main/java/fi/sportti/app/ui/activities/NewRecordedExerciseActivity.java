@@ -15,10 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import fi.sportti.app.R;
+import fi.sportti.app.constants.ExerciseType;
 import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
 
 /**
- *
  * @author Rasmus Hyyppä
  * @version 0.1
  * User wants to record exercise, here we choose what type of exercise we are planning to do
@@ -32,7 +32,7 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
 
     private ListView exerciseListView;
     private List<String> exerciseTypeList;
-    private String exerciseType;
+    private int exerciseType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +54,15 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
 
         //When user clicks one of the list items, it will select them as a sport type.
         exerciseListView.setOnItemClickListener((parent, view, position, id) -> {
-            exerciseType = exerciseListView.getItemAtPosition(position).toString();
+            exerciseType = position;
         });
     }
 
     // Button method to start activity
     public void continuePressed(View caller) {
         //Create Integer variable to check nulls
-        Log.d(TAG, "continuePressed(), sportType is: " + exerciseType);
-        if (exerciseType != null) {
+        Log.d(TAG, "continuePressed(), sportType is: " + ExerciseType.values()[exerciseType].getExerciseName());
+        if (exerciseType > 0) {
             Intent startExerciseActivity = new Intent(NewRecordedExerciseActivity.this, StartExerciseActivity.class);
             startExerciseActivity.putExtra(REPLY_EXERCISE_TYPE, exerciseType);
             startActivity(startExerciseActivity);

@@ -4,7 +4,12 @@ import android.os.Build;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class TimeConversionUtilities {
@@ -18,6 +23,18 @@ public class TimeConversionUtilities {
         Long minutes = (ms / (1000 * 60) % 60);
         Long hours = (ms / (1000 * 60 * 60) % 24);
         return makeTimeString(hours, minutes, seconds);
+    }
+
+    /**
+     * Calculate age from Date object
+     *
+     * @param birthDate is a Date object found in User entity
+     * @return return age as int
+     */
+    public static int getAgeFromDate(@NonNull Date birthDate) {
+        long ageInLong = birthDate.getTime();
+        return Period.between(LocalDate.ofEpochDay(ageInLong), LocalDate.now()).getYears();
+
     }
 
     @SuppressLint("DefaultLocale")

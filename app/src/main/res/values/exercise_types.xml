@@ -3,11 +3,18 @@
     <string-array name="exercise_type_list">
         <item>Walking</item>
         <item>Running</item>
-        <item>Cycling</item>
+        <item>Bicycling</item>
         <item>Yoga</item>
         <item>Golf</item>
         <item>Weight lifting</item>
+        <item>Football</item>
+        <item>Tennis</item>
+        <item>Basketball</item>
+        <item>Swimming</item>
         <item>Crossfit</item>
+        <item>Dancing</item>
+        <item>Zumba</item>
+        <item>Spinning</item>
         <item>Other</item>
     </string-array>
 </resources>

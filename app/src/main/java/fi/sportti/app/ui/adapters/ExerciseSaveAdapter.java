@@ -7,14 +7,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import fi.sportti.app.R;
 
 /**
  * @author Rasmus Hyyppä
  * @version 0.1
- * Custom adapter for listview to display recorded data. This is used when user is at "Save Exercise" page.
+ * Custom adapter for listview to display recorded data after recorded exercise.
  */
 
 public class ExerciseSaveAdapter extends ArrayAdapter<String> {
@@ -49,6 +54,28 @@ public class ExerciseSaveAdapter extends ArrayAdapter<String> {
         } else {
             recordedDataTextView.setText(" "); //Set it to empty string if no data is found from list
         }
+
+        //Set more details after our data to make it more appealing
+        TextView detailsForDataType = (TextView) v.findViewById(R.id.saveexercise_listview_textview_system_type);
+        String unitType;
+        switch (position) {
+            case 1:
+                unitType = ZonedDateTime.now().getOffset().toString();
+                break;
+            case 3:
+                unitType = "kcal";
+                break;
+            case 4:
+                unitType = "avg bpm";
+                break;
+            case 5:
+                unitType = "km";
+                break;
+            default:
+                unitType = " ";
+        }
+        detailsForDataType.setText(unitType);
+
         return v;
     }
 }
