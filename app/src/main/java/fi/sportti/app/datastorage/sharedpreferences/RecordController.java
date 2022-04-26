@@ -105,7 +105,7 @@ public class RecordController {
 
 
     public boolean getTimerCounting() {
-        Log.d(TAG, ", is timer running: " + timerCounting);
+        //Log.d(TAG, ", is timer running: " + timerCounting);
         return this.timerCounting;
     }
 

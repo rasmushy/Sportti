@@ -5,16 +5,25 @@
 
 package fi.sportti.app.ui.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +31,7 @@ import java.util.Objects;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
+import fi.sportti.app.location.LocationTracking;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
@@ -30,7 +40,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
-
+    private static final int PERMISSION_READ_PHONE_STATE = 101;
     private static final String TAG = "MainActivity"; // TAG for Log.d
     private static MainViewModel mainViewModel;
     private User user;
@@ -44,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         Log.d(TAG, "onCreate() launched");
         initialStartUp();
+        checkAppPermissions();
     }
 
     /*
@@ -110,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.setView(selectExercisePopUpView);
         dialog = dialogBuilder.create();
         dialog.show();
+
     }
 
     @Override
@@ -118,5 +130,34 @@ public class MainActivity extends AppCompatActivity {
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    /*
+     *@author Jukka-Pekka Jaakkola
+     */
+
+    private void checkAppPermissions(){
+        //At App startup check if app has READ_PHONE_STATE permission which is required to display maps.
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },PERMISSION_READ_PHONE_STATE);
+        }
+    }
+    @Override
+    //This method is called by Android when user responds to permission request.
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == PERMISSION_READ_PHONE_STATE){
+            if(!permissionGranted(grantResults)){
+                String message = getResources().getString(R.string.toast_maps_not_available);
+                Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 }

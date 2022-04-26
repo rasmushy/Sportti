@@ -27,7 +27,7 @@ import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class NewRecordedExerciseActivity extends AppCompatActivity {
 
-    private static final String TAG = "RecordExerciseActivity"; // TAG for Log.d
+    private static final String TAG = "TESTI"; // TAG for Log.d
     public static final String REPLY_EXERCISE_TYPE = "fi.sportti.app.REPLY_EXERCISE_POSITION";
 
     private ListView exerciseListView;
@@ -38,6 +38,8 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_recorded_exercise);
+
+        //Find views
 
         exerciseListView = findViewById(R.id.recordexercise_listview_all_exercises);
 
