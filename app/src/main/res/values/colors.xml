@@ -12,12 +12,5 @@
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
-
     <color name="yellow">#FFC107</color>
-
-    <color name="user_background">#EDDDE0</color>
-    <color name="red_wine_color">#611524</color>
-    <color name="deep_taupe">#8C6D74</color>
-    <color name="user_text_color">#291A1D</color>
-
 </resources>
