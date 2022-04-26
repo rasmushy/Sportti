@@ -17,6 +17,7 @@
     <string name="comment">Comment:</string>
     <string name="save_exercise">Save exercise</string>
     <string name="delete">Delete</string>
+    <string name="pop_up_placeholder">Placeholder</string>
 
 
 </resources>

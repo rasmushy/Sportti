@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,8 +26,9 @@ import fi.sportti.app.R;
 public class NewManualExerciseActivity extends AppCompatActivity {
 
     private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
-    int startTimeHour, startTimeMinute, distance, duration;
-    long startDateLong;
+    private EditText editTextComment;
+    private int startTimeHour, startTimeMinute, distance, duration, calories, pulse;
+    private long startDateLong;
     private String startDate;
 
     private AlertDialog.Builder dialogBuilder;
@@ -53,10 +55,13 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         textViewDistance = findViewById(R.id.textViewDistance);
         textViewCalories = findViewById(R.id.textViewCalories);
         textViewPulse = findViewById(R.id.textViewPulse);
+        editTextComment = findViewById(R.id.editTextTextComment);
 
         textViewStartTime.setText(dateAndTimeFormatter.format(new Date()));
         textViewDuration.setText("0h0min");
         textViewDistance.setText("0 meters");
+        textViewCalories.setText("0 calories");
+        textViewPulse.setText("0 bpm");
     }
 
 
@@ -167,7 +172,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
 
-        Button buttonSaveDistance = giveDistancePopUp.findViewById(R.id.buttonSaveDistancePopUp);
+        Button buttonSaveDistance = giveDistancePopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
         SeekBar seekBarDistance = giveDistancePopUp.findViewById(R.id.seekBarDistance);
         TextView textViewSeekBarDistanceValue = giveDistancePopUp.findViewById(R.id.textViewSeekBarDistanceValue);
         textViewSeekBarDistanceValue.setText(seekBarDistance.getProgress() * 500 + " meters");
@@ -204,6 +209,36 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         dialogBuilder.setView(giveCaloriesPopUp);
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
+
+        Button buttonSaveCalories = giveCaloriesPopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
+        SeekBar seekBarCalories = giveCaloriesPopUp.findViewById(R.id.seekBarCalories);
+        TextView textViewSeekBarCaloriesValue = giveCaloriesPopUp.findViewById(R.id.textViewSeekBarCaloriesValue);
+        textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+
+        seekBarCalories.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                calories = seekBarCalories.getProgress() * 10;
+            }
+        });
+
+        buttonSaveCalories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                textViewCalories.setText(calories+ " calories");
+            }
+        });
     }
 
     public void openGiveAveragePulse(View view){
@@ -211,5 +246,43 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         dialogBuilder.setView(giveAveragePulsePopUp);
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
+
+        Button buttonSavePulse = giveAveragePulsePopUp.findViewById(R.id.buttonSavePulsePopUp);
+        SeekBar seekBarPulse = giveAveragePulsePopUp.findViewById(R.id.seekBarPulse);
+        TextView textViewSeekBarPulseValue = giveAveragePulsePopUp.findViewById(R.id.textViewSeekBarPulseValue);
+        textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + "bpm");
+
+        seekBarPulse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + " bpm");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                pulse = seekBarPulse.getProgress() * 5 + 50;
+            }
+        });
+
+        buttonSavePulse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                textViewPulse.setText(pulse + " bpm");
+            }
+        });
+    }
+
+    public void onClickSaveExercise(View view){
+
+    }
+
+    private void saveExerciseData(){
+
     }
 }
