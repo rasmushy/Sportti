@@ -1,58 +1,28 @@
 <resources>
     <string name="app_name">Sportti</string>
-    <string name="channel_name">Exercise</string>
-    <string name="channel_description">Exercise recording is active</string>
     <string name="new_exercise">New exercise</string>
-    <string name="duration">Duration</string>
     <string name="button_text_continue">Continue</string>
     <string name="button_text_start">Start</string>
     <string name="button_text_stop">Stop</string>
     <string name="button_text_end">End</string>
     <string name="button_text_reset">Reset</string>
     <string name="button_text_resume">Resume</string>
-    <string name="button_text_save">Save</string>
     <string name="place_holder_time">00:00:00</string>
+    <string name="startexercise_textview_title_text">Duration</string>
     <string name="place_holder_exercise_name">Exercise name loading&#8230;</string>
-    <string name="comment_your_exercise">How was the exercise?</string>
-    <string name="comment">Comment:</string>
-    <string name="save_exercise">Save exercise</string>
-    <string name="delete">Delete</string>
-    <string name="pop_up_placeholder">Placeholder</string>
-
-     <!-- Record exercise -->
-    <string name="recordexercise_switch_text">Save route</string>
-    <string name="toast_location_services_not_enabled">Route cannot be saved because location services are disabled.</string>
-
-    <!-- History page -->
-    <string name="history_days">Days</string>
-    <string name="history_months">Months</string>
-    <string name="history_old_exercises">Exercises</string>
-
-    <!-- Exercise details page -->
-    <string name="exercisedetails_sport_default_value">Sport</string>
-    <string name="exercisedetails_start_date">Start:</string>
-    <string name="exercisedetails_duration">Duration:</string>
-    <string name="exercisedetails_calories">Calories:</string>
-    <string name="exercisedetails_length">Length:</string>
-    <string name="exercisedetails_pulse">Average pulse:</string>
-    <string name="exercisedetails_comment">Comment:</string>
-
-    <!-- Location tracking notification texts -->
-    <string name="notification_location_tracking_title">Sportti</string>
-    <string name="notification_location_tracking_on_message">Tracking location</string>
-
-    <!-- Custom graph -->
-    <string name="customgraph_y_axis_name">Hours</string>
-
-    <!-- Text for maps -->
-    <string name="map_start_marker">Start</string>
-    <string name="map_end_marker">End</string>
-    <string name="toast_maps_not_available">Maps are not available.</string>
-
-
-
-    <!-- Not used currently  -->
- <string name="informative_message_for_permissions">Sportti asks permission to make and manage phone calls in order to display maps on App.</string>
+    <string name="channel_name">Exercise</string>
+    <string name="channel_description">Exercise recording is active</string>
+    <string name="button_text_profile">Profile</string>
+    <string name="user_name">Name</string>
+    <string name="user_birthday">Birthday</string>
+    <string name="user_gender">Gender</string>
+    <string name="user_weight">Weight</string>
+    <string name="user_height">Height</string>
+    <string name="user_change_name">Enter your name</string>
+    <string name="user_change_birthday">Enter your birthday</string>
+    <string name="user_change_gender">Choose your gender</string>
+    <string name="user_change_weight">Enter your weight</string>
+    <string name="user_change_height">Enter your height</string>
 
 
 </resources>
