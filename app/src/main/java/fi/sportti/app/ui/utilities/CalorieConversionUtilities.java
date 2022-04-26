@@ -18,24 +18,24 @@ import fi.sportti.app.datastorage.room.User;
 public class CalorieConversionUtilities {
 
 
-//    /**
-//     * Mifflin-St Jeor Equation: https://en.wikipedia.org/wiki/Basal_metabolic_rate
-//     * For men:
-//     * BMR = 10xWeight + 6.25xHeight - 5xAge + 5
-//     * For women:
-//     * BMR = 10xWeight + 6.25xHeight - 5xAge - 161
-//     *
-//     * @param user
-//     * @return
-//     */
-//    public static double getBasalMetabolicRate(@NonNull User user) {
-//        if (user.getGender() == "Male") {
-//            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * getAgeFromDate(user.getAge()) + 5);
-//        } else if (user.getGender() == "Female") {
-//            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * getAgeFromDate(user.getAge()) - 161);
-//        }
-//        return 0.0;
-//    }
+    /**
+     * Mifflin-St Jeor Equation: https://en.wikipedia.org/wiki/Basal_metabolic_rate
+     * For men:
+     * BMR = 10xWeight + 6.25xHeight - 5xAge + 5
+     * For women:
+     * BMR = 10xWeight + 6.25xHeight - 5xAge - 161
+     *
+     * @param user
+     * @return
+     */
+    public static double getBasalMetabolicRate(@NonNull User user) {
+        if (user.getGender().equals("Male")) {
+            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * getAgeFromDate(user.getAge()) + 5);
+        } else if (user.getGender().equals("Female")) {
+            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * getAgeFromDate(user.getAge()) - 161);
+        }
+        return 0.0;
+    }
 
     /**
      * 1 MET = 1 kcal/kg x h = 4.184 kJ/kg x h = 1.162 W/kg

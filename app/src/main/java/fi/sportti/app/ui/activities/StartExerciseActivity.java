@@ -90,8 +90,6 @@ public class StartExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_exercise);
         mainViewModel = MainActivity.getMainViewModel();
-        createNotificationChannel();
-        //createNotificationChannel();
         //Initialize button's and text view's
         totalTimeTextView = findViewById(R.id.recordexercise_textview_time);
         exerciseTypeTextView = findViewById(R.id.recordexercise_textview_sport_name);
@@ -111,7 +109,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         stopTrackingLocation();
     }
@@ -147,7 +145,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             //Send notification for user. If location tracking is turned on,
             // then location tracking service will show notification.
             if (sendNotification && !trackLocationSwitch.isChecked()) {
-               setNotification();
+                setNotification();
             }
 
             //Get time if timer is running
@@ -202,7 +200,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     private void startStopAction() {
         if (recordController.getTimerCounting()) {
             recordController.setStopTime(ZonedDateTime.now());
-            if(trackLocationSwitch.isChecked()){
+            if (trackLocationSwitch.isChecked()) {
                 stopTrackingLocation();
             }
             stopTimer();
@@ -214,7 +212,7 @@ public class StartExerciseActivity extends AppCompatActivity {
                 recordController.setStartTime(ZonedDateTime.now());
             }
 
-            if(trackLocationSwitch.isChecked()){
+            if (trackLocationSwitch.isChecked()) {
                 startTrackingLocation();
             }
             startTimer();
@@ -226,13 +224,13 @@ public class StartExerciseActivity extends AppCompatActivity {
     //Method for reset/end button
     private void resetEndAction() {
         trackLocationSwitch.setClickable(true);
-        if(trackLocationSwitch.isChecked()){
+        if (trackLocationSwitch.isChecked()) {
             stopTrackingLocation();
         }
 
         if (recordController.getTimerCounting()) {
             resetAction();
-            if(trackLocationSwitch.isChecked()){
+            if (trackLocationSwitch.isChecked()) {
                 RouteContainer.getInstance().resetRoute();
             }
         } else {
@@ -315,24 +313,6 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-//    // Copypasta: https://developer.android.com/training/notify-user/build-notification#java
-//    private void createNotificationChannel() {
-//        Log.d(TAG, "createNotificationChannel: called");
-//        // Create the NotificationChannel, but only on API 26+ because
-//        // the NotificationChannel class is new and not in the support library
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            CharSequence name = getString(R.string.channel_name);
-//            String description = getString(R.string.channel_description);
-//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-//            channel.setDescription(description);
-//            // Register the channel with the system; you can't change the importance
-//            // or other notification behaviors after this
-//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//            notificationManager.createNotificationChannel(channel);
-//        }
-//    }
-
     // Notification: https://developer.android.com/training/notify-user/build-notification#java
     private void setNotification() {
         Log.d(TAG, "setNotification: called");
@@ -353,17 +333,16 @@ public class StartExerciseActivity extends AppCompatActivity {
      *@author Jukka-Pekka Jaakkola
      */
 
-    public void toggleLocationTracking(View view){
-        if(trackLocationSwitch.isChecked()){
+    public void toggleLocationTracking(View view) {
+        if (trackLocationSwitch.isChecked()) {
             //Check if app has permission to use device location.
             if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 //If it has, make sure that location services are enabled so location can be tracked.
                 enableLocationServices();
-            }
-            else {
+            } else {
                 //Request result will be handled in onRequestPermissionsResult which is defined below.
-                requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },PERMISSION_FINE_LOCATION);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
             }
         }
     }
@@ -374,8 +353,8 @@ public class StartExerciseActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         //If user gave app permission to Location services, make sure that Location services are enabled.
-        if(requestCode == PERMISSION_FINE_LOCATION){
-            if(permissionGranted(grantResults)){
+        if (requestCode == PERMISSION_FINE_LOCATION) {
+            if (permissionGranted(grantResults)) {
                 enableLocationServices();
             }
             //Else simply set locationTrackingSwitch off so app doesn't try to track route.
@@ -385,21 +364,21 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-    private void startTrackingLocation(){
+    private void startTrackingLocation() {
         Intent locationTrackingService = new Intent(this, LocationTracking.class);
         Context context = this;
         context.startForegroundService(locationTrackingService);
     }
 
-    private void stopTrackingLocation(){
-        if(LocationTracking.serviceRunning){
+    private void stopTrackingLocation() {
+        if (LocationTracking.serviceRunning) {
             Intent locationTrackingService = new Intent(this, LocationTracking.class);
             stopService(locationTrackingService);
         }
     }
 
     //Code to check if location service is enabled is from Android developer documentation.
-    private void enableLocationServices(){
+    private void enableLocationServices() {
         //Check if location services are enabled.
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(5000);
@@ -429,12 +408,12 @@ public class StartExerciseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ENABLE_LOCATION_SERVICES){
+        if (requestCode == ENABLE_LOCATION_SERVICES) {
             // If user did not enable Location services on device
             // turn trackLocationSwitch off and tell user that route cannot be saved.
-            if(resultCode != Activity.RESULT_OK){
+            if (resultCode != Activity.RESULT_OK) {
                 trackLocationSwitch.setChecked(false);
                 String message = getResources().getString(R.string.toast_location_services_not_enabled);
                 Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG);
@@ -443,10 +422,9 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-    private boolean permissionGranted(int[] grantResults){
+    private boolean permissionGranted(int[] grantResults) {
         return grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
-
 
 
 }

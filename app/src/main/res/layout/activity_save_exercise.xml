@@ -44,44 +44,6 @@
         app:layout_constraintTop_toBottomOf="@+id/saveexercise_listview" />
 
 
-    <TextView
-        android:id="@+id/saveexercise_textview_sport_type"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/place_holder_exercise_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/saveexercise_textview_exercise_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:text="@string/place_holder_exercise_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/saveexercise_textview_sport_type" />
-
-        <TextView
-            android:id="@+id/saveexercise_textview_calories_burned"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:text="@string/place_holder_exercise_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/saveexercise_textview_exercise_date" />
-
     <com.mapquest.mapping.maps.MapView
         android:id="@+id/saveexercise_mapView_map_for_route"
         android:layout_width="match_parent"
