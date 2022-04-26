@@ -1,5 +1,6 @@
 package fi.sportti.app.ui.activities;
 
+import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.getCalories;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFromLong;
 
 import androidx.annotation.RequiresApi;
@@ -26,7 +27,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fi.sportti.app.R;
+import fi.sportti.app.constants.ExerciseType;
 import fi.sportti.app.datastorage.sharedpreferences.RecordController;
+import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
  * @author Rasmus Hyyppä
@@ -46,12 +49,14 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     private static volatile RecordController recordController;
 
+    private MainViewModel mainViewModel;
+
     private TextView totalTimeTextView, exerciseTypeTextView;
     private Button startButton, resetButton;
 
     private Timer timer;
 
-    private String exerciseType;
+    private int exerciseType;
     private int notificationID = 1;
     private boolean sendNotification;
 
@@ -59,6 +64,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_exercise);
+        mainViewModel = MainActivity.getMainViewModel();
         createNotificationChannel();
         //Initialize button's and text view's
         totalTimeTextView = findViewById(R.id.recordexercise_textview_time);
@@ -71,8 +77,8 @@ public class StartExerciseActivity extends AppCompatActivity {
 
         //Set up our sport type to textview
         Intent intentExerciseType = getIntent();
-        exerciseType = intentExerciseType.getStringExtra(NewRecordedExerciseActivity.REPLY_EXERCISE_TYPE);
-        exerciseTypeTextView.setText(exerciseType);
+        exerciseType = intentExerciseType.getIntExtra(NewRecordedExerciseActivity.REPLY_EXERCISE_TYPE, 0);
+        exerciseTypeTextView.setText(ExerciseType.values()[exerciseType].getExerciseName());
 
     }
 
@@ -187,16 +193,17 @@ public class StartExerciseActivity extends AppCompatActivity {
             stopTimer();
 
             //We use previously selected exercise type as sportType
+
             //Variable types are currently set as they are in Exercise class
-            int calorieAmount = 0; //pretty useless training? TODO: calorie calculations
-            Log.d(TAG, "calorieAmount after calculations: " + calorieAmount);
+            //getCalories(User user, String sportType, ZonedDateTime startDate, ZonedDateTime endDate)
+            int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime());
             int avgHeartRate = 0;
             String route = ""; //TODO: route related stuff
             double distance = 0.0; // TODO: distance related stuff
             String comment = "";
 
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
-            String[] dataForIntent = {exerciseType, recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, Double.toString(distance), comment};
+            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, Double.toString(distance), comment};
             //Time to send all recorded data into SaveExerciseActivity
             Intent intentForSaveActivity = new Intent(this, SaveExerciseActivity.class);
             intentForSaveActivity.putExtra(REPLY_RECORDED_EXERCISE, dataForIntent);
@@ -274,7 +281,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     private void setNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, CHANNEL_ID)
                 .setSmallIcon(com.google.android.material.R.drawable.notification_icon_background)
-                .setContentTitle(exerciseType)
+                .setContentTitle(ExerciseType.values()[exerciseType].getExerciseName())
                 .setContentText("Sportti is running in the background")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_STOPWATCH);

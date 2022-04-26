@@ -6,20 +6,22 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="48dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
+            android:minWidth="380dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/saveexercise_listview_textview_topic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
                 android:gravity="center_vertical"
-                android:text="@string/duration"
                 android:textAlignment="gravity"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -29,15 +31,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
-                android:orientation="vertical"
+                android:minHeight="48dp"
                 android:textAlignment="viewStart">
 
                 <TextView
                     android:id="@+id/saveexercise_listview_textview_data"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
                     android:gravity="center_vertical"
-                    android:text="@string/place_holder_exercise_name"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/saveexercise_listview_textview_system_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
                     android:textAlignment="gravity"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
