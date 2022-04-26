@@ -26,9 +26,9 @@ import fi.sportti.app.datastorage.room.User;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainViewModel extends AndroidViewModel {
-    public static final String TAG = "testailua";
-    public static final int DAILY_HOURS = 1;
-    public static final int MONTHLY_HOURS = 2;
+    public static final String TAG = "TESTI";
+    public static final int DAILY_MINUTES = 1;
+    public static final int MONTHLY_MINUTES = 2;
     private final SporttiDatabaseController databaseController;
     private final LiveData<List<User>> listAllUsers;
     private final LiveData<List<Exercise>> listAllExercises;
@@ -134,7 +134,7 @@ public class MainViewModel extends AndroidViewModel {
                 day = e.getStartDate().getDayOfMonth();
                 month = e.getStartDate().getMonthValue();
                 year = e.getStartDate().getYear();
-                if (type == DAILY_HOURS) {
+                if (type == DAILY_MINUTES) {
                     newDate = ZonedDateTime.of(year, month, day, 12, 0, 0, 0, zone);
                 } else {
                     newDate = ZonedDateTime.of(year, month, 1, 12, 0, 0, 0, zone);

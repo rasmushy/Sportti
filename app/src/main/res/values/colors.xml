@@ -20,4 +20,7 @@
     <color name="deep_taupe">#8C6D74</color>
     <color name="user_text_color">#291A1D</color>
 
+    <color name="weekly_goal_gray">#f0f0f0</color>
+    <color name="weekly_goal_border">#C8C8C8</color>
+
 </resources>

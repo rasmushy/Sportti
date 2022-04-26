@@ -6,10 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
+
+
     <Button
         android:id="@+id/main_button_new_exercise"
         android:layout_width="250dp"
-        android:layout_height="75dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="24dp"
         android:onClick="selectExerciseTypePopUp"
         android:text="New exercise"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +23,7 @@
     <Button
         android:id="@+id/main_button_show_history"
         android:layout_width="250dp"
-        android:layout_height="75dp"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:onClick="openHistoryActivity"
         android:text="History"
@@ -31,7 +34,7 @@
     <Button
         android:id="@+id/main_button_profile"
         android:layout_width="250dp"
-        android:layout_height="75dp"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:onClick="openProfileActivity"
         android:text="Profile"
@@ -46,36 +49,53 @@
         app:layout_constraintGuide_percent="0.5"
         android:orientation="horizontal" />
 
-    <fi.sportti.app.ui.customViews.CustomProgressBar
-        android:id="@+id/customProgressBar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="25%"
-        android:textSize="45sp"
-        app:layout_constraintBottom_toBottomOf="@+id/customProgressBar"
-        app:layout_constraintEnd_toEndOf="@+id/customProgressBar"
-        app:layout_constraintStart_toStartOf="@+id/customProgressBar"
-        app:layout_constraintTop_toTopOf="@+id/customProgressBar" />
+        <fi.sportti.app.ui.customViews.CustomProgressBar
+            android:id="@+id/customProgressBar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="291dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="16dp"
-        android:text="You have reached 25% of your weekly goal!"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customProgressBar" />
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/main_tv_weekly_goal_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="You have completed 25% of your weekly exercise goal!"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/customProgressBar" />
+
+        <TextView
+            android:id="@+id/main_tv_weekly_goal_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25%"
+            android:textSize="45sp"
+            app:layout_constraintBottom_toBottomOf="@+id/customProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/customProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/customProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/customProgressBar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,9 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 public class CustomProgressBar extends View {
+
+    private float multiplier = 0;
+
     public CustomProgressBar(Context context) {
         super(context);
     }
@@ -31,36 +34,37 @@ public class CustomProgressBar extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint greyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        greyPaint.setColor(Color.rgb(220, 220, 220));
-        //bluePaint.setStyle(Paint.Style.FILL);
         Paint whitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        whitePaint.setColor(Color.WHITE);
-        //whitePaint.setStyle(Paint.Style.FILL);
-
         Paint greenPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        greyPaint.setColor(Color.rgb(240, 240, 240));
+        whitePaint.setColor(Color.WHITE);
         greenPaint.setColor(Color.rgb(151, 237, 81));
 
-        Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        pointPaint.setColor(Color.GREEN);
-        pointPaint.setStyle(Paint.Style.STROKE);
-        pointPaint.setStrokeWidth(80);
-        pointPaint.setStrokeCap(Paint.Cap.ROUND);
-
-        float width = getWidth();
-        float height = getHeight();
-        float x = getWidth() / 2;
-        float y = getHeight() / 2;
-
-        canvas.drawCircle(x, y, width/2, greyPaint);
-
+        float viewWidth = getWidth();
+        float viewHeight = getHeight();
+        float centerX = viewWidth / 2;
+        float centerY = viewHeight / 2;
         RectF rectF = new RectF();
-        rectF.bottom = height;
+        rectF.bottom = viewHeight;
         rectF.top = 0;
         rectF.left = 0;
-        rectF.right = width;
-        canvas.drawArc(rectF, 90, 90, true, greenPaint);
-        canvas.drawCircle(x, y, width/2 - width/12, whitePaint);
+        rectF.right = viewWidth;
 
+        //Sweep angle tells how many degrees to draw from starting point in clockwise direction.
+        float sweepAngle = 360 * multiplier;
+        float radius = viewWidth / 2;
+        //By making smallRadius smaller, width of fill bar is increased.
+        float smallRadius = radius * 0.75f;
 
+        //Its important to have draw methods below in this order!
+        //First grey circle is drawn, then correct sized arc on top of it.
+        //And finally white smaller circle is drawn on top of these both.
+        canvas.drawCircle(centerX, centerY, radius, greyPaint);
+        canvas.drawArc(rectF, 90, sweepAngle, true, greenPaint);
+        canvas.drawCircle(centerX, centerY, smallRadius, whitePaint);
+    }
+
+    public void setMultiplier(float value){
+        this.multiplier = value;
     }
 }
