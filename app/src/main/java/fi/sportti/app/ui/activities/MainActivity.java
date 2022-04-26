@@ -90,16 +90,6 @@ public class MainActivity extends AppCompatActivity {
      *@author Lassi Bågman
      * Methods for buttons
      */
-    public void openStartExerciseActivity(View view) {
-        Intent intent = new Intent(this, NewRecordedExerciseActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void openSaveExerciseActivity(View view) {
-        Intent intent = new Intent(this, NewManualExerciseActivity.class);
-        startActivity(intent);
-    }
 
     public void openHistoryActivity(View view) {
         Intent intent = new Intent(this, HistoryActivity.class);
@@ -114,14 +104,35 @@ public class MainActivity extends AppCompatActivity {
      *@author Lassi Bågman
      * Method for pop up
      */
-    public void selectExerciseTypePopUp(View view) {
+    public void onClickNewExercise(View view) {
         //Variables for exercise pop up
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
         dialogBuilder.setView(selectExercisePopUpView);
-        dialog = dialogBuilder.create();
+
+        Button start = (Button) selectExercisePopUpView.findViewById(R.id.buttonStartRecordingPopUp);
+        Button save = (Button) selectExercisePopUpView.findViewById(R.id.buttonSaveExercisePopUp);
+
+        AlertDialog dialog = dialogBuilder.create();
         dialog.show();
 
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, NewRecordedExerciseActivity.class);
+                dialog.dismiss();
+                startActivity(intent);
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, NewManualExerciseActivity.class);
+                dialog.dismiss();
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

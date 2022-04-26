@@ -23,7 +23,7 @@
         android:layout_width="250dp"
         android:layout_height="75dp"
         android:layout_marginTop="40dp"
-        android:onClick="selectExerciseTypePopUp"
+        android:onClick="onClickNewExercise"
         android:text="New exercise"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
