@@ -1,8 +1,7 @@
 package fi.sportti.app.ui.activities;
 
 import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateToUnixTime;
-import static fi.sportti.app.ui.utilities.TimeConversionUtilities.getUnixTimeDifference;
-import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFromLong;
+import static fi.sportti.app.ui.utilities.TimeConversionUtilities.*;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -26,8 +25,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.NumberPicker;
 
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -44,15 +43,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.location.RouteContainer;
-
-import java.util.ArrayList;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
 import fi.sportti.app.ui.viewmodels.MainViewModel;
@@ -70,13 +64,16 @@ public class SaveExerciseActivity extends AppCompatActivity {
 
     private MainViewModel mainViewModel;
 
+    //Dialog
+    private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
+
+    //Exercises
     private ListView exerciseListView;
     private List<String> exerciseDataList;
     String[] exerciseDataArray;
     private EditText userComment;
     private Button openMapButton;
-    private User user;
 //    private MapView mapView;
 
     @Override
@@ -85,23 +82,25 @@ public class SaveExerciseActivity extends AppCompatActivity {
         MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_save_exercise);
         Log.d(TAG, "OnCreate()");
+
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
         openMapButton = findViewById(R.id.saveexercise_button_open_map);
         exerciseDataList = new ArrayList<>();
         mainViewModel = MainActivity.getMainViewModel();
-        getRecordedData();
-        user = mainViewModel.getFirstUser();
+        dialogBuilder = new AlertDialog.Builder(this);
 
-        if(!RouteContainer.getInstance().hasRoute()){
+        getRecordedData();
+
+        if (!RouteContainer.getInstance().hasRoute()) {
             openMapButton.setVisibility(View.INVISIBLE);
         }
     }
 
-    public void openMap(View view){
-        if(RouteContainer.getInstance().hasRoute()){
+    public void openMap(View view) {
+        if (RouteContainer.getInstance().hasRoute()) {
             //Check if app has READ_PHONE_STATE permission which is required to display map.
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 String route = RouteContainer.getInstance().getRouteAsText();
                 Intent intent = new Intent(this, MapActivity.class);
                 intent.putExtra(MapActivity.EXTRA_ROUTE, route);
@@ -123,7 +122,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         ZonedDateTime zonedStartTime = ZonedDateTime.parse(exerciseStartDate);
         ZonedDateTime zonedDateEnd = ZonedDateTime.parse(exerciseEndDate);
         //Method to format date into prettier form
-        exerciseStartDate = getDateAndTimeAsText(zonedStartTime);
+        exerciseStartDate = getDateAndTimeAsString(zonedStartTime);
 
         //Duration
         Long totalDurationLong = getUnixTimeDifference(zonedDateToUnixTime(zonedStartTime), zonedDateToUnixTime(zonedDateEnd));
@@ -161,65 +160,92 @@ public class SaveExerciseActivity extends AppCompatActivity {
         userComment = exerciseListView.findViewById(R.id.saveexercise_listview_header_edittext);
 
         //SetOnItemClickListener for Listview
-        exerciseListView.setOnItemClickListener((adapterView, view, position, l) -> {
+        setItemClickListenerForListView();
+    }
+
+    private void setItemClickListenerForListView() {
+        exerciseListView.setOnItemClickListener((adapterView, viewFromListView, position, l) -> {
+            TextView textViewForData = (TextView) viewFromListView.findViewById(R.id.saveexercise_listview_textview_data);
             switch (position) {
-                case 1:
-                    //position == 1 -> Exercise Type
-                    Log.d(TAG, "exerciseListView clicked exercise type: " + position);
-                    break;
-                case 2:
-                    //position == 2 -> Start Date
-                    Log.d(TAG, "exerciseListView clicked start date: " + position);
-                    break;
-                case 3:
-                    //position == 3 -> Duration
-                    Log.d(TAG, "exerciseListView clicked duration: " + position);
-                    break;
                 case 4:
                     //position == 4 -> Calories
-                    Log.d(TAG, "exerciseListView clicked calories: " + position);
-                    break;
-                case 5:
-                    //position == 5 -> Avg HeartRate
-                    final NumberPicker heartRatePicker = new NumberPicker(this);
-                    heartRatePicker.setMaxValue(200);
-                    heartRatePicker.setMinValue(0);
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                    dialogBuilder.setView(heartRatePicker)
-                            .setTitle("Average heart rate")
-                            .setMessage("Choose estimate:")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    setIntegerValueForTextView(view, heartRatePicker.getValue());
-                                }
-                            });
+                    final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
+                    Button buttonSaveCalories = giveCaloriesPopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
+                    SeekBar seekBarCalories = giveCaloriesPopUp.findViewById(R.id.seekBarCalories);
+                    TextView textViewSeekBarCaloriesValue = giveCaloriesPopUp.findViewById(R.id.textViewSeekBarCaloriesValue);
+                    seekBarCalories.setMax(350);
+                    textViewSeekBarCaloriesValue.setText(exerciseDataArray[3] + " calories");
+                    seekBarCalories.setProgress(Integer.parseInt(exerciseDataArray[3]));
+                    dialogBuilder.setView(giveCaloriesPopUp);
+                    seekBarCalories.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+                        }
+                    });
+                    buttonSaveCalories.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            textViewForData.setText(Integer.toString(seekBarCalories.getProgress() * 10));
+                            exerciseDataArray[3] = Integer.toString(seekBarCalories.getProgress() * 10);
+                            dialog.dismiss();
+                        }
+                    });
                     dialog = dialogBuilder.create();
                     dialog.show();
                     break;
-                case 6:
-                    //position == 5 -> Distance
-                    Log.d(TAG, "exerciseListView clicked distance: " + position);
+                case 5:
+                    //position == 5 -> Avg HeartRate
+                    final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
+                    Button buttonSavePulse = giveAveragePulsePopUp.findViewById(R.id.buttonSavePulsePopUp);
+                    SeekBar seekBarPulse = giveAveragePulsePopUp.findViewById(R.id.seekBarPulse);
+                    TextView textViewSeekBarPulseValue = giveAveragePulsePopUp.findViewById(R.id.textViewSeekBarPulseValue);
+                    textViewSeekBarPulseValue.setText(exerciseDataArray[4] + " bpm");
+                    seekBarPulse.setMax(28);
+                    seekBarPulse.setMin(6);
+                    seekBarPulse.setProgress(Integer.parseInt(exerciseDataArray[4]));
+                    dialogBuilder.setView(giveAveragePulsePopUp);
+                    seekBarPulse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                            textViewSeekBarPulseValue.setText(seekBarPulse.getProgress() * 5 + 50 + " bpm");
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+                            textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + " bpm");
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                            textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + " bpm");
+                        }
+                    });
+                    buttonSavePulse.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            textViewForData.setText(Integer.toString(seekBarPulse.getProgress() * 5 + 50));
+                            exerciseDataArray[4] = Integer.toString(seekBarPulse.getProgress() * 5 + 50);
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog = dialogBuilder.create();
+                    dialog.show();
                     break;
                 default:
                     Log.d(TAG, "exerciseListView clicked position: " + position);
             }
         });
-        //Comment box for user initialized
-        userComment = exerciseListView.findViewById(R.id.saveexercise_listview_header_edittext);
-    }
-
-    /**
-     * Currently used only to set avg heart rate (if user changes it)
-     *
-     * @param view  View data where we can find textview
-     * @param value Value that will be set to textview
-     */
-    public void setIntegerValueForTextView(View view, int value) {
-        String valueToString = Integer.toString(value);
-        TextView avgHeartRateView = (TextView) view.findViewById(R.id.saveexercise_listview_textview_data);
-        avgHeartRateView.setText(valueToString);
-        exerciseDataArray[4] = valueToString;
-        Log.d(TAG, "setIntegerValueForTextView() --> Avg heart rate set to: " + exerciseDataArray[4]);
     }
 
     /**
@@ -303,19 +329,38 @@ public class SaveExerciseActivity extends AppCompatActivity {
         }
     }
 
-    private String getDateAndTimeAsText(ZonedDateTime date) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(date.getDayOfMonth() + ".");
-        sb.append(date.getMonthValue() + ".");
-        sb.append(date.getYear() + " ");
-        sb.append(date.getHour() + ":");
-        int minute = date.getMinute();
-        if (minute >= 10) {
-            sb.append(minute);
-        } else {
-            sb.append("0" + minute);
-        }
-
-        return sb.toString();
-    }
+//    private void setRouteOnMap(){
+//        mapView.getMapAsync(new OnMapReadyCallback() {
+//            @Override
+//            public void onMapReady(MapboxMap mapboxMap) {
+//                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
+//                mapView.setStreetMode();
+//
+//                //Center camera at start location.
+//                LatLng startPosition = coordinates.get(0);
+//                LatLng endPosition = coordinates.get(coordinates.size()-1);
+//                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
+//                mapboxMap.moveCamera(newPosition);
+//
+//                //Add markers
+//                String startMarkerText = getResources().getString(R.string.map_start_marker);
+//                String endMarkerText = getResources().getString(R.string.map_end_marker);
+//                MarkerOptions startMarker = new MarkerOptions();
+//                startMarker.position(startPosition);
+//                startMarker.setTitle(startMarkerText);
+//                mapboxMap.addMarker(startMarker);
+//                MarkerOptions endMarker = new MarkerOptions();
+//                endMarker.position(endPosition);
+//                endMarker.setTitle(endMarkerText);
+//                mapboxMap.addMarker(endMarker);
+//
+//                //Add route as polyline.
+//                PolylineOptions polyline = new PolylineOptions()
+//                    .addAll(coordinates)
+//                    .width(3)
+//                    .color(Color.BLUE);
+//                mapboxMap.addPolyline(polyline);
+//            }
+//        });
+//    }
 }

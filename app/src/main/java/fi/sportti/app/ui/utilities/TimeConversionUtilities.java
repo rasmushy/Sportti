@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -40,6 +41,29 @@ public class TimeConversionUtilities {
     @SuppressLint("DefaultLocale")
     public static String makeTimeString(Long hours, Long minutes, Long seconds) {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    /**
+     * (Rasmus Hyyppä copied from: ExerciseDetailsActivity)
+     *
+     * @param date ZonedDateTime that we want to format
+     * @return String of ZonedDateTime that looks pretty
+     * @author Jukka-Pekka Jaakkola
+     * Date formated to fit better.
+     */
+    public static String getDateAndTimeAsString(ZonedDateTime date) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(date.getDayOfMonth() + ".");
+        sb.append(date.getMonthValue() + ".");
+        sb.append(date.getYear() + " ");
+        sb.append(date.getHour() + ":");
+        int minute = date.getMinute();
+        if (minute >= 10) {
+            sb.append(minute);
+        } else {
+            sb.append("0" + minute);
+        }
+        return sb.toString();
     }
 
 
