@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "33841ee044305d622bd0f2dc4e17de25",
+    "identityHash": "3c0a730343cb2082d08b5eeff96aa321",
     "entities": [
       {
         "tableName": "user_data",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `gender` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "uid",
@@ -17,12 +17,6 @@
           {
             "fieldPath": "userName",
             "columnName": "username",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "gender",
-            "columnName": "gender",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -81,15 +75,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_username` ON `${TABLE_NAME}` (`username`)"
-          },
-          {
-            "name": "index_user_data_gender",
-            "unique": false,
-            "columnNames": [
-              "gender"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_gender` ON `${TABLE_NAME}` (`gender`)"
           },
           {
             "name": "index_user_data_weight",

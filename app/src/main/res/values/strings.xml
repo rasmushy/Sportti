@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">Sportti</string>
     <string name="channel_name">Exercise</string>
     <string name="channel_description">Exercise recording is active</string>
@@ -17,6 +18,9 @@
     <string name="comment">Comment:</string>
     <string name="save_exercise">Save exercise</string>
     <string name="delete">Delete</string>
+
+
+    <string name="pop_up_placeholder">Placeholder</string>
 
      <!-- Record exercise -->
     <string name="recordexercise_switch_text">Save route</string>
@@ -52,6 +56,20 @@
 
     <!-- Not used currently  -->
  <string name="informative_message_for_permissions">Sportti asks permission to make and manage phone calls in order to display maps on App.</string>
+
+
+    <string name="button_text_profile">Profile</string>
+    <string name="user_name">Name</string>
+    <string name="user_birthday">Birthday</string>
+    <string name="user_gender">Gender</string>
+    <string name="user_weight">Weight</string>
+    <string name="user_height">Height</string>
+    <string name="user_change_name">Enter your name</string>
+    <string name="user_change_birthday">Enter your birthday</string>
+    <string name="user_change_gender">Choose your gender</string>
+    <string name="user_change_weight">Enter your weight</string>
+    <string name="user_change_height">Enter your height</string>
+
 
 
 </resources>
