@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -32,7 +34,7 @@ import fi.sportti.app.location.RouteContainer;
  */
 
 public class MapActivity extends AppCompatActivity {
-
+    public static final String TAG = "TESTI";
     public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
     private MapView mapView;
 
@@ -54,10 +56,10 @@ public class MapActivity extends AppCompatActivity {
                 mapView.setStreetMode();
 
                 //Center camera at start location.
+                setCamera(mapboxMap, coordinates);
                 LatLng startPosition = coordinates.get(0);
                 LatLng endPosition = coordinates.get(coordinates.size()-1);
-                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
-                mapboxMap.moveCamera(newPosition);
+
 
                 //Add markers
                 String startMarkerText = getResources().getString(R.string.map_start_marker);
@@ -81,8 +83,68 @@ public class MapActivity extends AppCompatActivity {
         });
     }
 
+    private void setCamera(MapboxMap map, List<LatLng> list){
+        double maxDistance = 0;
+        float [] result = new float[3];
+        double latSum = 0;
+        double lonSum = 0;
+        double latAvg = 0;
+        double lonAvg = 0;
+        LatLng position1;
+        LatLng position2;
+        for(int i = 0; i < list.size() - 1; i++){
+            position1 = list.get(i);
+            latSum += position1.getLatitude();
+            lonSum += position1.getLongitude();
+            for(int j = i+1; j < list.size(); j++){
+                position2 = list.get(j);
+                double lat1 = position1.getLatitude();
+                double lon1 = position1.getLongitude();
+                double lat2 = position2.getLatitude();
+                double lon2 = position2.getLongitude();
+                Location.distanceBetween(lat1, lon1, lat2, lon2, result);
+                if(result[0] > maxDistance){
+                    maxDistance = result[0];
+                }
+            }
+        }
+        position1 = list.get(list.size()-1);
+        latSum += position1.getLatitude();
+        lonSum += position1.getLongitude();
+        latAvg = latSum / list.size();
+        lonAvg = lonSum / list.size();
+        LatLng cameraPosition = new LatLng(latAvg, lonAvg);
+
+        double zoom = getZoom(maxDistance/1000);
+
+        CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(cameraPosition, zoom);
+        map.moveCamera(newPosition);
+        Log.d(TAG, "setCamera: max distance between points: " + maxDistance);
+
+    }
+
     //These lifecycle methods have to be implemented because MapQuest requires to call same methods on map.
 
+    private double getZoom(double distance){
+        double zoom = 0;
+        if(distance <= 1){
+            zoom = 14;
+        }
+        else if(distance <= 5){
+            zoom = 13;
+        }
+        else if(distance <= 10){
+            zoom = 10;
+        }
+        else if(distance <= 100){
+            zoom = 8.5;
+        }
+        else {
+            zoom = 7;
+        }
+
+        return zoom;
+    }
     @Override
     public void onResume()
     { super.onResume(); mapView.onResume(); }
