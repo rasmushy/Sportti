@@ -326,7 +326,7 @@ public class StartExerciseActivity extends AppCompatActivity {
         super.onPause();
         //If timer has not started we wont send notifications
         //recordController.getTimerStartCount() > 0
-        if (timerIsRunning) {
+        if (timerIsRunning && !trackLocationSwitch.isChecked()) {
             sendNotification = true;
         }
     }
@@ -348,7 +348,7 @@ public class StartExerciseActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, App.NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(com.google.android.material.R.drawable.notification_icon_background)
+                .setSmallIcon(R.drawable.ic_baseline_access_time_24)
                 .setContentTitle(ExerciseType.values()[exerciseType].getExerciseName())
                 .setContentText("Sportti is running in the background")
                 .setContentIntent(pendingIntent)
