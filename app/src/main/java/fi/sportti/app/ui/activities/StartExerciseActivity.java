@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 
 import android.content.DialogInterface;
@@ -82,6 +83,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     private int exerciseType;
     private int notificationID = 1;
     private boolean sendNotification;
+    private boolean timerIsRunning = false;
 
     @Override
 
@@ -171,6 +173,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     //Stops timer
     private void stopTimer() {
+        timerIsRunning = false;
         recordController.setTimerCounting(false);
         if (recordController.getTimerStartCount() > 0) {
             startButton.setText(R.string.button_text_resume);
@@ -180,6 +183,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     //Starts timer
     private void startTimer() {
+        timerIsRunning = true;
         //If our timer is not yet active, create it.
         if (timer == null) {
             timer = new Timer();
@@ -321,18 +325,33 @@ public class StartExerciseActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         //If timer has not started we wont send notifications
-        if (recordController.getTimerStartCount() > 0) {
+        //recordController.getTimerStartCount() > 0
+        if (timerIsRunning) {
             sendNotification = true;
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(timerIsRunning){
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(StartExerciseActivity.this);
+            notificationManager.cancel(notificationID);
         }
     }
 
     // Notification: https://developer.android.com/training/notify-user/build-notification#java
     private void setNotification() {
         Log.d(TAG, "setNotification: called");
+        //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
+        Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, App.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(com.google.android.material.R.drawable.notification_icon_background)
                 .setContentTitle(ExerciseType.values()[exerciseType].getExerciseName())
                 .setContentText("Sportti is running in the background")
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_STOPWATCH);
 

@@ -29,7 +29,8 @@ import fi.sportti.app.location.RouteContainer;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class MapActivity extends AppCompatActivity {
+public class
+MapActivity extends AppCompatActivity {
 
     public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
     private MapView mapView;
