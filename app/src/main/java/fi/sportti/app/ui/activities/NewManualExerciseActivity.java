@@ -1,10 +1,14 @@
 package fi.sportti.app.ui.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,18 +22,31 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
 import fi.sportti.app.R;
+import fi.sportti.app.datastorage.room.Exercise;
+import fi.sportti.app.datastorage.room.User;
+import fi.sportti.app.ui.viewmodels.MainViewModel;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class NewManualExerciseActivity extends AppCompatActivity {
+    private static final String TAG = "SaveManualExerciseAct";
+
+    private MainViewModel mainViewModel;
+    private User user;
+    String[] exerciseDataArray;
 
     private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
     private EditText editTextComment;
-    private int startTimeHour, startTimeMinute, distance, duration, calories, pulse;
+    private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance, duration, durationHour, durationMin, calories, pulse;
+    private double distanceDouble;
     private long startDateLong;
-    private String startDate, comment;
+    private String exerciseType, startDate, startDateAndTime, comment;
+    private ZonedDateTime startTimeData, endTimeData;
 
     private AlertDialog.Builder dialogBuilder;
     private Spinner spinnerSelectExercise;
@@ -42,6 +59,11 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_manual_exercise);
+
+        exerciseDataArray = new String[8];
+
+        mainViewModel = MainActivity.getMainViewModel();
+        user = mainViewModel.getFirstUser();
 
         spinnerSelectExercise = findViewById(R.id.spinnerSelectActivity);
         adapter = ArrayAdapter.createFromResource(this, R.array.exercise_type_list, android.R.layout.simple_spinner_item);
@@ -81,6 +103,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
                 startDateLong = calendar.getTimeInMillis();
+                startYear = year;
+                startMonth = month;
+                startDay = day;
             }
         });
 
@@ -99,11 +124,14 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
                         startTimeHour = materialTimePicker.getHour();
+                        startTimeMinute = 0;
                         startTimeMinute = materialTimePicker.getMinute();
 
                         startDate = dateFormatter.format(startDateLong);
 
                         textViewStartTime.setText(startDate + " " + startTimeHour + ":" + startTimeMinute);
+                        startTimeData = ZonedDateTime.of(startYear, startMonth, startDay, startTimeHour, startTimeMinute, 0,0, ZoneId.systemDefault());
+                        exerciseDataArray[1] = startTimeData.toString();
                         dialog.dismiss();
                     }
                 });
@@ -118,15 +146,15 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         dialog.show();
 
         Button buttonSaveDurationPopUp = selectDurationPopUp.findViewById(R.id.buttonSaveDurationPopUp);
-        SeekBar seekerBarHoursPopUp = selectDurationPopUp.findViewById(R.id.seekBarHourPopUp);
-        SeekBar seekerBarMinutesPopUp = selectDurationPopUp.findViewById(R.id.seekBarMinPopUp);
+        SeekBar seekBarHoursPopUp = selectDurationPopUp.findViewById(R.id.seekBarHourPopUp);
+        SeekBar seekBarMinutesPopUp = selectDurationPopUp.findViewById(R.id.seekBarMinPopUp);
         TextView textViewDurationPopUp = selectDurationPopUp.findViewById(R.id.textViewTimePopUp);
-        textViewDurationPopUp.setText(seekerBarHoursPopUp.getProgress() + "h " + (seekerBarMinutesPopUp.getProgress() * 2 + "min"));
+        textViewDurationPopUp.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
 
-        seekerBarHoursPopUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarHoursPopUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                textViewDurationPopUp.setText(seekerBarHoursPopUp.getProgress() + "h " + (seekerBarMinutesPopUp.getProgress() * 2 + "min"));
+                textViewDurationPopUp.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
             }
 
             @Override
@@ -136,14 +164,15 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                duration = (seekerBarHoursPopUp.getProgress() * 60) + (seekerBarMinutesPopUp.getProgress() * 2);
+                duration = (seekBarHoursPopUp.getProgress() * 60) + (seekBarMinutesPopUp.getProgress() * 2);
+                durationHour = (seekBarHoursPopUp.getProgress() * 60);
             }
         });
 
-        seekerBarMinutesPopUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarMinutesPopUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                textViewDurationPopUp.setText(seekerBarHoursPopUp.getProgress() + "h " + (seekerBarMinutesPopUp.getProgress() * 2 + "min"));
+                textViewDurationPopUp.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
             }
 
             @Override
@@ -153,7 +182,8 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                duration = (seekerBarHoursPopUp.getProgress() * 60) + (seekerBarMinutesPopUp.getProgress() * 2);
+                duration = (seekBarHoursPopUp.getProgress() * 60) + (seekBarMinutesPopUp.getProgress() * 2);
+                durationMin = (seekBarMinutesPopUp.getProgress() * 2);
             }
         });
 
@@ -161,7 +191,10 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                textViewDuration.setText(seekerBarHoursPopUp.getProgress() + "h " + (seekerBarMinutesPopUp.getProgress() * 2 + "min"));
+                endTimeData = startTimeData.plusHours(durationHour);
+                endTimeData.plusMinutes(durationMin);
+                exerciseDataArray[2] = endTimeData.toString();
+                textViewDuration.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
             }
         });
     }
@@ -192,6 +225,8 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 distance = seekBarDistance.getProgress() * 500;
+                distanceDouble = distance;
+                exerciseDataArray[6] = String.valueOf(distanceDouble);
             }
         });
 
@@ -229,6 +264,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 calories = seekBarCalories.getProgress() * 10;
+                exerciseDataArray[3] = String.valueOf(calories);
             }
         });
 
@@ -266,6 +302,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 pulse = seekBarPulse.getProgress() * 5 + 50;
+                exerciseDataArray[4] = String.valueOf(pulse);
             }
         });
 
@@ -279,10 +316,37 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     }
 
     public void onClickSaveExercise(View view){
-
+        saveExerciseData();
+        Log.d(TAG, "Save exercise pressed");
     }
 
     private void saveExerciseData(){
-        comment = editTextComment.getText().toString();
+        exerciseType = spinnerSelectExercise.getSelectedItem().toString();
+        exerciseDataArray[0] = exerciseType;
+
+        if(editTextComment.getText().toString().length() > 0){
+            comment = editTextComment.getText().toString();
+        }
+
+        if(exerciseDataArray != null){
+            Integer userId = 1; //Integer to get null check (Currently useless cause its set to 1)
+            //Create exercise from our data
+            Exercise exercise = new Exercise(exerciseType, userId, startTimeData, endTimeData,
+                    calories, pulse, "", distanceDouble, comment);
+            mainViewModel.insertExercise(exercise);
+            Log.d(TAG, "savePressed() --> Exercise saved to database" +
+                    "\n   type: " + exerciseDataArray[0] +
+                    "\n   user id: " + userId +
+                    "\n   start d: " + exerciseDataArray[1] +
+                    "\n   end d: " + exerciseDataArray[2] +
+                    "\n   calories: " + exerciseDataArray[3] +
+                    "\n   avg HR: " + exerciseDataArray[4] +
+                    "\n   distance: " + exerciseDataArray[6] +
+                    "\n   comment: " + exerciseDataArray[7]);
+
+            Intent intentForMainActivity = new Intent(this, MainActivity.class);
+            startActivity(intentForMainActivity);
+        }
+
     }
 }
