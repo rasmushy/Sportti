@@ -2,7 +2,6 @@ package fi.sportti.app.location;
 
 import android.Manifest;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +23,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.Locale;
-
 import fi.sportti.app.App;
 import fi.sportti.app.R;
 import fi.sportti.app.ui.activities.StartExerciseActivity;
@@ -39,19 +35,26 @@ import fi.sportti.app.ui.activities.StartExerciseActivity;
 public class LocationTracking extends Service {
     private static final String TAG = "TESTI"; // TAG for Log.d
     public static boolean serviceRunning = false;
+    //Time in milliseconds how often FusedLocationProviderClient gives new location update.
+    //In normal use default interval would be around 20000-30000 (20-30 seconds). Because this App
+    //is mostly tested with emulator, interval is faster so it is easier and faster to create route
+    //while recording exercise.
+    public static int DEFAULT_INTERVAL = 2000;
+    public static int FAST_INTERVAL = 1500;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallBack;
     private RouteContainer routeContainer;
     private Notification notification;
 
+
     @Override
     public void onCreate(){
         super.onCreate();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
-        locationRequest.setInterval(2000);
-        locationRequest.setFastestInterval(2000);
+        locationRequest.setInterval(DEFAULT_INTERVAL);
+        locationRequest.setFastestInterval(FAST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         routeContainer = RouteContainer.getInstance();
 
@@ -72,7 +75,8 @@ public class LocationTracking extends Service {
         serviceRunning = true;
         startTracking();
         createNotification();
-        startForeground(1001, notification);
+        int notificationID = 1001;
+        startForeground(notificationID, notification);
 
         //Tells Android System that it has to recreate this Service once it can, if for some reason it has to kill it.
         return START_STICKY;
@@ -123,6 +127,8 @@ public class LocationTracking extends Service {
                 .build();
     }
 
+
+    //This method has to be implemented because this class extends Service. It is not used, so it just returns null.
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

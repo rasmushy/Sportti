@@ -26,15 +26,15 @@ import fi.sportti.app.location.RouteContainer;
 
 /**
  *@author Jukka-Pekka Jaakkola
+ * Own activity used to display routes on map.
+ * Route needs to be added to Intent that starts this activity.
+ * Use MapActivity.EXTRA_ROUTE as key.
  */
 
-@RequiresApi(api = Build.VERSION_CODES.M)
-public class
-MapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity {
 
     public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
     private MapView mapView;
-    private MapboxMap mMapboxMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ MapActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String route = intent.getExtras().getString(EXTRA_ROUTE);
         setContentView(R.layout.activity_map);
-        mapView = (MapView) findViewById(R.id.saveexercise_mapView_map_for_route);
+        mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
 
 
         mapView.onCreate(savedInstanceState);
@@ -81,6 +81,7 @@ MapActivity extends AppCompatActivity {
         });
     }
 
+    //These lifecycle methods have to be implemented because MapQuest requires to call same methods on map.
 
     @Override
     public void onResume()
