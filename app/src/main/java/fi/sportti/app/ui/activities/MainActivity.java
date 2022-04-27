@@ -152,6 +152,12 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
         }
     }
+    
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: Main Activity destroyed");
+    }
 
 
     /*

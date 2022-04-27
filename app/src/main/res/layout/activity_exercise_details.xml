@@ -145,6 +145,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="#EF3B3B"
+        android:onClick="deleteExercise"
         android:text="@string/exercisedetails_delete_exercise"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

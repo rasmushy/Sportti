@@ -49,13 +49,14 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        //mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         exerciseListView = findViewById(R.id.history_listview_exercises);
         changeTimePeriodSwitch = findViewById(R.id.history_switch_toggle_graph_timeperiod);
         graph = findViewById(R.id.history_customgraph_exercise_hours);
         graph.setGraphType(CustomGraph.BAR_GRAPH);
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
 
+        mainViewModel = MainActivity.getMainViewModel();
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {

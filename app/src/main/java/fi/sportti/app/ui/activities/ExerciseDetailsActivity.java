@@ -52,12 +52,13 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     private TextView commentTv;
     private String route;
     private Button openMapButton;
+    private Exercise exercise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_details);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        //mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         sportNameTv = findViewById(R.id.exercisedetails_tv_sport_name);
         startDateTv = findViewById(R.id.exercisedetails_tv_start_date_value);
         durationTv = findViewById(R.id.exercisedetails_tv_duration_value);
@@ -70,6 +71,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         int index = b.getInt(HistoryActivity.SELECTED_EXERCISE);
 
+        mainViewModel = MainActivity.getMainViewModel();
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
@@ -79,7 +81,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                         return t1.getStartDate().compareTo(exercise.getStartDate());
                     }
                 });
-                Exercise exercise = exercises.get(index);
+                exercise = exercises.get(index);
                 route = exercise.getRoute();
                 setInformationOnScreen(exercise);
                 if(exercise.hasRoute()){
@@ -99,6 +101,12 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
             mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
             startActivity(mapIntent);
         }
+    }
+
+    public void deleteExercise(View view){
+        MainActivity.getMainViewModel().deleteExercise(exercise);
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
     }
 
 
