@@ -111,6 +111,10 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
+    public void test(){
+
+    }
+
     public  void openSelectDuration(View view){
         final View selectDurationPopUp = getLayoutInflater().inflate(R.layout.pop_up_select_duration, null);
         dialogBuilder.setView(selectDurationPopUp);

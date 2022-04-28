@@ -35,7 +35,6 @@ import fi.sportti.app.location.RouteContainer;
 
 public class MapActivity extends AppCompatActivity {
     public static final String TAG = "TESTI";
-    public static final int READ_PHONE_STATE_PERMISSION_CODE = 101;
     public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
     private MapView mapView;
 

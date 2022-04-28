@@ -21,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import fi.sportti.app.App;
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
@@ -84,7 +85,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     }
 
     public void deleteExercise(View view){
-        MainActivity.getMainViewModel().deleteExercise(exercise);
+        mainViewModel.deleteExercise(exercise);
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
@@ -98,7 +99,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         else {
             openMapButton.setClickable(false);
             String[] permissions = { Manifest.permission.READ_PHONE_STATE };
-            requestPermissions(permissions, MapActivity.READ_PHONE_STATE_PERMISSION_CODE);
+            requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
         }
     }
 
@@ -107,7 +108,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == MapActivity.READ_PHONE_STATE_PERMISSION_CODE){
+        if(requestCode == App.PERMISSION_CODE_READ_PHONE_STATE){
             if(permissionGranted(grantResults)){
                 openMapButton.setClickable(true);
                 openMap();
@@ -136,45 +137,58 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
-    //Dialog where user is explained that map is not available because required permission was not granted.
+
     private void showPermissionDeniedDialog(){
+        //Dialog where user is explained that map is not available because required permission was not granted.
+
+        //Create button for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
+        //Get texts for dialog
         String title = getResources().getString(R.string.map_not_available);
         String message = getResources().getString(R.string.required_permission_denied_message);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                .setTitle(title)
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-        dialog.create().show();
+                .setPositiveButton("Ok", positiveButton)
+                .create().show();
     }
 
-    //Informative dialog where user can see why permission is required.
-    //User can verify to deny this permission or show permission request window again.
+
     private void showInformativeDialog(){
+        //Informative dialog where user can see why permission is required.
+        //User can verify to deny this permission or show permission request window again.
+
+        //Create buttons for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+                requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+            }
+        };
+        DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                openMapButton.setClickable(true);
+            }
+        };
+        //Get texts for dialog
         String title = getResources().getString(R.string.permission_denied);
         String message = getResources().getString(R.string.informative_message_for_permissions);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                .setTitle(title)
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("Ask again", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String[] permissions = { Manifest.permission.READ_PHONE_STATE };
-                        requestPermissions(permissions, MapActivity.READ_PHONE_STATE_PERMISSION_CODE);
-                    }
-                })
-                .setNegativeButton("I'm sure", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        openMapButton.setClickable(true);
-                    }
-                });
-        dialog.create().show();
+                .setPositiveButton("Ask again", positiveButton)
+                .setNegativeButton("I'm sure", negativeButton)
+                .create().show();
     }
 
 
@@ -186,13 +200,11 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         String durationAsText = formatDuration(duration);
         String calories = exercise.getCalories() + " kcal";
         String distanceAsText = String.format("%.2f", distance) + " km";
-        String pulse;
-        if(exercise.getAvgHeartRate() == 0){
-            pulse = "-";
-        }
-        else {
+        String pulse = "-";
+        if(exercise.getAvgHeartRate() != 0){
             pulse = exercise.getAvgHeartRate() + "/min";
         }
+
         String comment = exercise.getComment();
         sportNameTv.setText(sportName);
         startDateTv.setText(startDate);
@@ -217,31 +229,19 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         else {
             sb.append("0" + minute);
         }
-
         return sb.toString();
     }
 
 
-    private String formatDuration(int duration){
-        String result = "";
-        if(duration == 60){
-            result = "1h";
-        }
-        else if(duration >= 60){
-            int hours = duration / 60;
-            int minutes = duration - (hours*60);
-            if(hours == 1){
-                result = "1h";
+    private String formatDuration(int durationInMinutes){
+        String result = durationInMinutes + " min";
+        if(durationInMinutes >= 60){
+            int fullHours = durationInMinutes / 60;
+            int minutesLeft = durationInMinutes - fullHours * 60;
+            result = fullHours + "h ";
+            if(minutesLeft > 0){
+                result += minutesLeft + "min";
             }
-            else {
-                result += hours + "h ";
-            }
-            if(minutes > 0){
-                result += minutes + "min";
-            }
-        }
-        else {
-            result = duration + " min";
         }
         return result;
     }

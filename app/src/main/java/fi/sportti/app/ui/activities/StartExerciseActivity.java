@@ -64,9 +64,6 @@ import fi.sportti.app.location.RouteContainer;
 public class StartExerciseActivity extends AppCompatActivity {
     public static final String REPLY_RECORDED_EXERCISE = "fi.sportti.app.REPLY_RECORDED_EXERCISE";
     //public static final String CHANNEL_ID = "Sportti";
-    private static final int PERMISSION_FINE_LOCATION = 100;
-    private static final int PERMISSION_READ_PHONE_STATE = 101;
-    private static final int ENABLE_LOCATION_SERVICES = 102;
     private static final String TAG = "TESTI";
 
     private static volatile RecordController recordController;
@@ -376,7 +373,7 @@ public class StartExerciseActivity extends AppCompatActivity {
                 enableLocationServices();
             } else {
                 //Request result will be handled in onRequestPermissionsResult which is defined below.
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, App.PERMISSION_CODE_FINE_LOCATION);
             }
         }
     }
@@ -387,7 +384,7 @@ public class StartExerciseActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         //If user gave app permission to Location services, make sure that Location services are enabled.
-        if (requestCode == PERMISSION_FINE_LOCATION) {
+        if (requestCode == App.PERMISSION_CODE_FINE_LOCATION) {
             if (permissionGranted(grantResults)) {
                 enableLocationServices();
             }
@@ -432,7 +429,7 @@ public class StartExerciseActivity extends AppCompatActivity {
                         // Show the dialog by calling startResolutionForResult(),
                         // and check the result in onActivityResult().
                         ResolvableApiException resolvable = (ResolvableApiException) e;
-                        resolvable.startResolutionForResult(StartExerciseActivity.this, ENABLE_LOCATION_SERVICES);
+                        resolvable.startResolutionForResult(StartExerciseActivity.this, App.PERMISSION_CODE_ENABLE_LOCATION_SERVICES);
                     } catch (IntentSender.SendIntentException sendEx) {
                         // Ignore the error.
                     }
@@ -444,7 +441,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ENABLE_LOCATION_SERVICES) {
+        if (requestCode == App.PERMISSION_CODE_ENABLE_LOCATION_SERVICES) {
             // If user did not enable Location services on device
             // turn trackLocationSwitch off and tell user that route cannot be saved.
             if (resultCode != Activity.RESULT_OK) {
