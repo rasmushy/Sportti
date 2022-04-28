@@ -343,8 +343,11 @@ public class StartExerciseActivity extends AppCompatActivity {
     private void setNotification() {
         Log.d(TAG, "setNotification: called");
         //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
+        //Use FLAG_IMMUTABLE flag when creating Pending intent. This is recommended by Android Developer documentation if there is no need
+        //to modify intent after creating it.
+        //Also it is required to explicitly specify the mutability of pending intent in Android versions S or higher!
         Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, App.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_baseline_access_time_24)

@@ -77,14 +77,11 @@ public class SaveExerciseActivity extends AppCompatActivity {
     private EditText userComment;
     private Button openMapButton;
     private User user;
-//    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_save_exercise);
-        Log.d(TAG, "OnCreate()");
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
         openMapButton = findViewById(R.id.saveexercise_button_open_map);
@@ -93,9 +90,13 @@ public class SaveExerciseActivity extends AppCompatActivity {
         getRecordedData();
         user = mainViewModel.getFirstUser();
 
-        if(!RouteContainer.getInstance().hasRoute()){
+        //Set openMapButton invisible if user did not want to save route or
+        //user did not give required permissions to display maps when app started.
+        if(!RouteContainer.getInstance().hasRoute() ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
             openMapButton.setVisibility(View.INVISIBLE);
         }
+
     }
 
     public void openMap(View view){

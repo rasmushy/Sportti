@@ -92,6 +92,13 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Set openMapButton invisible if user did not give required permissions to display maps when app started.
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
+            openMapButton.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     public void openMap(View view){

@@ -108,8 +108,11 @@ public class LocationTracking extends Service {
         //In the code below, this Notification is built.
 
         //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
+        //Use FLAG_IMMUTABLE flag when creating Pending intent. This is recommended by Android Developer documentation if there is no need
+        //to modify intent after creating it.
+        //Also it is required to explicitly specify the mutability of pending intent in Android versions S or higher!
         Intent notificationIntent = new Intent(this, StartExerciseActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         //Build Notification. Notification Channel ID is passed to constructor to support newer versions of Android (Oreo and newer).
         //On older versions this ID is simply ignored.
