@@ -22,6 +22,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="2dp"
                 android:gravity="center_vertical"
+                android:text="@string/place_holder_exercise_name"
                 android:textAlignment="gravity"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -40,6 +41,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="2dp"
                     android:gravity="center_vertical"
+                    android:text="@string/place_holder_time"
                     android:textAlignment="gravity"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
@@ -51,6 +53,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="2dp"
                     android:gravity="center_vertical"
+                    android:text="@string/button_text_end"
                     android:textAlignment="gravity"
                     android:textColor="@color/black"
                     android:textSize="18sp" />

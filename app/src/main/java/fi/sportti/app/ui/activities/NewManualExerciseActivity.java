@@ -65,7 +65,8 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     }
 
 
-    public void openSelectStartTime(View view) {
+
+    public void openSelectStartTime(View view){
         final View selectStartDatePopUp = getLayoutInflater().inflate(R.layout.pop_up_select_start_date, null);
         dialogBuilder.setView(selectStartDatePopUp);
         AlertDialog dialog = dialogBuilder.create();
@@ -110,7 +111,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
-    public void openSelectDuration(View view) {
+    public  void openSelectDuration(View view){
         final View selectDurationPopUp = getLayoutInflater().inflate(R.layout.pop_up_select_duration, null);
         dialogBuilder.setView(selectDurationPopUp);
         AlertDialog dialog = dialogBuilder.create();
@@ -165,8 +166,8 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
-    public void openGiveDistance(View view) {
-        final View giveDistancePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_distance, null);
+    public void openGiveDistance(View view){
+        final  View giveDistancePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_distance, null);
         dialogBuilder.setView(giveDistancePopUp);
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
@@ -203,7 +204,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
-    public void openGiveCalories(View view) {
+    public  void openGiveCalories(View view){
         final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
         dialogBuilder.setView(giveCaloriesPopUp);
         AlertDialog dialog = dialogBuilder.create();
@@ -235,12 +236,12 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                textViewCalories.setText(calories + " calories");
+                textViewCalories.setText(calories+ " calories");
             }
         });
     }
 
-    public void openGiveAveragePulse(View view) {
+    public void openGiveAveragePulse(View view){
         final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
         dialogBuilder.setView(giveAveragePulsePopUp);
         AlertDialog dialog = dialogBuilder.create();
@@ -277,11 +278,11 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
-    public void onClickSaveExercise(View view) {
+    public void onClickSaveExercise(View view){
 
     }
 
-    private void saveExerciseData() {
+    private void saveExerciseData(){
         comment = editTextComment.getText().toString();
     }
 }

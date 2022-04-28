@@ -81,7 +81,8 @@ public class SaveExerciseActivity extends AppCompatActivity {
     private List<String> exerciseDataList;
     String[] exerciseDataArray;
     private EditText userComment;
-    private MapView mapView;
+    private Button openMapButton;
+//    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,45 +92,28 @@ public class SaveExerciseActivity extends AppCompatActivity {
         Log.d(TAG, "OnCreate()");
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
+        openMapButton = findViewById(R.id.saveexercise_button_open_map);
         exerciseDataList = new ArrayList<>();
         mainViewModel = MainActivity.getMainViewModel();
         getRecordedData();
         user = mainViewModel.getFirstUser();
         dialogBuilder = new AlertDialog.Builder(this);
 
-        mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
-        mapView.onCreate(savedInstanceState);
-
-        if (RouteContainer.getInstance().hasRoute()) {
-            //Check if app has READ_PHONE_STATE permission which is required to display map.
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                setRouteOnMap();
-            } else {
-                mapView.setVisibility(View.INVISIBLE);
-            }
-        } else {
-            mapView.setVisibility(View.INVISIBLE);
+        if(!RouteContainer.getInstance().hasRoute()){
+            openMapButton.setVisibility(View.INVISIBLE);
         }
-
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-
+    public void openMap(View view){
+        if(RouteContainer.getInstance().hasRoute()){
+            //Check if app has READ_PHONE_STATE permission which is required to display map.
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+                String route = RouteContainer.getInstance().getRouteAsText();
+                Intent intent = new Intent(this, MapActivity.class);
+                intent.putExtra(MapActivity.EXTRA_ROUTE, route);
+                startActivity(intent);
+            }
+        }
     }
 
     private void getRecordedData() {
@@ -356,40 +340,5 @@ public class SaveExerciseActivity extends AppCompatActivity {
         if (dialog != null) {
             dialog.dismiss();
         }
-    }
-
-    private void setRouteOnMap() {
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
-                mapView.setStreetMode();
-
-                //Center camera at start location.
-                LatLng startPosition = coordinates.get(0);
-                LatLng endPosition = coordinates.get(coordinates.size() - 1);
-                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
-                mapboxMap.moveCamera(newPosition);
-
-                //Add markers
-                String startMarkerText = getResources().getString(R.string.map_start_marker);
-                String endMarkerText = getResources().getString(R.string.map_end_marker);
-                MarkerOptions startMarker = new MarkerOptions();
-                startMarker.position(startPosition);
-                startMarker.setTitle(startMarkerText);
-                mapboxMap.addMarker(startMarker);
-                MarkerOptions endMarker = new MarkerOptions();
-                endMarker.position(endPosition);
-                endMarker.setTitle(endMarkerText);
-                mapboxMap.addMarker(endMarker);
-
-                //Add route as polyline.
-                PolylineOptions polyline = new PolylineOptions()
-                        .addAll(coordinates)
-                        .width(3)
-                        .color(Color.BLUE);
-                mapboxMap.addPolyline(polyline);
-            }
-        });
     }
 }

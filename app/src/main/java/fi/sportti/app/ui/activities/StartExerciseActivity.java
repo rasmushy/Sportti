@@ -249,12 +249,26 @@ public class StartExerciseActivity extends AppCompatActivity {
             //getCalories(User user, String sportType, ZonedDateTime startDate, ZonedDateTime endDate)
             int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime());
             int avgHeartRate = 0;
+            String route;
+            double distance;
             RouteContainer routeContainer = RouteContainer.getInstance();
-            String route = routeContainer.getRouteAsText();
-            double distance = routeContainer.getRouteLength();
+            if (trackLocationSwitch.isChecked()) {
+
+                route = routeContainer.getRouteAsText();
+
+                distance = routeContainer.getRouteLength();
+            } else {
+                route = "60.2207383&24.8393433_60.2204833&24.8341083_60.223965&24.82633_60.2254553&24.8258409_60.2259226&24.8256875_60.2264232&24.8295127_60.2260967&24.83517_60.2254073&24.8361407_60.2252246&24.8398707_60.2252449&24.8404679_60.2259026&24.8424576_60.2260579&24.8428381_60.2258996&24.8461283_60.2248365&24.8492301_60.2246494&24.8495303_60.2213233&24.842465_";
+                routeContainer.resetRoute();
+                routeContainer.setRoute(route);
+                distance = routeContainer.getRouteLength();
+            }
+
+            //Log.d(TAG, "resetEndAction: " + route);
             String comment = "";
+
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
-            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, Double.toString(distance), comment};
+            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, String.format("%.2f", distance), comment};
             //Time to send all recorded data into SaveExerciseActivity
             Intent intentForSaveActivity = new Intent(this, SaveExerciseActivity.class);
             intentForSaveActivity.putExtra(REPLY_RECORDED_EXERCISE, dataForIntent);
