@@ -254,6 +254,8 @@ public class SaveExerciseActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             textViewForData.setText(Integer.toString(seekBarPulse.getProgress() * 5 + 50));
                             exerciseDataArray[4] = Integer.toString(seekBarPulse.getProgress() * 5 + 50);
+
+                            //If Average heart rate is between 90 - 189 we calculate calorie estimate.
                             if (seekBarPulse.getProgress() * 5 + 50 > 89 && seekBarPulse.getProgress() * 5 + 50 < 190) {
                                 View calorieView = exerciseListView.getChildAt(4);
                                 TextView textViewForCalories = calorieView.findViewById(R.id.saveexercise_listview_textview_data);
@@ -310,6 +312,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     "\n   comment: " + exerciseDataArray[7]);
             //Send us back to MainActivity page after saving data.
             Intent intentForMainActivity = new Intent(this, MainActivity.class);
+            // FLAG_ACTIVITY_CLEAR_TOP to clear activity stack:  https://developer.android.com/guide/components/activities/tasks-and-back-stack
             intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intentForMainActivity);
         }
