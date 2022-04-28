@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +44,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
     private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
     private EditText editTextComment;
-    private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance, duration,
+    private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance,
             durationHours, durationMinutes, durationSeconds, calories, pulse;
     private double distanceDouble;
     private long startDateLong;
@@ -86,11 +85,15 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         textViewPulse = findViewById(R.id.textViewPulse);
         editTextComment = findViewById(R.id.editTextTextComment);
 
+        startTimeData = ZonedDateTime.now();
+        exerciseDataArray[1] = startTimeData.toString();
+
         textViewStartTime.setText(dateAndTimeFormatter.format(new Date()));
         textViewDuration.setText("0h 0min 0sec");
         textViewDistance.setText("0 meters");
         textViewCalories.setText("0 calories");
         textViewPulse.setText("0 bpm");
+
     }
 
 
@@ -786,7 +789,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
     public void onClickSaveExercise(View view) {
         saveExerciseData();
-        Log.d(TAG, "Save exercise pressed");
     }
 
     private void saveExerciseData() {
