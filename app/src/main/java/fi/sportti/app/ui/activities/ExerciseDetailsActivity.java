@@ -1,12 +1,15 @@
 package fi.sportti.app.ui.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
@@ -82,7 +86,6 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                     }
                 });
                 exercise = exercises.get(index);
-                route = exercise.getRoute();
                 setInformationOnScreen(exercise);
                 if(exercise.hasRoute()){
                     route = exercise.getRoute();
@@ -92,28 +95,84 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
-        //Set openMapButton invisible if user did not give required permissions to display maps when app started.
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
-            openMapButton.setVisibility(View.INVISIBLE);
-        }
-
-    }
-
-    public void openMap(View view){
-        //Check if app has READ_PHONE_STATE permission which is required to display map.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
-            Intent mapIntent = new Intent(this, MapActivity.class);
-            mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
-            startActivity(mapIntent);
-        }
     }
 
     public void deleteExercise(View view){
         MainActivity.getMainViewModel().deleteExercise(exercise);
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
+    }
+
+    public void openMapButtonClicked(View view){
+        //Check if app has READ_PHONE_STATE permission which is required to display map.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+            openMap();
+        }
+        else {
+            openMapButton.setClickable(false);
+            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },MapActivity.PERMISSION_READ_PHONE_STATE);
+        }
+    }
+
+    @Override
+    //This method is called by Android when user responds to permission request.
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == MapActivity.PERMISSION_READ_PHONE_STATE){
+            if(permissionGranted(grantResults)){
+                openMapButton.setClickable(true);
+                openMap();
+            }
+            else {
+                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+                    showInformativeDialog();
+                }
+                else {
+                    openMapButton.setClickable(true);
+                    showPermissionDeniedToast();
+                }
+            }
+        }
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void openMap(){
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
+        startActivity(mapIntent);
+    }
+
+    private void showPermissionDeniedToast(){
+        String message = getResources().getString(R.string.required_permission_denied);
+        Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    private void showInformativeDialog(){
+        String title = getResources().getString(R.string.permission_denied);
+        String message = getResources().getString(R.string.informative_message_for_permissions);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ask again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },MapActivity.PERMISSION_READ_PHONE_STATE);
+                    }
+                })
+                .setNegativeButton("I'm sure", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        openMapButton.setClickable(true);
+                        showPermissionDeniedToast();
+                    }
+                });
+        dialog.create().show();
     }
 
 

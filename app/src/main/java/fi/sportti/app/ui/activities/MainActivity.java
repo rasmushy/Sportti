@@ -40,7 +40,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
-    public static final int PERMISSION_READ_PHONE_STATE = 101;
+   // public static final int PERMISSION_READ_PHONE_STATE = 101;
     private static final String TAG = "TESTI"; // TAG for Log.d
 
     private static MainViewModel mainViewModel;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initialStartUp();
-        checkAppPermissions();
+        //checkAppPermissions();
     }
 
     /*
@@ -195,28 +195,28 @@ public class MainActivity extends AppCompatActivity {
         progressBar.postInvalidate();
     }
 
-    private void checkAppPermissions(){
-        //At App startup check if app has READ_PHONE_STATE permission which is required to display maps.
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },PERMISSION_READ_PHONE_STATE);
-        }
-    }
-    @Override
-    //This method is called by Android when user responds to permission request.
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == PERMISSION_READ_PHONE_STATE){
-            if(!permissionGranted(grantResults)){
-                String message = getResources().getString(R.string.toast_maps_not_available);
-                Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-    }
-
-    private boolean permissionGranted(int[] grantResults){
-        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
-    }
+//    private void checkAppPermissions(){
+//        //At App startup check if app has READ_PHONE_STATE permission which is required to display maps.
+//        if (ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
+//            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },PERMISSION_READ_PHONE_STATE);
+//        }
+//    }
+//    @Override
+//    //This method is called by Android when user responds to permission request.
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        if(requestCode == PERMISSION_READ_PHONE_STATE){
+//            if(!permissionGranted(grantResults)){
+//                String message = getResources().getString(R.string.toast_maps_not_available);
+//                Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT);
+//                toast.show();
+//            }
+//        }
+//    }
+//
+//    private boolean permissionGranted(int[] grantResults){
+//        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
+//    }
 }

@@ -35,6 +35,7 @@ import fi.sportti.app.location.RouteContainer;
 
 public class MapActivity extends AppCompatActivity {
     public static final String TAG = "TESTI";
+    public static final int PERMISSION_READ_PHONE_STATE = 101;
     public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
     private MapView mapView;
 
@@ -55,7 +56,7 @@ public class MapActivity extends AppCompatActivity {
                 List<LatLng> coordinates = RouteContainer.getInstance().convertTextRouteToList(route);
                 mapView.setStreetMode();
 
-                //Center camera at start location.
+                //Set camera at center of whole route.
                 setCamera(mapboxMap, coordinates);
                 LatLng startPosition = coordinates.get(0);
                 LatLng endPosition = coordinates.get(coordinates.size()-1);
