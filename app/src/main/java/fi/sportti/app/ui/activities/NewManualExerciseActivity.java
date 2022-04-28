@@ -715,7 +715,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         imageButtonPulsePlus100.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counterUtilityPulse.addToCounter(10);
+                counterUtilityPulse.addToCounter(100);
                 pulse = counterUtilityPulse.returnCounterInt();
                 if (pulse < 10) {
                     pulseString = "00" + pulse + "bpm";
@@ -810,6 +810,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 Exercise exercise = new Exercise(exerciseType, userId, startTimeData, endTimeData,
                         calories, pulse, "", distanceDouble, comment);
                 mainViewModel.insertExercise(exercise);
+
                 Log.d(TAG, "savePressed() --> Exercise saved to database" +
                         "\n   type: " + exerciseDataArray[0] +
                         "\n   user id: " + userId +
