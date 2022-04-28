@@ -117,7 +117,6 @@ public class LocationTracking extends Service {
         //Build Notification. Notification Channel ID is passed to constructor to support newer versions of Android (Oreo and newer).
         //On older versions this ID is simply ignored.
         //Notification Channel itself is created in App class when application starts.
-
         String title = getResources().getString(R.string.notification_location_tracking_title);
         String message = getResources().getString(R.string.notification_location_tracking_on_message);
         notification = new NotificationCompat.Builder(this, App.NOTIFICATION_CHANNEL_ID)

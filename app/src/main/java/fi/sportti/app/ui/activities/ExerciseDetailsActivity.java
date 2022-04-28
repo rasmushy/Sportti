@@ -49,7 +49,6 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_details);
-        //mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         sportNameTv = findViewById(R.id.exercisedetails_tv_sport_name);
         startDateTv = findViewById(R.id.exercisedetails_tv_start_date_value);
         durationTv = findViewById(R.id.exercisedetails_tv_duration_value);
@@ -63,6 +62,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         int index = b.getInt(HistoryActivity.SELECTED_EXERCISE);
 
         mainViewModel = MainActivity.getMainViewModel();
+        //Get correct Exercise.
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
@@ -103,8 +103,8 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
     //This method is called by Android when user responds to permission request.
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -191,7 +191,6 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 .create().show();
     }
 
-
     private void setInformationOnScreen(Exercise exercise){
         int duration = exercise.getDurationInMinutes();
         double distance = exercise.getDistance();
@@ -204,8 +203,8 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         if(exercise.getAvgHeartRate() != 0){
             pulse = exercise.getAvgHeartRate() + "/min";
         }
-
         String comment = exercise.getComment();
+
         sportNameTv.setText(sportName);
         startDateTv.setText(startDate);
         durationTv.setText(durationAsText);
@@ -234,6 +233,9 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
 
 
     private String formatDuration(int durationInMinutes){
+        //Returns duration in String format. Examples:
+        // "34 min" if duration is less than 60 minutes.
+        // "1h 15min" if duration is over 60 minutes.
         String result = durationInMinutes + " min";
         if(durationInMinutes >= 60){
             int fullHours = durationInMinutes / 60;

@@ -130,12 +130,15 @@
 
     <TextView
         android:id="@+id/exercisedetails_tv_comment_value"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_comment"
-        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_comment" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_comment" />
 
     <Button
         android:id="@+id/exercisedetails_button_delete_exercise"

@@ -76,17 +76,10 @@ public class SaveExerciseActivity extends AppCompatActivity {
         getRecordedData();
         user = mainViewModel.getFirstUser();
 
-        //Set openMapButton invisible if user did not want to save route or
-        //user did not give required permissions to display maps when app started.
-//        if(!RouteContainer.getInstance().hasRoute() ||
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
-//            openMapButton.setVisibility(View.INVISIBLE);
-//        }
-
+        //Set openMapButton invisible if user did not want to save route.
         if(!RouteContainer.getInstance().hasRoute()){
             openMapButton.setVisibility(View.INVISIBLE);
         }
-
     }
 
 
@@ -298,7 +291,6 @@ public class SaveExerciseActivity extends AppCompatActivity {
         else {
             openMapButton.setClickable(false);
             String[] permissions = { Manifest.permission.READ_PHONE_STATE };
-
             requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
         }
     }
@@ -311,8 +303,8 @@ public class SaveExerciseActivity extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
-    @Override
     //This method is called by Android when user responds to permission request.
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -323,7 +315,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
             }
             else {
                 //Check if app should show informative message to user about why this permission is required.
-                //Android System decides this.
+                //Android System decides if it is required or not.
                 if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
                     showInformativeDialog();
                 }

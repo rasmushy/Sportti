@@ -59,7 +59,7 @@
     <!--Permissions -->
     <string name="permission_denied">Permission denied!</string>
     <string name="informative_message_for_permissions">"Sportti needs this permission to display exercise routes on map.\n\nAre you sure you want to deny this permission?"</string>
-    <string name="required_permission_denied_message">"Required permission to display map was denied.\nYou can change this in phone's settings"</string>
+    <string name="required_permission_denied_message">"Permission required to display map was denied.\nYou can change this in phone's settings"</string>
     <string name="map_not_available">Map is not available</string>
 
 

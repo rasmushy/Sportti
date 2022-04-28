@@ -253,21 +253,17 @@ public class StartExerciseActivity extends AppCompatActivity {
             double distance;
             RouteContainer routeContainer = RouteContainer.getInstance();
             if(trackLocationSwitch.isChecked()){
-
                 route = routeContainer.getRouteAsText();
-
                 distance = routeContainer.getRouteLength();
             }
+            //Default route used for development purpose and testing.
             else {
                 route = "60.2207383&24.8393433_60.2204833&24.8341083_60.223965&24.82633_60.2254553&24.8258409_60.2259226&24.8256875_60.2264232&24.8295127_60.2260967&24.83517_60.2254073&24.8361407_60.2252246&24.8398707_60.2252449&24.8404679_60.2259026&24.8424576_60.2260579&24.8428381_60.2258996&24.8461283_60.2248365&24.8492301_60.2246494&24.8495303_60.2213233&24.842465_";
                 routeContainer.resetRoute();
                 routeContainer.setRoute(route);
                 distance = routeContainer.getRouteLength();
             }
-
-            //Log.d(TAG, "resetEndAction: " + route);
             String comment = "";
-
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
             String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, Double.toString(distance), comment};
             //Time to send all recorded data into SaveExerciseActivity
@@ -338,7 +334,6 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     // Notification: https://developer.android.com/training/notify-user/build-notification#java
     private void setNotification() {
-        Log.d(TAG, "setNotification: called");
         //Create Pending Intent which is passed to notification so user can open correct activity by pressing notification.
         //Use FLAG_IMMUTABLE flag when creating Pending intent. This is recommended by Android Developer documentation if there is no need
         //to modify intent after creating it.
@@ -360,31 +355,33 @@ public class StartExerciseActivity extends AppCompatActivity {
     }
 
 
-    /*
+    /**
      *@author Jukka-Pekka Jaakkola
      */
 
     public void toggleLocationTracking(View view) {
         if (trackLocationSwitch.isChecked()) {
             //Check if app has permission to use device location.
-            if (ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                //If it has, make sure that location services are enabled so location can be tracked.
+            int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            //If it has, make sure that location services are enabled so location can be tracked.
+            if (permissionState == PackageManager.PERMISSION_GRANTED) {
                 enableLocationServices();
-            } else {
+            }
+            else {
                 //Request result will be handled in onRequestPermissionsResult which is defined below.
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, App.PERMISSION_CODE_FINE_LOCATION);
+                String[] permissions = { Manifest.permission.ACCESS_FINE_LOCATION };
+                requestPermissions(permissions, App.PERMISSION_CODE_FINE_LOCATION);
             }
         }
     }
 
-    @Override
     //This method is called by Android system when user responds to permission request.
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        //If user gave app permission to Location services, make sure that Location services are enabled.
         if (requestCode == App.PERMISSION_CODE_FINE_LOCATION) {
+            //If user gave app permission to Location services, make sure that Location services are enabled.
             if (permissionGranted(grantResults)) {
                 enableLocationServices();
             }
@@ -422,7 +419,6 @@ public class StartExerciseActivity extends AppCompatActivity {
         task.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: Location services are disabled. Asking user to turn them on.");
                 if (e instanceof ResolvableApiException) {
                     // Location settings are not satisfied, but this can be fixed by showing the user a dialog.
                     try {
