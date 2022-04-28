@@ -4,6 +4,16 @@ public class CounterUtility {
 
     private int counter;
     private int min, max, step, start;
+    private boolean roll;
+
+    public CounterUtility(int min, int max, int start, int step, boolean roll){
+        this.counter = start;
+        this.min = min;
+        this.max = max;
+        this.step = step;
+        this.start = start;
+        this.roll = roll;
+    }
 
     public CounterUtility(int min, int max, int start, int step){
         this.counter = start;
@@ -29,6 +39,8 @@ public class CounterUtility {
     public void addToCounter(){
         if(this.counter + this.step <= this.max){
             this.counter += this.step;
+        }else if(this.roll && this.counter == this.max){
+            this.counter = this.min;
         }else{
             this.counter = this.max;
         }
@@ -45,7 +57,9 @@ public class CounterUtility {
     public void minusToCounter(){
         if(this.counter - this.step >= this.min){
             this.counter -= this.step;
-        }else{
+        }else if(this.roll && this.counter == this.min){
+            this.counter = this.max;
+        } else{
             this.counter = this.min;
         }
     }

@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import java.util.Date;
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.User;
+import fi.sportti.app.ui.utilities.CounterUtility;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -42,10 +44,10 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
     private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
     private EditText editTextComment;
-    private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance, duration, durationHour, durationMin, calories, pulse;
+    private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance, duration, durationHours, durationMinutes, durationSeconds, calories, pulse;
     private double distanceDouble;
     private long startDateLong;
-    private String exerciseType, startDate, startDateAndTime, comment;
+    private String secondsString,minutesString,hoursString, distanceString, exerciseType, startDate, startDateAndTime, comment;
     private ZonedDateTime startTimeData, endTimeData;
 
     private AlertDialog.Builder dialogBuilder;
@@ -80,7 +82,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         editTextComment = findViewById(R.id.editTextTextComment);
 
         textViewStartTime.setText(dateAndTimeFormatter.format(new Date()));
-        textViewDuration.setText("0h0min");
+        textViewDuration.setText("0h 0min 0sec");
         textViewDistance.setText("0 meters");
         textViewCalories.setText("0 calories");
         textViewPulse.setText("0 bpm");
@@ -145,56 +147,199 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
 
-        Button buttonSaveDurationPopUp = selectDurationPopUp.findViewById(R.id.buttonSaveDurationPopUp);
-        SeekBar seekBarHoursPopUp = selectDurationPopUp.findViewById(R.id.seekBarHourPopUp);
-        SeekBar seekBarMinutesPopUp = selectDurationPopUp.findViewById(R.id.seekBarMinPopUp);
-        TextView textViewDurationPopUp = selectDurationPopUp.findViewById(R.id.textViewTimePopUp);
-        textViewDurationPopUp.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
+        Button buttonSaveDistance = selectDurationPopUp.findViewById(R.id.buttonSaveDurationPopUp);
+        ImageButton buttonSecondsPlus = selectDurationPopUp.findViewById(R.id.imageButtonSecondsPlus);
+        ImageButton buttonSecondsMinus = selectDurationPopUp.findViewById(R.id.imageButtonSecondsMinus);
+        ImageButton buttonMinutesPlus = selectDurationPopUp.findViewById(R.id.imageButtonMinutesPlus);
+        ImageButton buttonMinutesMinus = selectDurationPopUp.findViewById(R.id.imageButtonMinutesMinus);
+        ImageButton buttonHoursPlus = selectDurationPopUp.findViewById(R.id.imageButtonHoursPlus);
+        ImageButton buttonHoursMinus = selectDurationPopUp.findViewById(R.id.imageButtonHoursMinus);
+        TextView textViewDurationPopUp = selectDurationPopUp.findViewById(R.id.textViewDistancePopUp);
 
-        seekBarHoursPopUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        textViewDurationPopUp.setText("00h00m00s");
+
+        CounterUtility counterUtilitySeconds = new CounterUtility(0,59,0,1,true);
+        CounterUtility counterUtilityMinutes = new CounterUtility(0,59,0,1,true);
+        CounterUtility counterUtilityHours = new CounterUtility(0,99,0,1,true);
+
+        buttonSecondsPlus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                textViewDurationPopUp.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
-            }
+            public void onClick(View view) {
+                counterUtilitySeconds.addToCounter();
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                durationMinutes = counterUtilityMinutes.returnCounterInt();
+                durationHours = counterUtilityHours.returnCounterInt();
 
-            }
+                if(durationSeconds < 10){
+                    secondsString = "0" + durationSeconds;
+                }else {
+                    secondsString = String.valueOf(durationSeconds);
+                }
+                if(durationMinutes < 10){
+                    minutesString = "0" + durationMinutes;
+                }else {
+                    minutesString = String.valueOf(durationMinutes);
+                }
+                if(durationHours < 10){
+                    hoursString = "0" + durationHours;
+                }else {
+                    hoursString = String.valueOf(durationHours);
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                duration = (seekBarHoursPopUp.getProgress() * 60) + (seekBarMinutesPopUp.getProgress() * 2);
-                durationHour = (seekBarHoursPopUp.getProgress() * 60);
+                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
             }
         });
 
-        seekBarMinutesPopUp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        buttonSecondsMinus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                textViewDurationPopUp.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
-            }
+            public void onClick(View view) {
+                counterUtilitySeconds.minusToCounter();
+                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                durationMinutes = counterUtilityMinutes.returnCounterInt();
+                durationHours = counterUtilityHours.returnCounterInt();
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+                if(durationSeconds < 10){
+                    secondsString = "0" + durationSeconds;
+                }else {
+                    secondsString = String.valueOf(durationSeconds);
+                }
+                if(durationMinutes < 10){
+                    minutesString = "0" + durationMinutes;
+                }else {
+                    minutesString = String.valueOf(durationMinutes);
+                }
+                if(durationHours < 10){
+                    hoursString = "0" + durationHours;
+                }else {
+                    hoursString = String.valueOf(durationHours);
+                }
 
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                duration = (seekBarHoursPopUp.getProgress() * 60) + (seekBarMinutesPopUp.getProgress() * 2);
-                durationMin = (seekBarMinutesPopUp.getProgress() * 2);
+                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
             }
         });
 
-        buttonSaveDurationPopUp.setOnClickListener(new View.OnClickListener() {
+        buttonMinutesPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterUtilityMinutes.addToCounter();
+                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                durationMinutes = counterUtilityMinutes.returnCounterInt();
+                durationHours = counterUtilityHours.returnCounterInt();
+
+                if(durationSeconds < 10){
+                    secondsString = "0" + durationSeconds;
+                }else {
+                    secondsString = String.valueOf(durationSeconds);
+                }
+                if(durationMinutes < 10){
+                    minutesString = "0" + durationMinutes;
+                }else {
+                    minutesString = String.valueOf(durationMinutes);
+                }
+                if(durationHours < 10){
+                    hoursString = "0" + durationHours;
+                }else {
+                    hoursString = String.valueOf(durationHours);
+                }
+
+                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+            }
+        });
+
+        buttonMinutesMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterUtilityMinutes.minusToCounter();
+                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                durationMinutes = counterUtilityMinutes.returnCounterInt();
+                durationHours = counterUtilityHours.returnCounterInt();
+
+                if(durationSeconds < 10){
+                    secondsString = "0" + durationSeconds;
+                }else {
+                    secondsString = String.valueOf(durationSeconds);
+                }
+                if(durationMinutes < 10){
+                    minutesString = "0" + durationMinutes;
+                }else {
+                    minutesString = String.valueOf(durationMinutes);
+                }
+                if(durationHours < 10){
+                    hoursString = "0" + durationHours;
+                }else {
+                    hoursString = String.valueOf(durationHours);
+                }
+
+                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+            }
+        });
+
+        buttonHoursPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterUtilityHours.addToCounter();
+                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                durationMinutes = counterUtilityMinutes.returnCounterInt();
+                durationHours = counterUtilityHours.returnCounterInt();
+
+                if(durationSeconds < 10){
+                    secondsString = "0" + durationSeconds;
+                }else {
+                    secondsString = String.valueOf(durationSeconds);
+                }
+                if(durationMinutes < 10){
+                    minutesString = "0" + durationMinutes;
+                }else {
+                    minutesString = String.valueOf(durationMinutes);
+                }
+                if(durationHours < 10){
+                    hoursString = "0" + durationHours;
+                }else {
+                    hoursString = String.valueOf(durationHours);
+                }
+
+                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+            }
+        });
+
+        buttonHoursMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterUtilityHours.minusToCounter();
+                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                durationMinutes = counterUtilityMinutes.returnCounterInt();
+                durationHours = counterUtilityHours.returnCounterInt();
+
+                if(durationSeconds < 10){
+                    secondsString = "0" + durationSeconds;
+                }else {
+                    secondsString = String.valueOf(durationSeconds);
+                }
+                if(durationMinutes < 10){
+                    minutesString = "0" + durationMinutes;
+                }else {
+                    minutesString = String.valueOf(durationMinutes);
+                }
+                if(durationHours < 10){
+                    hoursString = "0" + durationHours;
+                }else {
+                    hoursString = String.valueOf(durationHours);
+                }
+
+                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+            }
+        });
+
+        buttonSaveDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                endTimeData = startTimeData.plusHours(durationHour);
-                endTimeData.plusMinutes(durationMin);
+                endTimeData = startTimeData.plusHours(durationHours);
+                endTimeData.plusMinutes(durationMinutes);
+                endTimeData.plusSeconds(durationSeconds);
                 exerciseDataArray[2] = endTimeData.toString();
-                textViewDuration.setText(seekBarHoursPopUp.getProgress() + "h " + (seekBarMinutesPopUp.getProgress() * 2 + "min"));
+                textViewDuration.setText(counterUtilityHours.returnCounter() + "h " + counterUtilityMinutes.returnCounter() + "min " + counterUtilitySeconds.returnCounter() + "sec");
             }
         });
     }
@@ -205,28 +350,144 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
 
+        ImageButton imageButtonPlus10 = giveDistancePopUp.findViewById(R.id.imageButtonPlus10);
+        ImageButton imageButtonPlus100 = giveDistancePopUp.findViewById(R.id.imageButtonPlus100);
+        ImageButton imageButtonPlus1000 = giveDistancePopUp.findViewById(R.id.imageButtonPlus1000);
+        ImageButton imageButtonMinus10 = giveDistancePopUp.findViewById(R.id.imageButtonMinus10);
+        ImageButton imageButtonMinus100 = giveDistancePopUp.findViewById(R.id.imageButtonMinus100);
+        ImageButton imageButtonMinus1000 = giveDistancePopUp.findViewById(R.id.imageButtonMinus1000);
+        TextView textViewDistanceValue = giveDistancePopUp.findViewById(R.id.textViewDistanceValue);
         Button buttonSaveDistance = giveDistancePopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
-        SeekBar seekBarDistance = giveDistancePopUp.findViewById(R.id.seekBarDistance);
-        TextView textViewSeekBarDistanceValue = giveDistancePopUp.findViewById(R.id.textViewSeekBarDistanceValue);
-        textViewSeekBarDistanceValue.setText(seekBarDistance.getProgress() * 500 + " meters");
 
-        seekBarDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        textViewDistanceValue.setText("00000m");
+
+        CounterUtility counterUtilityDistance = new CounterUtility(0,99999,0,1);
+
+
+
+        imageButtonPlus10.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                //TODO Auto-generated method
-                textViewSeekBarDistanceValue.setText(seekBarDistance.getProgress() * 500 + " meters");
+            public void onClick(View view) {
+                counterUtilityDistance.addToCounter(10);
+                distance = counterUtilityDistance.returnCounterInt();
+
+                if(distance < 10){
+                    distanceString = "0000" +distance + "m";
+                }else if (distance < 100){
+                    distanceString = "000" +distance + "m";
+                }else if (distance < 1000){
+                    distanceString = "00" +distance + "m";
+                }else if (distance < 10000){
+                    distanceString = "0" +distance + "m";
+                }else {
+                    distanceString = distance + "m";
+                }
+                textViewDistanceValue.setText(distanceString);
             }
+        });
 
+        imageButtonPlus100.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                //TODO Auto-generated method
+            public void onClick(View view) {
+                counterUtilityDistance.addToCounter(100);
+                distance = counterUtilityDistance.returnCounterInt();
+
+                if(distance < 10){
+                    distanceString = "0000" +distance + "m";
+                }else if (distance < 100){
+                    distanceString = "000" +distance + "m";
+                }else if (distance < 1000){
+                    distanceString = "00" +distance + "m";
+                }else if (distance < 10000){
+                    distanceString = "0" +distance + "m";
+                }else {
+                    distanceString = distance + "m";
+                }
+                textViewDistanceValue.setText(distanceString);
             }
+        });
 
+        imageButtonPlus1000.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                distance = seekBarDistance.getProgress() * 500;
-                distanceDouble = distance;
-                exerciseDataArray[6] = String.valueOf(distanceDouble);
+            public void onClick(View view) {
+                counterUtilityDistance.addToCounter(1000);
+                distance = counterUtilityDistance.returnCounterInt();
+
+                if(distance < 10){
+                    distanceString = "0000" +distance + "m";
+                }else if (distance < 100){
+                    distanceString = "000" +distance + "m";
+                }else if (distance < 1000){
+                    distanceString = "00" +distance + "m";
+                }else if (distance < 10000){
+                    distanceString = "0" +distance + "m";
+                }else {
+                    distanceString = distance + "m";
+                }
+                textViewDistanceValue.setText(distanceString);
+            }
+        });
+
+        imageButtonMinus10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterUtilityDistance.minusToCounter(10);
+                distance = counterUtilityDistance.returnCounterInt();
+
+                if(distance < 10){
+                    distanceString = "0000" +distance + "m";
+                }else if (distance < 100){
+                    distanceString = "000" +distance + "m";
+                }else if (distance < 1000){
+                    distanceString = "00" +distance + "m";
+                }else if (distance < 10000){
+                    distanceString = "0" +distance + "m";
+                }else {
+                    distanceString = distance + "m";
+                }
+                textViewDistanceValue.setText(distanceString);
+            }
+        });
+
+        imageButtonMinus100.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterUtilityDistance.minusToCounter(100);
+                distance = counterUtilityDistance.returnCounterInt();
+
+                if(distance < 10){
+                    distanceString = "0000" +distance + "m";
+                }else if (distance < 100){
+                    distanceString = "000" +distance + "m";
+                }else if (distance < 1000){
+                    distanceString = "00" +distance + "m";
+                }else if (distance < 10000){
+                    distanceString = "0" +distance + "m";
+                }else {
+                    distanceString = distance + "m";
+                }
+                textViewDistanceValue.setText(distanceString);
+            }
+        });
+
+        imageButtonMinus1000.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counterUtilityDistance.minusToCounter(1000);
+                distance = counterUtilityDistance.returnCounterInt();
+
+                if(distance < 10){
+                    distanceString = "0000" +distance + "m";
+                }else if (distance < 100){
+                    distanceString = "000" +distance + "m";
+                }else if (distance < 1000){
+                    distanceString = "00" +distance + "m";
+                }else if (distance < 10000){
+                    distanceString = "0" +distance + "m";
+                }else {
+                    distanceString = distance + "m";
+                }
+                textViewDistanceValue.setText(distanceString);
             }
         });
 
@@ -234,7 +495,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                textViewDistance.setText(distance + " meters");
+                distanceDouble = distance;
+                exerciseDataArray[6] = String.valueOf(distanceDouble);
+                textViewDistance.setText(counterUtilityDistance.returnCounter() + " meters");
             }
         });
     }
