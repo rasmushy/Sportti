@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initialStartUp();
-        //checkAppPermissions();
     }
 
     /*
@@ -152,13 +151,6 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
         }
     }
-    
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: Main Activity destroyed");
-    }
-
 
     /*
      *@author Jukka-Pekka Jaakkola
@@ -194,29 +186,4 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setMultiplier(multiplier);
         progressBar.postInvalidate();
     }
-
-//    private void checkAppPermissions(){
-//        //At App startup check if app has READ_PHONE_STATE permission which is required to display maps.
-//        if (ActivityCompat.checkSelfPermission(this,
-//                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
-//            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },PERMISSION_READ_PHONE_STATE);
-//        }
-//    }
-//    @Override
-//    //This method is called by Android when user responds to permission request.
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if(requestCode == PERMISSION_READ_PHONE_STATE){
-//            if(!permissionGranted(grantResults)){
-//                String message = getResources().getString(R.string.toast_maps_not_available);
-//                Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        }
-//    }
-//
-//    private boolean permissionGranted(int[] grantResults){
-//        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
-//    }
 }

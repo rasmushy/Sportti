@@ -60,7 +60,6 @@ public class HistoryActivity extends AppCompatActivity {
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
-                Log.d(TAG, "onChanged: Exercise list changed");
                 updateGraph();
                 //Sort exercises based on date so they are in correct order to display on listview.
                 exercises.sort(new Comparator<Exercise>() {

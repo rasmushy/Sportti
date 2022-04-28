@@ -6,29 +6,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapquest.mapping.MapQuest;
-import com.mapquest.mapping.maps.MapView;
 
 import java.time.ZonedDateTime;
 import java.util.Comparator;
@@ -36,7 +23,6 @@ import java.util.List;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.location.RouteContainer;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
@@ -105,12 +91,14 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
 
     public void openMapButtonClicked(View view){
         //Check if app has READ_PHONE_STATE permission which is required to display map.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
+        int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (permissionState == PackageManager.PERMISSION_GRANTED){
             openMap();
         }
         else {
             openMapButton.setClickable(false);
-            requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },MapActivity.PERMISSION_READ_PHONE_STATE);
+            String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+            requestPermissions(permissions, MapActivity.READ_PHONE_STATE_PERMISSION_CODE);
         }
     }
 
@@ -119,18 +107,20 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == MapActivity.PERMISSION_READ_PHONE_STATE){
+        if(requestCode == MapActivity.READ_PHONE_STATE_PERMISSION_CODE){
             if(permissionGranted(grantResults)){
                 openMapButton.setClickable(true);
                 openMap();
             }
             else {
+                //Check if app should show informative message to user about why this permission is required.
+                //Android System decides this.
                 if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
                     showInformativeDialog();
                 }
                 else {
                     openMapButton.setClickable(true);
-                    showPermissionDeniedToast();
+                    showPermissionDeniedDialog();
                 }
             }
         }
@@ -146,12 +136,24 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
-    private void showPermissionDeniedToast(){
-        String message = getResources().getString(R.string.required_permission_denied);
-        Toast toast = Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG);
-        toast.show();
+    //Dialog where user is explained that map is not available because required permission was not granted.
+    private void showPermissionDeniedDialog(){
+        String title = getResources().getString(R.string.map_not_available);
+        String message = getResources().getString(R.string.required_permission_denied_message);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        dialog.create().show();
     }
 
+    //Informative dialog where user can see why permission is required.
+    //User can verify to deny this permission or show permission request window again.
     private void showInformativeDialog(){
         String title = getResources().getString(R.string.permission_denied);
         String message = getResources().getString(R.string.informative_message_for_permissions);
@@ -161,7 +163,8 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 .setPositiveButton("Ask again", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE },MapActivity.PERMISSION_READ_PHONE_STATE);
+                        String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+                        requestPermissions(permissions, MapActivity.READ_PHONE_STATE_PERMISSION_CODE);
                     }
                 })
                 .setNegativeButton("I'm sure", new DialogInterface.OnClickListener() {
@@ -169,7 +172,6 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                         openMapButton.setClickable(true);
-                        showPermissionDeniedToast();
                     }
                 });
         dialog.create().show();
