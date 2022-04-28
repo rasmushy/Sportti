@@ -96,6 +96,7 @@ public class CalorieConversionUtilities {
                         * 60 * ChronoUnit.HOURS.between(startDate, endDate);
             }
         } else {
+            Log.d("getCaloriesWithVOMAX() ", "user has set resting heart rate, calculating calories with VO2Max.");
             if (user.getGender().equals("Male")) {
                 calories = ((-55.0969 + (0.6309 * avgHeartRate)
                         + (0.1988 * user.getWeight())
