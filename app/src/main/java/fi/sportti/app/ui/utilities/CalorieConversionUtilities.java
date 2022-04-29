@@ -1,7 +1,5 @@
 package fi.sportti.app.ui.utilities;
 
-import static fi.sportti.app.ui.utilities.TimeConversionUtilities.getAgeFromDate;
-
 import android.os.Build;
 import android.util.Log;
 
@@ -11,9 +9,15 @@ import androidx.annotation.RequiresApi;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-import fi.sportti.app.constants.ExerciseType;
+import fi.sportti.app.ui.constants.ExerciseType;
 import fi.sportti.app.datastorage.room.User;
 
+/**
+ * Calorie conversion utilities, to calculate and convert our calorie related stuff.
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
+ */
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CalorieConversionUtilities {
 
@@ -32,9 +36,9 @@ public class CalorieConversionUtilities {
      */
     public static double getBasalMetabolicRate(@NonNull User user) {
         if (user.getGender().equals("Male")) {
-            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * getAgeFromDate(user.getAge()) + 5);
+            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * user.getAge() + 5);
         } else if (user.getGender().equals("Female")) {
-            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * getAgeFromDate(user.getAge()) - 161);
+            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * user.getAge() - 161);
         }
         return 0.0;
     }
@@ -67,45 +71,45 @@ public class CalorieConversionUtilities {
      * VO2MAX is more accurate, uses generic form if user has not set resting heart rate.
      *
      * @param user         Current user (for gender, weight and age)
-     * @param avgHeartRate Average heart rate in exercise
+     * @param avgHeartRate User set value for average heart rate in the exercise
      * @param startDate    Start date to calculate time duration
      * @param endDate      End date to calculate time duration
      * @return Estimated calories burned as integer value
      * @author Rasmus Hyyppä
      */
     public static int getCaloriesWithHeartRate(@NonNull User user, int avgHeartRate, ZonedDateTime startDate, ZonedDateTime endDate) {
-        // VO2MAX calculations: https://www.mdapp.co/vo2-max-calculator-for-aerobic-capacity-369/
+
         double calories = 0;
-        double maxHeartRate = 208 - (0.7 * getAgeFromDate(user.getAge()));
-        double vo2MAX = 15.3 * (maxHeartRate / user.getRestHeartRate());
-        Log.d("getCaloriesWithVOMax() ", "vo2MAX is: " + vo2MAX);
-        Log.d("getCaloriesWithVOMax() ", "maxHR is: " + maxHeartRate);
+
         if (user.getRestHeartRate() > 20) {
-            Log.d("getCaloriesWithVOMAX() ", "userRestHeartRate less than 20, calculating without vo2MAX.");
+            // VO2MAX calculations: https://www.mdapp.co/vo2-max-calculator-for-aerobic-capacity-369/
+            double vo2MAX = 15.3 * (user.getMaxHeartRate() / user.getRestHeartRate());
+            Log.d("getCaloriesWithVOMax() ", "maxHR is: " + user.getMaxHeartRate());
+            Log.d("getCaloriesWithVOMax() ", "vo2MAX is: " + vo2MAX);
             if (user.getGender().equals("Male")) {
                 calories = ((-95.7735 + (0.634 * avgHeartRate)
                         + (0.404 * vo2MAX)
                         + (0.394 * user.getWeight())
-                        + (0.271 * getAgeFromDate(user.getAge()))) / 4.184)
+                        + (0.271 * user.getAge())) / 4.184)
                         * 60 * ChronoUnit.HOURS.between(startDate, endDate);
             } else if (user.getGender().equals("Female")) {
                 calories = ((-59.3954 + (0.45 * avgHeartRate)
                         + (0.380 * vo2MAX)
                         + (0.103 * user.getWeight())
-                        + (0.274 * getAgeFromDate(user.getAge()))) / 4.184)
+                        + (0.274 * user.getAge())) / 4.184)
                         * 60 * ChronoUnit.HOURS.between(startDate, endDate);
             }
         } else {
-            Log.d("getCaloriesWithVOMAX() ", "user has set resting heart rate, calculating calories with VO2Max.");
+            //userRestHeartRate less than 20, calculating without vo2MAX.
             if (user.getGender().equals("Male")) {
                 calories = ((-55.0969 + (0.6309 * avgHeartRate)
                         + (0.1988 * user.getWeight())
-                        + (0.2017 * getAgeFromDate(user.getAge()))) / 4.184)
+                        + (0.2017 * user.getAge())) / 4.184)
                         * 60 * ChronoUnit.HOURS.between(startDate, endDate);
             } else if (user.getGender().equals("Female")) {
                 calories = ((-20.4022 + (0.4472 * avgHeartRate)
                         + (0.1263 * user.getWeight())
-                        + (0.074 * getAgeFromDate(user.getAge()))) / 4.184)
+                        + (0.074 * user.getAge())) / 4.184)
                         * 60 * ChronoUnit.HOURS.between(startDate, endDate);
             }
         }

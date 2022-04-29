@@ -11,9 +11,11 @@ import java.util.Locale;
 
 
 /**
- * @author Rasmus Hyyppä
  * Controller for keeping up timer for recorded exercise
  * It saves timer data to shared preferences
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
  */
 
 public class RecordController {

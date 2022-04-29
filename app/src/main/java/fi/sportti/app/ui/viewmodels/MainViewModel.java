@@ -20,9 +20,11 @@ import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.SporttiDatabaseController;
 import fi.sportti.app.datastorage.room.User;
 
-/*
+/**
+ * Main view model to distance our database from the ui.
+ *
  * @author Rasmus Hyyppä
- * Main view model to distance our database from ui.
+ * @version 0.5
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -122,7 +124,7 @@ public class MainViewModel extends AndroidViewModel {
 
     /**
      * @author Jukka-Pekka Jaakkola
-     * */
+     */
     //Go through all exercises and sum up total exercise time of each day.
     public HashMap<ZonedDateTime, Integer> getExerciseTimesForGraph(int type) {
         List<Exercise> list = listAllExercises.getValue();
@@ -138,8 +140,7 @@ public class MainViewModel extends AndroidViewModel {
                     int totalTime = dataMap.get(keyDate);
                     totalTime += minutes;
                     dataMap.replace(keyDate, totalTime);
-                }
-                else {
+                } else {
                     dataMap.put(keyDate, minutes);
                 }
             }
@@ -161,7 +162,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
-    private ZonedDateTime getKeyDate(Exercise exercise, int type){
+    private ZonedDateTime getKeyDate(Exercise exercise, int type) {
         ZonedDateTime keyDate;
 
         ZonedDateTime startDate = exercise.getStartDate();
@@ -172,8 +173,7 @@ public class MainViewModel extends AndroidViewModel {
         //Set time to 12:00:00 always so these dates can be found from HashMap.
         if (type == DAILY_MINUTES) {
             keyDate = ZonedDateTime.of(year, month, day, 12, 0, 0, 0, zone);
-        }
-        else {
+        } else {
             keyDate = ZonedDateTime.of(year, month, 1, 12, 0, 0, 0, zone);
         }
         return keyDate;
