@@ -44,12 +44,10 @@ public class HistoryActivity extends AppCompatActivity {
     private HashMap<ZonedDateTime, Integer> dailyDataMap;
     private HashMap<ZonedDateTime, Integer> monthlyDataMap;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         exerciseListView = findViewById(R.id.history_listview_exercises);
         changeTimePeriodSwitch = findViewById(R.id.history_switch_toggle_graph_timeperiod);
         graph = findViewById(R.id.history_customgraph_exercise_hours);
@@ -59,7 +57,6 @@ public class HistoryActivity extends AppCompatActivity {
         populateListView();
         setSwipeListenerOnGraph();
         setClickListenerOnListView();
-
 //         createTestExercises();
         //mainViewModel.deleteAllExercises();
 
@@ -83,7 +80,6 @@ public class HistoryActivity extends AppCompatActivity {
         graph.showNextPeriod();
         graph.postInvalidate();
     }
-
     private void showDailyGraph() {
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         graph.setDataMap(dailyDataMap);
@@ -112,7 +108,6 @@ public class HistoryActivity extends AppCompatActivity {
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
-                Log.d(TAG, "onChanged: Exercise list changed");
                 updateGraph();
                 //Sort exercises based on date so they are in correct order to display on listview.
                 exercises.sort(new Comparator<Exercise>() {

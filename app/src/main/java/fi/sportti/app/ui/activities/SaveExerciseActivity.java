@@ -14,7 +14,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,7 +55,6 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SaveExerciseActivity extends AppCompatActivity {
     private static final String TAG = "SaveExerciseActivity";
-
     private MainViewModel mainViewModel;
 
     //Dialog
@@ -74,6 +72,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
     String[] exerciseDataArray;
     private EditText userComment;
     private Button openMapButton;
+
 //    private MapView mapView;
 
     @Override
@@ -333,6 +332,116 @@ public class SaveExerciseActivity extends AppCompatActivity {
         int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permissionState == PackageManager.PERMISSION_GRANTED){
             openMap();
+
+        }
+        //If not, request permission and disable openMapButton until permission request process is finished.
+        else {
+            openMapButton.setClickable(false);
+            String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+            requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+        }
+    }
+
+    private void openMap(){
+        //Starts Map Activity and passes route as extra.
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        String route = RouteContainer.getInstance().getRouteAsText();
+        mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
+        startActivity(mapIntent);
+    }
+
+    //This method is called by Android when user responds to permission request.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == App.PERMISSION_CODE_READ_PHONE_STATE){
+            if(permissionGranted(grantResults)){
+                openMapButton.setClickable(true);
+                openMap();
+            }
+            else {
+                //Check if app should show informative message to user about why this permission is required.
+                //Android System decides if it is required or not.
+                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+                    showInformativeDialog();
+                }
+                else {
+                    openMapButton.setClickable(true);
+                    showPermissionDeniedDialog();
+                }
+            }
+        }
+    }
+
+    private void showPermissionDeniedDialog(){
+        //Dialog where user is explained that map is not available because required permission was not granted.
+        //Create button for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.map_not_available);
+        String message = getResources().getString(R.string.required_permission_denied_message);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ok", positiveButton)
+                .create().show();
+    }
+
+
+    private void showInformativeDialog(){
+        //Informative dialog where user can see why permission is required.
+        //User can verify to deny this permission or show permission request window again.
+
+        //Create buttons for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+                requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+            }
+        };
+        DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                openMapButton.setClickable(true);
+
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.permission_denied);
+        String message = getResources().getString(R.string.informative_message_for_permissions);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ask again", positiveButton)
+                .setNegativeButton("I'm sure", negativeButton)
+                .create().show();
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private String getDateAndTimeAsText(ZonedDateTime date) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(date.getDayOfMonth() + ".");
+        sb.append(date.getMonthValue() + ".");
+        sb.append(date.getYear() + " ");
+        sb.append(date.getHour() + ":");
+        int minute = date.getMinute();
+        if (minute >= 10) {
+            sb.append(minute);
+        } else {
+            sb.append("0" + minute);
         }
         //If not, request permission and disable openMapButton until permission request process is finished.
         else {
