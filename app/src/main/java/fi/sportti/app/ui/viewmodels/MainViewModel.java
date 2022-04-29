@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -145,6 +146,18 @@ public class MainViewModel extends AndroidViewModel {
 
         }
         return dataMap;
+    }
+
+    public List<Exercise> getSortedExerciseList(){
+        List<Exercise> listToReturn = listAllExercises.getValue();
+        listToReturn.sort(new Comparator<Exercise>() {
+            @Override
+            public int compare(Exercise exercise, Exercise t1) {
+                return t1.getStartDate().compareTo(exercise.getStartDate());
+            }
+        });
+
+        return listToReturn;
     }
 
 

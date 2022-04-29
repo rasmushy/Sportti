@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.Observer;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -18,8 +17,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.time.ZonedDateTime;
-import java.util.Comparator;
-import java.util.List;
 
 import fi.sportti.app.App;
 import fi.sportti.app.R;
@@ -59,29 +56,17 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         openMapButton = findViewById(R.id.exercisedetails_button_open_map);
 
         Bundle b = getIntent().getExtras();
-        int index = b.getInt(HistoryActivity.SELECTED_EXERCISE);
-
+        int index = b.getInt(HistoryActivity.SELECTED_EXERCISE_INDEX);
         mainViewModel = MainActivity.getMainViewModel();
         //Get correct Exercise.
-        mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(List<Exercise> exercises) {
-                exercises.sort(new Comparator<Exercise>() {
-                    @Override
-                    public int compare(Exercise exercise, Exercise t1) {
-                        return t1.getStartDate().compareTo(exercise.getStartDate());
-                    }
-                });
-                exercise = exercises.get(index);
-                setInformationOnScreen(exercise);
-                if(exercise.hasRoute()){
-                    route = exercise.getRoute();
-                }
-                else {
-                    openMapButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        exercise = mainViewModel.getSortedExerciseList().get(index);
+        setInformationOnScreen(exercise);
+        if(exercise.hasRoute()){
+            route = exercise.getRoute();
+        }
+        else {
+            openMapButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void deleteExercise(View view){

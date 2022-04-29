@@ -25,7 +25,7 @@ public class User {
         this.height = 170;
         this.weight = 70;
         this.weeklyGoalMinute = 0;
-        this.weeklyGoalHour = 2;
+        this.weeklyGoalHour = 5;
         this.age = new Date(0);
         this.restHeartRate = 0;
     }

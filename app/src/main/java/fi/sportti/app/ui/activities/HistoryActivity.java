@@ -3,12 +3,10 @@ package fi.sportti.app.ui.activities;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,10 +16,8 @@ import android.widget.Switch;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
@@ -35,8 +31,8 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class HistoryActivity extends AppCompatActivity {
-    public static final String TAG = "testailua";
-    public static String SELECTED_EXERCISE = "selected_exercise_on_history_activity";
+    public static final String TAG = "TESTI";
+    public static String SELECTED_EXERCISE_INDEX = "index_of_selected_exercise_on_history_activity";
     private MainViewModel mainViewModel;
     private CustomGraph graph;
     private ListView exerciseListView;
@@ -54,12 +50,28 @@ public class HistoryActivity extends AppCompatActivity {
         graph.setGraphType(CustomGraph.BAR_GRAPH);
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         mainViewModel = MainActivity.getMainViewModel();
-        populateListView();
-        setSwipeListenerOnGraph();
+        /*
+        Add Observer to exercise list which is wrapped with LiveData.
+        This makes sure that listview and graph are updated only when mainViewModel has
+        loaded all exercises from database and listView and graph are updated correctly if user deletes exercises.
+        onChanged method is also called once everytime Activity opens so this initializes listView and graph with values. */
+        mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(List<Exercise> exercises) {
+                addExercisesToListView();
+                updateGraph();
+            }
+        });
         setClickListenerOnListView();
-//         createTestExercises();
-        //mainViewModel.deleteAllExercises();
+        setSwipeListenerOnGraph();
+    }
 
+    //Override onBackPressed to prevent situation where user can go back to exercise details page
+    //of exercise that user just deleted.
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void changeTimePeriod(View view) {
@@ -103,29 +115,16 @@ public class HistoryActivity extends AppCompatActivity {
         graph.postInvalidate();
     }
 
-    private void populateListView(){
-        //Get all exercises, sort them by date, and list them in listView.
-        mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(List<Exercise> exercises) {
-                updateGraph();
-                //Sort exercises based on date so they are in correct order to display on listview.
-                exercises.sort(new Comparator<Exercise>() {
-                    @Override
-                    public int compare(Exercise exercise, Exercise t1) {
-                        return t1.getStartDate().compareTo(exercise.getStartDate());
-                    }
-                });
-                exerciseListView.setAdapter(new ExerciseAdapter(
-                        getApplicationContext(),
-                        R.layout.exercise_on_history_listview,
-                        (ArrayList) exercises));
-            }
-        });
+    private void addExercisesToListView(){
+        //Get all exercises in sorted order and pass them to adapter which is set to listView.
+        ArrayList<Exercise> list = (ArrayList<Exercise>) mainViewModel.getSortedExerciseList();
+        ExerciseAdapter adapter = new ExerciseAdapter(this, R.layout.exercise_on_history_listview, list);
+        exerciseListView.setAdapter(adapter);
     }
 
     private void setSwipeListenerOnGraph(){
         //Basic idea on how to implement swipe listener https://www.youtube.com/watch?v=vNJyU-XW8_Y
+
         //Swipe listener to change weeks/years on graph.
         GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -149,7 +148,6 @@ public class HistoryActivity extends AppCompatActivity {
                 return true;
             }
         });
-
         //Pass all events to GestureDetector which will handle it.
         graph.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -165,43 +163,44 @@ public class HistoryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(HistoryActivity.this, ExerciseDetailsActivity.class);
-                intent.putExtra(SELECTED_EXERCISE, i);
+                intent.putExtra(SELECTED_EXERCISE_INDEX, i);
                 startActivity(intent);
             }
         });
     }
 
     //Used for development purpose and testing.
-    private void createTestExercises() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String running = "juoksu";
-                Exercise exercise1;
-                Exercise exercise2;
-                ZonedDateTime today = ZonedDateTime.now();
-                ZonedDateTime start;
-                ZonedDateTime end;
-                int hours;
-                Random rand = new Random();
-                //Create data for 300 previous and 300 future days.
-                List<Exercise> list = new ArrayList<>();
-                for (int i = 1; i <= 100; i++) {
-                    hours = rand.nextInt(4) + 1;
-                    start = today.plusDays(i);
-                    end = start.plusHours(hours);
-                    exercise1 = new Exercise(running, 1, start, end, 200, 0, "", 0.0, "");
-                    hours = rand.nextInt(4) + 1;
-                    start = today.minusDays(i);
-                    end = start.plusHours(hours);
-                    exercise2 = new Exercise(running, 1, start, end, 200, 0, "", 0.0, "");
-                    list.add(exercise1);
-                    list.add(exercise2);
-                }
-                mainViewModel.insertExercisesFromList(list);
-                Log.d(TAG, "createTestExercises: New exercises added");
-            }
-        });
-        thread.start();
-    }
+
+//    private void createTestExercises() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                String running = "juoksu";
+//                Exercise exercise1;
+//                Exercise exercise2;
+//                ZonedDateTime today = ZonedDateTime.now();
+//                ZonedDateTime start;
+//                ZonedDateTime end;
+//                int hours;
+//                Random rand = new Random();
+//                //Create data for 300 previous and 300 future days.
+//                List<Exercise> list = new ArrayList<>();
+//                for (int i = 1; i <= 100; i++) {
+//                    hours = rand.nextInt(4) + 1;
+//                    start = today.plusDays(i);
+//                    end = start.plusHours(hours);
+//                    exercise1 = new Exercise(running, 1, start, end, 200, 0, "", 0.0, "");
+//                    hours = rand.nextInt(4) + 1;
+//                    start = today.minusDays(i);
+//                    end = start.plusHours(hours);
+//                    exercise2 = new Exercise(running, 1, start, end, 200, 0, "", 0.0, "");
+//                    list.add(exercise1);
+//                    list.add(exercise2);
+//                }
+//                mainViewModel.insertExercisesFromList(list);
+//                Log.d(TAG, "createTestExercises: New exercises added");
+//            }
+//        });
+//        thread.start();
+//    }
 }

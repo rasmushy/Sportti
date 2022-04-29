@@ -10,6 +10,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import fi.sportti.app.R;
+
 /**
  *@author Jukka-Pekka Jaakkola
  * Custom View used to draw round progress bars.
@@ -84,8 +86,8 @@ public class CustomProgressBar extends View {
         greenPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         greyPaint.setColor(Color.rgb(240, 240, 240));
-//        whitePaint.setColor(Color.WHITE);
         whitePaint.setColor(Color.rgb(198, 222, 241));
-        greenPaint.setColor(Color.rgb(151, 237, 81));
+        int green = getResources().getColor(R.color.green_for_custom_progress_bar);
+        greenPaint.setColor(green);
     }
 }

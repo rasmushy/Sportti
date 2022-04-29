@@ -70,29 +70,18 @@ public class ExerciseAdapter extends ArrayAdapter<Exercise> {
     }
 
 
-    private String formatDuration(int duration){
-        // Format duration in minutes to String.
-        // Less than 60 minutes is returned as (X min)
-        // Equal or higher than 60 minutes is returned as (Xh Ymin)
-        String result = "";
-        if(duration == 60){
-            result = "1h";
-        }
-        else if(duration >= 60){
-            int hours = duration / 60;
-            int minutes = duration - (hours*60);
-            if(hours == 1){
-                result = "1h";
+    private String formatDuration(int durationInMinutes){
+        //Returns duration in String format. Examples:
+        // "34 min" if duration is less than 60 minutes.
+        // "1h 15min" if duration is over 60 minutes.
+        String result = durationInMinutes + " min";
+        if(durationInMinutes >= 60){
+            int fullHours = durationInMinutes / 60;
+            int minutesLeft = durationInMinutes - fullHours * 60;
+            result = fullHours + "h ";
+            if(minutesLeft > 0){
+                result += minutesLeft + "min";
             }
-            else {
-                result += hours + "h ";
-            }
-            if(minutes > 0){
-                result += minutes + "min";
-            }
-        }
-        else {
-            result = duration + " min";
         }
         return result;
     }
