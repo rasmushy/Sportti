@@ -14,7 +14,7 @@ import fi.sportti.app.R;
 
 /**
  *@author Jukka-Pekka Jaakkola
- * Custom View used to draw round progress bars.
+ * Custom View used to draw round progress bars that can be filled.
  */
 
 public class CustomProgressBar extends View {
@@ -75,11 +75,21 @@ public class CustomProgressBar extends View {
 
     }
 
-    public void setMultiplier(float value){
-        this.multiplier = value;
+    /**
+     * Sets multiplier for progress bar which determines how much bar will fill. Example:
+     * @param multiplier multiplier between 0-1
+     */
+    public void setMultiplier(float multiplier){
+        if(multiplier > 1){
+            this.multiplier = 1f;
+        }
+        else {
+            this.multiplier = multiplier;
+        }
     }
 
     private void init(){
+        //Initialize all Paints.
         init = true;
         greyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         whitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);

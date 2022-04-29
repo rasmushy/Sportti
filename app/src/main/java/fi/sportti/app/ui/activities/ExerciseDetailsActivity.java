@@ -71,10 +71,14 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
 
     public void deleteExercise(View view){
         mainViewModel.deleteExercise(exercise);
-        Intent intent = new Intent(this, HistoryActivity.class);
-        startActivity(intent);
+        onBackPressed(); //Go back to history activity
     }
 
+    /**
+     * Method attached to button in layout. Checks if app has required permissions to display map.
+     * If yes, opens map. Otherwise requests required permissions from user.
+     * @params view
+     * */
     public void openMapButtonClicked(View view){
         //Check if app has READ_PHONE_STATE permission which is required to display map.
         int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);

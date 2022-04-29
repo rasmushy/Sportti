@@ -29,6 +29,8 @@ import fi.sportti.app.ui.activities.StartExerciseActivity;
 
 /**
  *@author Jukka-Pekka Jaakkola
+ * Service which is started as foreground service when user records new exercise and has location tracking enabled.
+ * Resposible for tracking device's location and passing updated location to RouteContainer which holds route data.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -48,6 +50,7 @@ public class LocationTracking extends Service {
     private Notification notification;
 
 
+    //Method called by Android when this Service is created for first time.
     @Override
     public void onCreate(){
         super.onCreate();
@@ -70,12 +73,15 @@ public class LocationTracking extends Service {
         };
     }
 
+    //Method called by Android when this Service is started.
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         serviceRunning = true;
         startTracking();
         createNotification();
         int notificationID = 1001;
+        //Because this Service is started as foreground service, this service has to call its startForeground method within 5 seconds
+        //of startService call. Otherwise Android will kill this Service.
         startForeground(notificationID, notification);
 
         //Tells Android System that it has to recreate this Service once it can, if for some reason it has to kill it.

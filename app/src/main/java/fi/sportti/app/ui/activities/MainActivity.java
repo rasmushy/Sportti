@@ -158,29 +158,17 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void updateWeeklyGoalBar() {
-        HashMap<ZonedDateTime, Integer> dataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.DAILY_MINUTES);
-        ZonedDateTime today = ZonedDateTime.now();
-        int year = today.getYear();
-        int monthOfYear = today.getMonthValue();
-        int currentDayOfWeek = today.getDayOfWeek().getValue();
-        ZoneId zone = ZoneId.systemDefault();
-        today = ZonedDateTime.of(year, monthOfYear, today.getDayOfMonth(), 12, 0, 0, 0, zone);
-        //Set date to first day of week.
-        ZonedDateTime firstDayOfWeek = today.minusDays(currentDayOfWeek - 1);
-        ZonedDateTime keyDate;
-        int minutes = 0;
-        if (dataMap != null) {
-            for (int i = 0; i < 7; i++) {
-                keyDate = firstDayOfWeek.plusDays(i);
-                if (dataMap.containsKey(keyDate)) {
-                    minutes += dataMap.get(keyDate);
-                }
-            }
-        }
-        int weeklyGoalInMinutes = user.getWeeklyGoalHour() * 60 + user.getWeeklyGoalMinute();
+        int exerciseTime = mainViewModel.getExerciseTimeForCurrentWeek();
+        int weeklyGoal = user.getWeeklyGoalHour() * 60 + user.getWeeklyGoalMinute();
         //Calculate how many percentages user's total exercise time during current week is of weekly goal.
         //Set that information on screen and draw progress bar again with correct value.
-        float multiplier = 1.0f * minutes / weeklyGoalInMinutes;
+        float multiplier = 1;
+        // If user has exercised less than weekly goal, calculate how many % that is of weekly goal.
+        // Other wise keep default value 1, meaning 100%
+        if(exerciseTime < weeklyGoal){
+            multiplier = 1.0f * exerciseTime / weeklyGoal;
+        }
+
         int valueOnScreen = Math.round(multiplier * 100);
         weeklyGoalValueTv.setText(valueOnScreen + "%");
         weeklyGoalInfoTv.setText("You have completed " + valueOnScreen + "% of your weekly exercise goal!");

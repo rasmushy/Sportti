@@ -9,7 +9,6 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.concurrent.Future;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.SporttiDatabaseController;
 import fi.sportti.app.datastorage.room.User;
+import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 
 /**
  * Main view model to distance our database from the ui.
@@ -124,8 +124,12 @@ public class MainViewModel extends AndroidViewModel {
 
     /**
      * @author Jukka-Pekka Jaakkola
+     * Go through all exercises and sum up total exercise time of each day.
+     * @param type Use constants in this class.
+     *             DAILY_MINUTES if you want to get total exercise time of each day.
+     *             MONTHLY_MINUTES if you want to get total exercise time of each month.
+     * @return dataMap
      */
-    //Go through all exercises and sum up total exercise time of each day.
     public HashMap<ZonedDateTime, Integer> getExerciseTimesForGraph(int type) {
         List<Exercise> list = listAllExercises.getValue();
         HashMap<ZonedDateTime, Integer> dataMap = new HashMap<>();
@@ -140,7 +144,8 @@ public class MainViewModel extends AndroidViewModel {
                     int totalTime = dataMap.get(keyDate);
                     totalTime += minutes;
                     dataMap.replace(keyDate, totalTime);
-                } else {
+                }
+                else {
                     dataMap.put(keyDate, minutes);
                 }
             }
@@ -149,30 +154,52 @@ public class MainViewModel extends AndroidViewModel {
         return dataMap;
     }
 
+    /**
+     * Returns exercises sorted by date. From most recent to oldest.
+     * @return list
+     */
     public List<Exercise> getSortedExerciseList(){
-        List<Exercise> listToReturn = listAllExercises.getValue();
-        listToReturn.sort(new Comparator<Exercise>() {
+        List<Exercise> list = listAllExercises.getValue();
+        list.sort(new Comparator<Exercise>() {
             @Override
             public int compare(Exercise exercise, Exercise t1) {
                 return t1.getStartDate().compareTo(exercise.getStartDate());
             }
         });
-        return listToReturn;
+        return list;
+    }
+
+    /**
+     * Returns total exercise times of each day of current week.
+     * @return exerciseTimeInMinutes
+     */
+    public int getExerciseTimeForCurrentWeek(){
+        HashMap<ZonedDateTime, Integer> dataMap = getExerciseTimesForGraph(DAILY_MINUTES);
+
+        ZonedDateTime firstDayOfWeek = TimeConversionUtilities.getFirstDayOfWeek();
+        ZonedDateTime keyDate;
+        int exerciseTimeInMinutes = 0;
+        if (dataMap != null) {
+            for (int i = 0; i < 7; i++) {
+                keyDate = firstDayOfWeek.plusDays(i);
+                if (dataMap.containsKey(keyDate)) {
+                    exerciseTimeInMinutes += dataMap.get(keyDate);
+                }
+            }
+        }
+        return exerciseTimeInMinutes;
     }
 
     private ZonedDateTime getKeyDate(Exercise exercise, int type) {
-        ZonedDateTime keyDate;
-
+        ZonedDateTime keyDate = ZonedDateTime.now();
         ZonedDateTime startDate = exercise.getStartDate();
-        int day = startDate.getDayOfMonth();
-        int month = startDate.getMonthValue();
-        int year = startDate.getYear();
-        ZoneId zone = ZoneId.systemDefault();
-        //Set time to 12:00:00 always so these dates can be found from HashMap.
         if (type == DAILY_MINUTES) {
-            keyDate = ZonedDateTime.of(year, month, day, 12, 0, 0, 0, zone);
-        } else {
-            keyDate = ZonedDateTime.of(year, month, 1, 12, 0, 0, 0, zone);
+            keyDate = TimeConversionUtilities.getDateWithDefaultTime(startDate);
+        }
+        else if(type == MONTHLY_MINUTES) {
+            int month = startDate.getMonthValue();
+            int year = startDate.getYear();
+            keyDate = TimeConversionUtilities.getDateWithDefaultTime(year, month, 1);
         }
         return keyDate;
     }

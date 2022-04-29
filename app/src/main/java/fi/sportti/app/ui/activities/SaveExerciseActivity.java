@@ -328,12 +328,17 @@ public class SaveExerciseActivity extends AppCompatActivity {
      * @author Jukka-Pekka Jaakkola
      */
 
+
+    /**
+     * Method attached to button in layout. Checks if app has required permissions to display map.
+     * If yes, opens map. Otherwise requests required permissions from user.
+     * @params view Required parameter for methods that are attached to buttons in layout.
+     * */
     public void openMapButtonClicked(View view) {
         //Check if app has READ_PHONE_STATE permission which is required to display map.
         int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permissionState == PackageManager.PERMISSION_GRANTED) {
             openMap();
-
         }
         //If not, request permission and disable openMapButton until permission request process is finished.
         else {

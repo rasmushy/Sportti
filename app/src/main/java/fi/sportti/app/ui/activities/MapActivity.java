@@ -44,12 +44,12 @@ public class MapActivity extends AppCompatActivity {
         mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
 
         mapView.onCreate(savedInstanceState);
+        //Create callback that is called when map is ready to be used.
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 List<LatLng> coordinates = RouteContainer.getInstance().convertTextRouteToList(route);
                 mapView.setStreetMode();
-
                 //Set camera at center of whole route.
                 setCamera(mapboxMap, coordinates);
                 LatLng startPosition = coordinates.get(0);
@@ -79,42 +79,38 @@ public class MapActivity extends AppCompatActivity {
 
     private void setCamera(MapboxMap map, List<LatLng> list){
         //Go through all positions on route and calculate average of all coordinates.
-        //Then center camera at that location. At same time, calculate max distance between two points
+        //Then center camera at that location. At same time, calculate max distance between two locations
         //in route. This will determine correct zoom value so whole route shows on map when its opened.
-        float [] result = new float[3];
+
         double maxDistance = 0;
         double latSum = 0;
         double lonSum = 0;
-        LatLng position1;
-        LatLng position2;
+        LatLng location1;
+        LatLng location2;
         for(int i = 0; i < list.size() - 1; i++){
-            position1 = list.get(i);
-            latSum += position1.getLatitude();
-            lonSum += position1.getLongitude();
+            location1 = list.get(i);
+            latSum += location1.getLatitude();
+            lonSum += location1.getLongitude();
             for(int j = i+1; j < list.size(); j++){
-                position2 = list.get(j);
-                double lat1 = position1.getLatitude();
-                double lon1 = position1.getLongitude();
-                double lat2 = position2.getLatitude();
-                double lon2 = position2.getLongitude();
-                Location.distanceBetween(lat1, lon1, lat2, lon2, result);
-                //Location.distanceBetween method saves result in float array at index 0.
-                if(result[0] > maxDistance){
-                    maxDistance = result[0];
+                location2 = list.get(j);
+                double distance = getDistance(location1, location2);
+                if(distance > maxDistance){
+                    maxDistance = distance;
                 }
             }
         }
         //Add last position in route to calculations.
-        position1 = list.get(list.size()-1);
-        latSum += position1.getLatitude();
-        lonSum += position1.getLongitude();
+        location1 = list.get(list.size()-1);
+        latSum += location1.getLatitude();
+        lonSum += location1.getLongitude();
         double latAvg = latSum / list.size();
         double lonAvg = lonSum / list.size();
 
-        LatLng cameraPosition = new LatLng(latAvg, lonAvg);
+        //Move camera to correct location with correct zoom.
+        LatLng newLocation = new LatLng(latAvg, lonAvg);
         double zoom = getValueForZoom(maxDistance/1000);
-        CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(cameraPosition, zoom);
-        map.moveCamera(newPosition);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, zoom);
+        map.moveCamera(cameraUpdate);
 
     }
 
@@ -139,6 +135,18 @@ public class MapActivity extends AppCompatActivity {
         }
         return zoom;
     }
+
+    private double getDistance(LatLng location1, LatLng location2){
+        double lat1 = location1.getLatitude();
+        double lon1 = location1.getLongitude();
+        double lat2 = location2.getLatitude();
+        double lon2 = location2.getLongitude();
+        float [] result = new float[3];
+        //Location.distanceBetween method saves result in float array at index 0.
+        Location.distanceBetween(lat1, lon1, lat2, lon2, result);
+        return result[0];
+    }
+
 
     //These lifecycle methods have to be implemented because MapQuest requires to call same methods on map.
     @Override

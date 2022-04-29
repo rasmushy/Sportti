@@ -18,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 import fi.sportti.app.R;
+import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 
 /**
  *@author Jukka-Pekka Jaakkola
@@ -26,7 +27,7 @@ import fi.sportti.app.R;
 
 /*
 * Basic idea how to build own custom Views learnt from this article
-* https://medium.com/@mayurjajoomj/custom-graphs-custom-view-android-862e16813cc*/
+* https://medium.com/@mayurjajoomj/custom-graphs-custom-view-android-862e16813cc */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CustomGraph extends View  {
@@ -40,8 +41,6 @@ public class CustomGraph extends View  {
     private final int yBottomOffset = 50;
     private ZonedDateTime date;
     private Boolean isInit = false;
-    private Boolean drawDailyGraph = true;
-    private Boolean drawMonthlyGraph = false;
     private Path path;
     private Paint axisPaint, barPaint, linePaint, textPaint, horizontalLinesPaint;
     private Canvas canvas;
@@ -94,50 +93,75 @@ public class CustomGraph extends View  {
         return super.performClick();
     }
 
-    //Called when graph is created for first time. Initialized variables used in graph.
-    private void init(){
-        date = ZonedDateTime.now();
-        initPaints();
-        viewWidth = getWidth();
-        viewHeight = getHeight();
-        origoX = xOffset;
-        origoY = viewHeight - yBottomOffset;
-        graphHeight = viewHeight - yTopOffset - yBottomOffset;
-        graphWidth = viewWidth - (xOffset * 2);
-        isInit = true;
-        path = new Path();
-        setGraphTimePeriod(DAYS_OF_WEEK);
-    }
-
-    public void setGraphType(int number){
-        if(number == BAR_GRAPH){
+    /**
+     * Set different type for graph. Options are: bar graph or line graph
+     * @param type use constants in CustomGraph class.
+     * */
+    public void setGraphType(int type){
+        if(type == BAR_GRAPH){
             graphType = BAR_GRAPH;
         }
-        else if(number == LINE_GRAPH){
+        else if(type == LINE_GRAPH){
             graphType = LINE_GRAPH;
         }
     }
 
+    /**
+     * Current time period set to graph. Options: days of week or months of year.
+     * @return graphTimePeriod
+     */
     public int getGraphTimePeriod(){
         return graphTimePeriod;
     }
 
-    public void setGraphTimePeriod(int style){
-        if(style == DAYS_OF_WEEK){
-            drawDailyGraph = true;
-            drawMonthlyGraph = false;
+    /**
+     * Set different time periods for graph. Options: days of week or months of year.
+     * @param timePeriod user constants in CustomGraph class.
+     */
+    public void setGraphTimePeriod(int timePeriod){
+        if(timePeriod == DAYS_OF_WEEK){
             graphTimePeriod = DAYS_OF_WEEK;
             graphMaxValue = 5;
             rectWidth = graphWidth / (DAYS_OF_WEEK * 2);
         }
-        else if(style == MONTHS_OF_YEAR){
-            drawDailyGraph = false;
-            drawMonthlyGraph = true;
+        else if(timePeriod == MONTHS_OF_YEAR){
             graphTimePeriod = MONTHS_OF_YEAR;
             graphMaxValue = 100;
             rectWidth = graphWidth / (MONTHS_OF_YEAR * 2);
         }
         date = ZonedDateTime.now();
+    }
+
+    /**
+     * Show next time period in graph.
+     */
+    public void showNextPeriod(){
+        if(drawDailyGraph()){
+            date = date.plusDays(7);
+        }
+        else if(drawMonthlyGraph()){
+            date = date.plusYears(1);
+        }
+    }
+
+    /**
+     * Show previous time period in graph.
+     */
+    public void showPreviousPeriod(){
+        if(drawDailyGraph()){
+            date = date.minusDays(7);
+        }
+        else if(drawMonthlyGraph()){
+            date = date.minusYears(1);
+        }
+    }
+
+    /**
+     * Set data for graph. Data is stored in HashMap where date is key and value is total exercise time in minutes.
+     * @param dataMap
+     */
+    public void setDataMap(HashMap<ZonedDateTime, Integer> dataMap) {
+        this.dataMap = dataMap;
     }
 
     private void drawAxis() {
@@ -151,10 +175,10 @@ public class CustomGraph extends View  {
 
     private void drawDataPoints(){
         //Draw data points for days of week or months of year.
-        if(drawDailyGraph){
+        if(drawDailyGraph()){
             drawDataPointsForWeek();
         }
-        else if(drawMonthlyGraph){
+        else if(drawMonthlyGraph()){
             drawDataPointsForYear();
         }
         //At end draw full path/line from Path object.
@@ -258,53 +282,42 @@ public class CustomGraph extends View  {
 
     private void setCorrectStartDateForGraph(){
         //Set date to first day of current week or first month of year.
-        int year = date.getYear();
-        int monthOfYear = date.getMonthValue();
-        int currentDayOfWeek = date.getDayOfWeek().getValue();
-        ZoneId zone = date.getZone();
-        if(drawDailyGraph){
-            date = ZonedDateTime.of(year, monthOfYear, date.getDayOfMonth(), 12, 0, 0, 0, zone);
+        if(drawDailyGraph()){
             //Set date to first day of week.
-            date = date.minusDays(currentDayOfWeek-1);
+            date = TimeConversionUtilities.getFirstDayOfWeek(date);
         }
-        else if(drawMonthlyGraph){
-            date = ZonedDateTime.of(year, monthOfYear, 1, 12, 0, 0 ,0, zone);
+        else if(drawMonthlyGraph()){
+            date = TimeConversionUtilities.getFirstDayOfMonth(date);
             //Set date to first month of year.
-            date = date.minusMonths(monthOfYear-1);
-        }
-    }
-
-    public void setDataMap(HashMap<ZonedDateTime, Integer> dataMap) {
-        this.dataMap = dataMap;
-    }
-
-    public void showNextPeriod(){
-        if(drawDailyGraph){
-            date = date.plusDays(7);
-        }
-        else if(drawMonthlyGraph){
-            date = date.plusYears(1);
-        }
-    }
-
-    public void showPreviousPeriod(){
-        if(drawDailyGraph){
-            date = date.minusDays(7);
-        }
-        else if(drawMonthlyGraph){
-            date = date.minusYears(1);
+            int monthOfYear = date.getMonthValue();
+            date = date.minusMonths(monthOfYear - 1);
         }
     }
 
     private String getTextForDataPoint(ZonedDateTime date){
         String text = "";
-        if(drawDailyGraph){
+        if(drawDailyGraph()){
             text = date.getDayOfMonth() + "." + date.getMonthValue();
         }
-        else if(drawMonthlyGraph){
+        else if(drawMonthlyGraph()){
             text = String.valueOf(date.getMonthValue());
         }
         return text;
+    }
+
+    //Called when graph is created for first time. Initialized variables used in graph.
+    private void init(){
+        date = ZonedDateTime.now();
+        initPaints();
+        viewWidth = getWidth();
+        viewHeight = getHeight();
+        origoX = xOffset;
+        origoY = viewHeight - yBottomOffset;
+        graphHeight = viewHeight - yTopOffset - yBottomOffset;
+        graphWidth = viewWidth - (xOffset * 2);
+        isInit = true;
+        path = new Path();
+        setGraphTimePeriod(DAYS_OF_WEEK);
     }
 
     //All different Paints used in drawing graph.
@@ -330,5 +343,13 @@ public class CustomGraph extends View  {
         axisPaint.setColor(Color.rgb(180, 180, 180));
         axisPaint.setStyle(Paint.Style.STROKE);
         axisPaint.setStrokeWidth(5);
+    }
+
+    private boolean drawDailyGraph(){
+        return graphTimePeriod == DAYS_OF_WEEK;
+    }
+
+    private boolean drawMonthlyGraph(){
+        return graphTimePeriod == MONTHS_OF_YEAR;
     }
 }

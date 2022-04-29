@@ -363,6 +363,12 @@ public class StartExerciseActivity extends AppCompatActivity {
      * @author Jukka-Pekka Jaakkola
      */
 
+    /**
+     * Method attached to Location tracking switch in layout. When turned on, checks if app has required
+     * permissions needed to track location. If app has permissions, makes sure that location services are enabled.
+     * If app does not have permissions, requests them from user.
+     * @params view Required parameter for methods that are attached to buttons in layout.
+     * */
     public void toggleLocationTracking(View view) {
         if (trackLocationSwitch.isChecked()) {
             //Check if app has permission to use device location.
@@ -370,7 +376,8 @@ public class StartExerciseActivity extends AppCompatActivity {
             //If it has, make sure that location services are enabled so location can be tracked.
             if (permissionState == PackageManager.PERMISSION_GRANTED) {
                 enableLocationServices();
-            } else {
+            }
+            else {
                 //Request result will be handled in onRequestPermissionsResult which is defined below.
                 String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
                 requestPermissions(permissions, App.PERMISSION_CODE_FINE_LOCATION);
@@ -408,7 +415,10 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-    //Code to check if location service is enabled is from Android developer documentation.
+    /*
+     * Checks if phone has location services enabled. If it doesn't, shows request to user to enable them.
+     * Code to check if location service is enabled is from Android developer documentation.
+     * */
     private void enableLocationServices() {
         //Check if location services are enabled.
         LocationRequest locationRequest = LocationRequest.create();
