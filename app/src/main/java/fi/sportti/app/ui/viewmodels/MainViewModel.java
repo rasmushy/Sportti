@@ -26,9 +26,9 @@ import fi.sportti.app.datastorage.room.User;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainViewModel extends AndroidViewModel {
-    public static final String TAG = "testailua";
-    public static final int DAILY_HOURS = 1;
-    public static final int MONTHLY_HOURS = 2;
+    public static final String TAG = "TESTI";
+    public static final int DAILY_MINUTES = 1;
+    public static final int MONTHLY_MINUTES = 2;
     private final SporttiDatabaseController databaseController;
     private final LiveData<List<User>> listAllUsers;
     private final LiveData<List<Exercise>> listAllExercises;
@@ -119,36 +119,51 @@ public class MainViewModel extends AndroidViewModel {
     }
 
 
+    /**
+     * @author Jukka-Pekka Jaakkola
+     * */
+    //Go through all exercises and sum up total exercise time of each day.
     public HashMap<ZonedDateTime, Integer> getExerciseTimesForGraph(int type) {
         List<Exercise> list = listAllExercises.getValue();
-        HashMap<ZonedDateTime, Integer> result = new HashMap<>();
+        HashMap<ZonedDateTime, Integer> dataMap = new HashMap<>();
         if (list != null) {
             int minutes;
-            ZonedDateTime newDate;
-            int day = 0;
-            int month = 0;
-            int year = 0;
-            ZoneId zone = ZoneId.systemDefault();
-            for (Exercise e : list) {
-                minutes = e.getDurationInMinutes();
-                day = e.getStartDate().getDayOfMonth();
-                month = e.getStartDate().getMonthValue();
-                year = e.getStartDate().getYear();
-                if (type == DAILY_HOURS) {
-                    newDate = ZonedDateTime.of(year, month, day, 12, 0, 0, 0, zone);
-                } else {
-                    newDate = ZonedDateTime.of(year, month, 1, 12, 0, 0, 0, zone);
+            ZonedDateTime keyDate;
+
+            for (Exercise exercise : list) {
+                minutes = exercise.getDurationInMinutes();
+                keyDate = getKeyDate(exercise, type);
+                if (dataMap.containsKey(keyDate)) {
+                    int totalTime = dataMap.get(keyDate);
+                    totalTime += minutes;
+                    dataMap.replace(keyDate, totalTime);
                 }
-                if (result.containsKey(newDate)) {
-                    int value = result.get(newDate);
-                    value += minutes;
-                    result.replace(newDate, value);
-                } else {
-                    result.put(newDate, minutes);
+                else {
+                    dataMap.put(keyDate, minutes);
                 }
             }
+
         }
-        return result;
+        return dataMap;
+    }
+
+
+    private ZonedDateTime getKeyDate(Exercise exercise, int type){
+        ZonedDateTime keyDate;
+
+        ZonedDateTime startDate = exercise.getStartDate();
+        int day = startDate.getDayOfMonth();
+        int month = startDate.getMonthValue();
+        int year = startDate.getYear();
+        ZoneId zone = ZoneId.systemDefault();
+        //Set time to 12:00:00 always so these dates can be found from HashMap.
+        if (type == DAILY_MINUTES) {
+            keyDate = ZonedDateTime.of(year, month, day, 12, 0, 0, 0, zone);
+        }
+        else {
+            keyDate = ZonedDateTime.of(year, month, 1, 12, 0, 0, 0, zone);
+        }
+        return keyDate;
     }
 
 

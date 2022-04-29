@@ -1,4 +1,4 @@
-package fi.sportti.app.ui;
+package fi.sportti.app.ui.customViews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -214,6 +214,7 @@ public class CustomGraph extends View  {
         path.moveTo(xPos, yPos);
         int radius = 13;
         canvas.drawCircle(xPos, yPos, radius, barPaint);
+
     }
 
     private void drawHorizontalMarks() {

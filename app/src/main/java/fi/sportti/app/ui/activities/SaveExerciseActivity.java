@@ -4,6 +4,7 @@ import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateT
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.getUnixTimeDifference;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFromLong;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,35 +23,24 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 
 import android.widget.TextView;
 
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapquest.mapping.MapQuest;
-import com.mapquest.mapping.maps.MapView;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
+import fi.sportti.app.App;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.location.RouteContainer;
 
-import java.util.ArrayList;
-
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
 import fi.sportti.app.ui.viewmodels.MainViewModel;
@@ -66,66 +55,33 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SaveExerciseActivity extends AppCompatActivity {
     private static final String TAG = "SaveExerciseActivity";
-
     private MainViewModel mainViewModel;
-
     private AlertDialog dialog;
     private ListView exerciseListView;
     private List<String> exerciseDataList;
     String[] exerciseDataArray;
     private EditText userComment;
+    private Button openMapButton;
     private User user;
-    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_save_exercise);
-        Log.d(TAG, "OnCreate()");
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
+        openMapButton = findViewById(R.id.saveexercise_button_open_map);
         exerciseDataList = new ArrayList<>();
         mainViewModel = MainActivity.getMainViewModel();
         getRecordedData();
         user = mainViewModel.getFirstUser();
 
-        mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
-        mapView.onCreate(savedInstanceState);
-
-        if(RouteContainer.getInstance().hasRoute()){
-            //Check if app has READ_PHONE_STATE permission which is required to display map.
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
-                setRouteOnMap();
-            }
-            else{
-                mapView.setVisibility(View.INVISIBLE);
-            }
+        //Set openMapButton invisible if user did not want to save route.
+        if(!RouteContainer.getInstance().hasRoute()){
+            openMapButton.setVisibility(View.INVISIBLE);
         }
-        else{
-            mapView.setVisibility(View.INVISIBLE);
-        }
-
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-
-    }
 
     private void getRecordedData() {
         Intent intent = getIntent();
@@ -315,45 +271,117 @@ public class SaveExerciseActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
         if (dialog != null) {
             dialog.dismiss();
         }
     }
 
-    private void setRouteOnMap(){
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-                List<LatLng> coordinates = RouteContainer.getInstance().getRouteAsList();
-                mapView.setStreetMode();
 
-                //Center camera at start location.
-                LatLng startPosition = coordinates.get(0);
-                LatLng endPosition = coordinates.get(coordinates.size()-1);
-                CameraUpdate newPosition = CameraUpdateFactory.newLatLngZoom(startPosition, 12);
-                mapboxMap.moveCamera(newPosition);
+/**
+ * @author Jukka-Pekka Jaakkola
+ * */
 
-                //Add markers
-                String startMarkerText = getResources().getString(R.string.map_start_marker);
-                String endMarkerText = getResources().getString(R.string.map_end_marker);
-                MarkerOptions startMarker = new MarkerOptions();
-                startMarker.position(startPosition);
-                startMarker.setTitle(startMarkerText);
-                mapboxMap.addMarker(startMarker);
-                MarkerOptions endMarker = new MarkerOptions();
-                endMarker.position(endPosition);
-                endMarker.setTitle(endMarkerText);
-                mapboxMap.addMarker(endMarker);
+    public void openMapButtonClicked(View view){
+        //Check if app has READ_PHONE_STATE permission which is required to display map.
+        int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (permissionState == PackageManager.PERMISSION_GRANTED){
+            openMap();
+        }
+        //If not, request permission and disable openMapButton until permission request process is finished.
+        else {
+            openMapButton.setClickable(false);
+            String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+            requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+        }
+    }
 
-                //Add route as polyline.
-                PolylineOptions polyline = new PolylineOptions()
-                    .addAll(coordinates)
-                    .width(3)
-                    .color(Color.BLUE);
-                mapboxMap.addPolyline(polyline);
+    private void openMap(){
+        //Starts Map Activity and passes route as extra.
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        String route = RouteContainer.getInstance().getRouteAsText();
+        mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
+        startActivity(mapIntent);
+    }
+
+    //This method is called by Android when user responds to permission request.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == App.PERMISSION_CODE_READ_PHONE_STATE){
+            if(permissionGranted(grantResults)){
+                openMapButton.setClickable(true);
+                openMap();
             }
-        });
+            else {
+                //Check if app should show informative message to user about why this permission is required.
+                //Android System decides if it is required or not.
+                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+                    showInformativeDialog();
+                }
+                else {
+                    openMapButton.setClickable(true);
+                    showPermissionDeniedDialog();
+                }
+            }
+        }
+    }
+
+    private void showPermissionDeniedDialog(){
+        //Dialog where user is explained that map is not available because required permission was not granted.
+        //Create button for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.map_not_available);
+        String message = getResources().getString(R.string.required_permission_denied_message);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ok", positiveButton)
+                .create().show();
+    }
+
+
+    private void showInformativeDialog(){
+        //Informative dialog where user can see why permission is required.
+        //User can verify to deny this permission or show permission request window again.
+
+        //Create buttons for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+                requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+            }
+        };
+        DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                openMapButton.setClickable(true);
+
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.permission_denied);
+        String message = getResources().getString(R.string.informative_message_for_permissions);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ask again", positiveButton)
+                .setNegativeButton("I'm sure", negativeButton)
+                .create().show();
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 
     private String getDateAndTimeAsText(ZonedDateTime date) {
