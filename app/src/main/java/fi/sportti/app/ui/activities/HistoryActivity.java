@@ -25,7 +25,7 @@ import java.util.Random;
 
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.ui.CustomGraph;
+import fi.sportti.app.ui.customViews.CustomGraph;
 import fi.sportti.app.ui.adapters.ExerciseAdapter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
@@ -55,7 +55,60 @@ public class HistoryActivity extends AppCompatActivity {
         graph = findViewById(R.id.history_customgraph_exercise_hours);
         graph.setGraphType(CustomGraph.BAR_GRAPH);
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
+        mainViewModel = MainActivity.getMainViewModel();
+        populateListView();
+        setSwipeListenerOnGraph();
+        setClickListenerOnListView();
 
+//         createTestExercises();
+        //mainViewModel.deleteAllExercises();
+
+    }
+
+    public void changeTimePeriod(View view) {
+        if (changeTimePeriodSwitch.isChecked()) {
+            showMonthlyGraph();
+        }
+        else {
+            showDailyGraph();
+        }
+    }
+
+    private void showPrevious() {
+        graph.showPreviousPeriod();
+        graph.postInvalidate();
+    }
+
+    private void showNext() {
+        graph.showNextPeriod();
+        graph.postInvalidate();
+    }
+
+    private void showDailyGraph() {
+        graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
+        graph.setDataMap(dailyDataMap);
+        graph.postInvalidate();
+    }
+
+    private void showMonthlyGraph() {
+        graph.setGraphTimePeriod(CustomGraph.MONTHS_OF_YEAR);
+        graph.setDataMap(monthlyDataMap);
+        graph.postInvalidate();
+    }
+
+    private void updateGraph() {
+        dailyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.DAILY_MINUTES);
+        monthlyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.MONTHLY_MINUTES);
+        if (graph.getGraphTimePeriod() == CustomGraph.DAYS_OF_WEEK) {
+            graph.setDataMap(dailyDataMap);
+        } else if (graph.getGraphTimePeriod() == CustomGraph.MONTHS_OF_YEAR) {
+            graph.setDataMap(monthlyDataMap);
+        }
+        graph.postInvalidate();
+    }
+
+    private void populateListView(){
+        //Get all exercises, sort them by date, and list them in listView.
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
@@ -74,27 +127,27 @@ public class HistoryActivity extends AppCompatActivity {
                         (ArrayList) exercises));
             }
         });
+    }
 
-        //Swipe listener to change weeks/years on graph.
+    private void setSwipeListenerOnGraph(){
         //Basic idea on how to implement swipe listener https://www.youtube.com/watch?v=vNJyU-XW8_Y
+        //Swipe listener to change weeks/years on graph.
         GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDown(MotionEvent event) {
                 return true;
             }
-
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 //Get two x coordinates from MotionEvents and based on their difference determine if user swiped View and in which direction.
                 float x1 = e1.getX();
                 float x2 = e2.getX();
                 float xDelta = Math.abs(x2 - x1);
-                if (xDelta > 100) {
-                    if (x1 > x2) {
-                        //User swiped left
+                if (xDelta > 100) { //Check if user swiped enough.
+                    if (x1 > x2) { //User swiped left
                         showNext();
-                    } else if (x1 < x2) {
-                        //User swiped right
+                    }
+                    else if (x1 < x2) { //User swiped right
                         showPrevious();
                     }
                 }
@@ -109,7 +162,9 @@ public class HistoryActivity extends AppCompatActivity {
                 return gestureDetector.onTouchEvent(event);
             }
         });
+    }
 
+    private void setClickListenerOnListView(){
         //ClickListener to open exercise details activity.
         exerciseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,53 +174,9 @@ public class HistoryActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-//         createTestExercises();
-        //mainViewModel.deleteAllExercises();
-
     }
 
-    public void changeTimePeriod(View view) {
-        if (changeTimePeriodSwitch.isChecked()) {
-            showMonthlyGraph();
-        } else {
-            showDailyGraph();
-        }
-    }
-
-    public void showPrevious() {
-        graph.showPreviousPeriod();
-        graph.postInvalidate();
-    }
-
-    public void showNext() {
-        graph.showNextPeriod();
-        graph.postInvalidate();
-    }
-
-    public void showDailyGraph() {
-        graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
-        graph.setDataMap(dailyDataMap);
-        graph.postInvalidate();
-    }
-
-    public void showMonthlyGraph() {
-        graph.setGraphTimePeriod(CustomGraph.MONTHS_OF_YEAR);
-        graph.setDataMap(monthlyDataMap);
-        graph.postInvalidate();
-    }
-
-    private void updateGraph() {
-        monthlyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.MONTHLY_HOURS);
-        dailyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.DAILY_HOURS);
-        if (graph.getGraphTimePeriod() == CustomGraph.DAYS_OF_WEEK) {
-            graph.setDataMap(dailyDataMap);
-        } else if (graph.getGraphTimePeriod() == CustomGraph.MONTHS_OF_YEAR) {
-            graph.setDataMap(monthlyDataMap);
-        }
-        graph.postInvalidate();
-    }
-
+    //Used for development purpose and testing.
     private void createTestExercises() {
         Thread thread = new Thread(new Runnable() {
             @Override

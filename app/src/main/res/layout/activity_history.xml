@@ -7,7 +7,7 @@
     android:layout_weight="1.0"
     tools:context=".ui.activities.HistoryActivity">
 
-    <fi.sportti.app.ui.CustomGraph
+    <fi.sportti.app.ui.customViews.CustomGraph
         android:id="@+id/history_customgraph_exercise_hours"
         android:layout_width="match_parent"
         android:layout_height="225dp"

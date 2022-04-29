@@ -14,6 +14,10 @@ import android.os.Build;
 public class App extends Application {
 
     public static final String NOTIFICATION_CHANNEL_ID = "fi.sportti.app.Sportti_Notification_Channel";
+    public static final int PERMISSION_CODE_FINE_LOCATION = 100;
+    public static final int PERMISSION_CODE_READ_PHONE_STATE = 101;
+    public static final int PERMISSION_CODE_ENABLE_LOCATION_SERVICES = 102;
+
 
     @Override
     public void onCreate() {

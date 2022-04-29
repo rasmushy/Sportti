@@ -77,7 +77,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:onClick="openMap"
+                android:onClick="openMapButtonClicked"
                 android:text="@string/button_open_map"
                 app:layout_constraintBottom_toBottomOf="@+id/saveexercise_guideline_buttons"
                 app:layout_constraintEnd_toEndOf="parent"

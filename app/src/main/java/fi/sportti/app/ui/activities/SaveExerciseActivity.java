@@ -4,6 +4,7 @@ import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateT
 import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.*;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.*;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,26 +31,17 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapquest.mapping.MapQuest;
-import com.mapquest.mapping.maps.MapView;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
-import fi.sportti.app.datastorage.room.Exercise;
+import fi.sportti.app.App;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.location.RouteContainer;
 
 import fi.sportti.app.R;
+import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
 import fi.sportti.app.ui.viewmodels.MainViewModel;
@@ -87,9 +79,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapQuest.start(getApplicationContext());
         setContentView(R.layout.activity_save_exercise);
-        Log.d(TAG, "OnCreate()");
         //Initialize
         exerciseListView = findViewById(R.id.saveexercise_listview);
         openMapButton = findViewById(R.id.saveexercise_button_open_map);
@@ -99,22 +89,12 @@ public class SaveExerciseActivity extends AppCompatActivity {
         user = mainViewModel.getFirstUser();
         dialogBuilder = new AlertDialog.Builder(this);
 
+        //Set openMapButton invisible if user did not want to save route.
         if(!RouteContainer.getInstance().hasRoute()){
             openMapButton.setVisibility(View.INVISIBLE);
         }
     }
 
-    public void openMap(View view){
-        if(RouteContainer.getInstance().hasRoute()){
-            //Check if app has READ_PHONE_STATE permission which is required to display map.
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
-                String route = RouteContainer.getInstance().getRouteAsText();
-                Intent intent = new Intent(this, MapActivity.class);
-                intent.putExtra(MapActivity.EXTRA_ROUTE, route);
-                startActivity(intent);
-            }
-        }
-    }
 
     private void getRecordedData() {
         Intent intent = getIntent();
@@ -174,86 +154,87 @@ public class SaveExerciseActivity extends AppCompatActivity {
         exerciseListView.setOnItemClickListener((adapterView, viewFromListView, position, l) -> {
             TextView textViewForData = (TextView) viewFromListView.findViewById(R.id.saveexercise_listview_textview_data);
             switch (position) {
-                case 4:
-                    //position == 4 -> Calories
-                    final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
-                    Button buttonSaveCalories = giveCaloriesPopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
-                    SeekBar seekBarCalories = giveCaloriesPopUp.findViewById(R.id.seekBarCalories);
-                    TextView textViewSeekBarCaloriesValue = giveCaloriesPopUp.findViewById(R.id.textViewSeekBarCaloriesValue);
-                    textViewSeekBarCaloriesValue.setText(exerciseDataArray[3] + " calories");
-                    seekBarCalories.setProgress(Integer.parseInt(exerciseDataArray[3]));
-                    seekBarCalories.setMax(350);
-                    dialogBuilder.setView(giveCaloriesPopUp);
-                    seekBarCalories.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
-                        }
-                    });
-                    buttonSaveCalories.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            textViewForData.setText(Integer.toString(seekBarCalories.getProgress() * 10));
-                            exerciseDataArray[3] = Integer.toString(seekBarCalories.getProgress() * 10);
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog = dialogBuilder.create();
-                    dialog.show();
-                    break;
-                case 5:
-                    //position == 5 -> Avg HeartRate
-                    final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
-                    Button buttonSavePulse = giveAveragePulsePopUp.findViewById(R.id.buttonSavePulsePopUp);
-                    SeekBar seekBarPulse = giveAveragePulsePopUp.findViewById(R.id.seekBarPulse);
-                    TextView textViewSeekBarPulseValue = giveAveragePulsePopUp.findViewById(R.id.textViewSeekBarPulseValue);
-                    textViewSeekBarPulseValue.setText(exerciseDataArray[4] + " bpm");
-                    dialogBuilder.setView(giveAveragePulsePopUp);
-                    seekBarPulse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                            textViewSeekBarPulseValue.setText(seekBarPulse.getProgress() * 5 + 50 + " bpm");
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-                            textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + " bpm");
-                        }
-                    });
-                    buttonSavePulse.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            textViewForData.setText(Integer.toString(seekBarPulse.getProgress() * 5 + 50));
-                            exerciseDataArray[4] = Integer.toString(seekBarPulse.getProgress() * 5 + 50);
-
-                            //If Average heart rate is between 90 - 189 we calculate calorie estimate.
-                            if (seekBarPulse.getProgress() * 5 + 50 > 89 && seekBarPulse.getProgress() * 5 + 50 < 190) {
-                                View calorieView = exerciseListView.getChildAt(4);
-                                TextView textViewForCalories = calorieView.findViewById(R.id.saveexercise_listview_textview_data);
-                                int calories = getCaloriesWithHeartRate(user, (seekBarPulse.getProgress() * 5 + 50), zonedStartTime, zonedDateEnd);
-                                Log.d(TAG, "textViewForCalories.setText " + calories);
-                                exerciseDataArray[3] = Integer.toString(calories);
-                                textViewForCalories.setText(Integer.toString(calories));
-                            }
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog = dialogBuilder.create();
-                    dialog.show();
-                    break;
+                //TODO: Have to update popup's what they are in master.
+//                case 4:
+//                    //position == 4 -> Calories
+//                    final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
+//                    Button buttonSaveCalories = giveCaloriesPopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
+//                    SeekBar seekBarCalories = giveCaloriesPopUp.findViewById(R.id.seekBarCalories);
+//                    TextView textViewSeekBarCaloriesValue = giveCaloriesPopUp.findViewById(R.id.textViewSeekBarCaloriesValue);
+//                    textViewSeekBarCaloriesValue.setText(exerciseDataArray[3] + " calories");
+//                    seekBarCalories.setProgress(Integer.parseInt(exerciseDataArray[3]));
+//                    seekBarCalories.setMax(350);
+//                    dialogBuilder.setView(giveCaloriesPopUp);
+//                    seekBarCalories.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//                        @Override
+//                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+//                        }
+//
+//                        @Override
+//                        public void onStartTrackingTouch(SeekBar seekBar) {
+//                        }
+//
+//                        @Override
+//                        public void onStopTrackingTouch(SeekBar seekBar) {
+//                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+//                        }
+//                    });
+//                    buttonSaveCalories.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            textViewForData.setText(Integer.toString(seekBarCalories.getProgress() * 10));
+//                            exerciseDataArray[3] = Integer.toString(seekBarCalories.getProgress() * 10);
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog = dialogBuilder.create();
+//                    dialog.show();
+//                    break;
+//                case 5:
+//                    //position == 5 -> Avg HeartRate
+//                    final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
+//                    Button buttonSavePulse = giveAveragePulsePopUp.findViewById(R.id.buttonSavePulsePopUp);
+//                    SeekBar seekBarPulse = giveAveragePulsePopUp.findViewById(R.id.seekBarPulse);
+//                    TextView textViewSeekBarPulseValue = giveAveragePulsePopUp.findViewById(R.id.textViewSeekBarPulseValue);
+//                    textViewSeekBarPulseValue.setText(exerciseDataArray[4] + " bpm");
+//                    dialogBuilder.setView(giveAveragePulsePopUp);
+//                    seekBarPulse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//                        @Override
+//                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//                            textViewSeekBarPulseValue.setText(seekBarPulse.getProgress() * 5 + 50 + " bpm");
+//                        }
+//
+//                        @Override
+//                        public void onStartTrackingTouch(SeekBar seekBar) {
+//                        }
+//
+//                        @Override
+//                        public void onStopTrackingTouch(SeekBar seekBar) {
+//                            textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + " bpm");
+//                        }
+//                    });
+//                    buttonSavePulse.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            textViewForData.setText(Integer.toString(seekBarPulse.getProgress() * 5 + 50));
+//                            exerciseDataArray[4] = Integer.toString(seekBarPulse.getProgress() * 5 + 50);
+//
+//                            //If Average heart rate is between 90 - 189 we calculate calorie estimate.
+//                            if (seekBarPulse.getProgress() * 5 + 50 > 89 && seekBarPulse.getProgress() * 5 + 50 < 190) {
+//                                View calorieView = exerciseListView.getChildAt(4);
+//                                TextView textViewForCalories = calorieView.findViewById(R.id.saveexercise_listview_textview_data);
+//                                int calories = getCaloriesWithHeartRate(user, (seekBarPulse.getProgress() * 5 + 50), zonedStartTime, zonedDateEnd);
+//                                Log.d(TAG, "textViewForCalories.setText " + calories);
+//                                exerciseDataArray[3] = Integer.toString(calories);
+//                                textViewForCalories.setText(Integer.toString(calories));
+//                            }
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog = dialogBuilder.create();
+//                    dialog.show();
+//                    break;
                 default:
                     Log.d(TAG, "exerciseListView clicked position: " + position);
             }
@@ -340,5 +321,113 @@ public class SaveExerciseActivity extends AppCompatActivity {
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+
+/**
+ * @author Jukka-Pekka Jaakkola
+ * */
+
+    public void openMapButtonClicked(View view){
+        //Check if app has READ_PHONE_STATE permission which is required to display map.
+        int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (permissionState == PackageManager.PERMISSION_GRANTED){
+            openMap();
+        }
+        //If not, request permission and disable openMapButton until permission request process is finished.
+        else {
+            openMapButton.setClickable(false);
+            String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+            requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+        }
+    }
+
+    private void openMap(){
+        //Starts Map Activity and passes route as extra.
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        String route = RouteContainer.getInstance().getRouteAsText();
+        mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
+        startActivity(mapIntent);
+    }
+
+    //This method is called by Android when user responds to permission request.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == App.PERMISSION_CODE_READ_PHONE_STATE){
+            if(permissionGranted(grantResults)){
+                openMapButton.setClickable(true);
+                openMap();
+            }
+            else {
+                //Check if app should show informative message to user about why this permission is required.
+                //Android System decides if it is required or not.
+                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+                    showInformativeDialog();
+                }
+                else {
+                    openMapButton.setClickable(true);
+                    showPermissionDeniedDialog();
+                }
+            }
+        }
+    }
+
+    private void showPermissionDeniedDialog(){
+        //Dialog where user is explained that map is not available because required permission was not granted.
+        //Create button for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.map_not_available);
+        String message = getResources().getString(R.string.required_permission_denied_message);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ok", positiveButton)
+                .create().show();
+    }
+
+
+    private void showInformativeDialog(){
+        //Informative dialog where user can see why permission is required.
+        //User can verify to deny this permission or show permission request window again.
+
+        //Create buttons for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+                requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+            }
+        };
+        DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                openMapButton.setClickable(true);
+
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.permission_denied);
+        String message = getResources().getString(R.string.informative_message_for_permissions);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ask again", positiveButton)
+                .setNegativeButton("I'm sure", negativeButton)
+                .create().show();
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 }

@@ -1,38 +1,29 @@
 package fi.sportti.app.ui.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapquest.mapping.MapQuest;
-import com.mapquest.mapping.maps.MapView;
-
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import fi.sportti.app.App;
 import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.location.RouteContainer;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
@@ -52,12 +43,12 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
     private TextView commentTv;
     private String route;
     private Button openMapButton;
+    private Exercise exercise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_details);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         sportNameTv = findViewById(R.id.exercisedetails_tv_sport_name);
         startDateTv = findViewById(R.id.exercisedetails_tv_start_date_value);
         durationTv = findViewById(R.id.exercisedetails_tv_duration_value);
@@ -70,6 +61,8 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         int index = b.getInt(HistoryActivity.SELECTED_EXERCISE);
 
+        mainViewModel = MainActivity.getMainViewModel();
+        //Get correct Exercise.
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
@@ -79,8 +72,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                         return t1.getStartDate().compareTo(exercise.getStartDate());
                     }
                 });
-                Exercise exercise = exercises.get(index);
-                route = exercise.getRoute();
+                exercise = exercises.get(index);
                 setInformationOnScreen(exercise);
                 if(exercise.hasRoute()){
                     route = exercise.getRoute();
@@ -92,15 +84,112 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         });
     }
 
-    public void openMap(View view){
+    public void deleteExercise(View view){
+        mainViewModel.deleteExercise(exercise);
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
+    }
+
+    public void openMapButtonClicked(View view){
         //Check if app has READ_PHONE_STATE permission which is required to display map.
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
-            Intent mapIntent = new Intent(this, MapActivity.class);
-            mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
-            startActivity(mapIntent);
+        int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+        if (permissionState == PackageManager.PERMISSION_GRANTED){
+            openMap();
+        }
+        else {
+            openMapButton.setClickable(false);
+            String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+            requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
         }
     }
 
+    //This method is called by Android when user responds to permission request.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == App.PERMISSION_CODE_READ_PHONE_STATE){
+            if(permissionGranted(grantResults)){
+                openMapButton.setClickable(true);
+                openMap();
+            }
+            else {
+                //Check if app should show informative message to user about why this permission is required.
+                //Android System decides this.
+                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+                    showInformativeDialog();
+                }
+                else {
+                    openMapButton.setClickable(true);
+                    showPermissionDeniedDialog();
+                }
+            }
+        }
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void openMap(){
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
+        startActivity(mapIntent);
+    }
+
+
+    private void showPermissionDeniedDialog(){
+        //Dialog where user is explained that map is not available because required permission was not granted.
+
+        //Create button for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.map_not_available);
+        String message = getResources().getString(R.string.required_permission_denied_message);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ok", positiveButton)
+                .create().show();
+    }
+
+
+    private void showInformativeDialog(){
+        //Informative dialog where user can see why permission is required.
+        //User can verify to deny this permission or show permission request window again.
+
+        //Create buttons for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+                requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+            }
+        };
+        DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                openMapButton.setClickable(true);
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.permission_denied);
+        String message = getResources().getString(R.string.informative_message_for_permissions);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ask again", positiveButton)
+                .setNegativeButton("I'm sure", negativeButton)
+                .create().show();
+    }
 
     private void setInformationOnScreen(Exercise exercise){
         int duration = exercise.getDurationInMinutes();
@@ -110,8 +199,12 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         String durationAsText = formatDuration(duration);
         String calories = exercise.getCalories() + " kcal";
         String distanceAsText = String.format("%.2f", distance) + " km";
-        String pulse = exercise.getAvgHeartRate() + " /min";
+        String pulse = "-";
+        if(exercise.getAvgHeartRate() != 0){
+            pulse = exercise.getAvgHeartRate() + "/min";
+        }
         String comment = exercise.getComment();
+
         sportNameTv.setText(sportName);
         startDateTv.setText(startDate);
         durationTv.setText(durationAsText);
@@ -135,31 +228,22 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         else {
             sb.append("0" + minute);
         }
-
         return sb.toString();
     }
 
 
-    private String formatDuration(int duration){
-        String result = "";
-        if(duration == 60){
-            result = "1h";
-        }
-        else if(duration >= 60){
-            int hours = duration / 60;
-            int minutes = duration - (hours*60);
-            if(hours == 1){
-                result = "1h";
+    private String formatDuration(int durationInMinutes){
+        //Returns duration in String format. Examples:
+        // "34 min" if duration is less than 60 minutes.
+        // "1h 15min" if duration is over 60 minutes.
+        String result = durationInMinutes + " min";
+        if(durationInMinutes >= 60){
+            int fullHours = durationInMinutes / 60;
+            int minutesLeft = durationInMinutes - fullHours * 60;
+            result = fullHours + "h ";
+            if(minutesLeft > 0){
+                result += minutesLeft + "min";
             }
-            else {
-                result += hours + "h ";
-            }
-            if(minutes > 0){
-                result += minutes + "min";
-            }
-        }
-        else {
-            result = duration + " min";
         }
         return result;
     }
