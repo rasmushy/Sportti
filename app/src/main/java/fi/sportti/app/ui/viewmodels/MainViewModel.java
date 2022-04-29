@@ -157,10 +157,8 @@ public class MainViewModel extends AndroidViewModel {
                 return t1.getStartDate().compareTo(exercise.getStartDate());
             }
         });
-
         return listToReturn;
     }
-
 
     private ZonedDateTime getKeyDate(Exercise exercise, int type) {
         ZonedDateTime keyDate;
