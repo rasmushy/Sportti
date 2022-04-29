@@ -37,11 +37,13 @@
         <activity
             android:name=".ui.activities.ExerciseDetailsActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.HistoryActivity" />
+            android:parentActivityName=".ui.activities.HistoryActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.HistoryActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.MainActivity"/>
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.activities.ProfileActivity"
@@ -66,7 +68,8 @@
         <!--MainActivity is landing page when you open application-->
         <activity
             android:name=".ui.activities.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

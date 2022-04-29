@@ -123,16 +123,16 @@ public class MapActivity extends AppCompatActivity {
         //Bigger distance -> smaller zoom value so whole route shows on map.
         double zoom = 0;
         if(distance <= 1){
-            zoom = 14;
-        }
-        else if(distance <= 5){
             zoom = 13;
         }
+        else if(distance <= 5){
+            zoom = 12;
+        }
         else if(distance <= 10){
-            zoom = 10;
+            zoom = 9;
         }
         else if(distance <= 100){
-            zoom = 8.5;
+            zoom = 8;
         }
         else {
             zoom = 7;
