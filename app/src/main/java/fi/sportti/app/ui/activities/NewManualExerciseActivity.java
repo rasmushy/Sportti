@@ -808,15 +808,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 Exercise exercise = new Exercise(exerciseType, userId, startTimeData, endTimeData,
                         calories, pulse, "", distanceDouble, comment);
                 mainViewModel.insertExercise(exercise);
-                Log.d(TAG, "savePressed() --> Exercise saved to database" +
-                        "\n   type: " + exerciseDataArray[0] +
-                        "\n   user id: " + userId +
-                        "\n   start d: " + exerciseDataArray[1] +
-                        "\n   end d: " + exerciseDataArray[2] +
-                        "\n   calories: " + exerciseDataArray[3] +
-                        "\n   avg HR: " + exerciseDataArray[4] +
-                        "\n   distance: " + exerciseDataArray[6] +
-                        "\n   comment: " + exerciseDataArray[7]);
+                Log.d(TAG, "savePressed() --> Exercise saved to database" + exercise);
 
                 Intent intentForMainActivity = new Intent(this, MainActivity.class);
                 intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

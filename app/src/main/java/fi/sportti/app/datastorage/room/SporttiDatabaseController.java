@@ -12,7 +12,8 @@ import java.util.concurrent.Future;
 
 /**
  * @author Rasmus Hyyppä
- * Database controller with Dao commands
+ * @version 0.5
+ * Database controller with commands from our DAO's
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)

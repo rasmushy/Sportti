@@ -15,13 +15,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import fi.sportti.app.R;
-import fi.sportti.app.constants.ExerciseType;
+import fi.sportti.app.ui.constants.ExerciseType;
 import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
 
 /**
  * @author Rasmus Hyyppä
- * @version 0.1
- * User wants to record exercise, here we choose what type of exercise we are planning to do
+ * @version 0.5
+ * User wants to record exercise: Activity to choose exercise.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)

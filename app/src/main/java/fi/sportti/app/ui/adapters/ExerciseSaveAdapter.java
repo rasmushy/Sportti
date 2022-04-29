@@ -17,9 +17,10 @@ import java.util.TimeZone;
 import fi.sportti.app.R;
 
 /**
- * @author Rasmus Hyyppä
- * @version 0.1
  * Custom adapter for listview to display recorded data after recorded exercise.
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
  */
 
 public class ExerciseSaveAdapter extends ArrayAdapter<String> {

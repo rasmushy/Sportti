@@ -14,9 +14,10 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 /**
- * @author rasmushy
- * @version 0.1
  * Entity class for User created Exercises
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -147,10 +148,26 @@ public class Exercise {
         return (int) ChronoUnit.MINUTES.between(startDate, endDate);
     }
 
-    public boolean hasRoute(){
-        if(route == null){
+    public boolean hasRoute() {
+        if (route == null) {
             return false;
         }
         return !route.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "exerciseId=" + exerciseId +
+                ", userId=" + userId +
+                ", sportType='" + sportType + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", calories=" + calories +
+                ", avgHeartRate=" + avgHeartRate +
+                ", route='" + route + '\'' +
+                ", distance=" + distance +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

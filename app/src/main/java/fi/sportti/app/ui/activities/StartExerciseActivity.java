@@ -46,18 +46,19 @@ import java.util.TimerTask;
 
 import fi.sportti.app.App;
 import fi.sportti.app.R;
-import fi.sportti.app.constants.ExerciseType;
+import fi.sportti.app.ui.constants.ExerciseType;
 import fi.sportti.app.datastorage.sharedpreferences.RecordController;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 import fi.sportti.app.location.LocationTracking;
 import fi.sportti.app.location.RouteContainer;
 
 /**
- * @author Rasmus Hyyppä
- * @version 0.1
  * Application running while you exercise to collect data from it.
  * It provides user a timer count up with reset possibility, it also sends notification to user
  * This activity includes private class TimerTask: "RecordTask"
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -136,7 +137,10 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-    // Private class for running TimerTask, even when user has locked screen.
+    /**
+     * @author Rasmus Hyyppä
+     * Private class for running TimerTask, even when user has locked screen.
+     */
     private class RecordTask extends TimerTask {
         @Override
         public void run() {
@@ -247,12 +251,12 @@ public class StartExerciseActivity extends AppCompatActivity {
 
             //Variable types are currently set as they are in Exercise class
             //getCalories(User user, String sportType, ZonedDateTime startDate, ZonedDateTime endDate)
-            int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime());
+            int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime().plusHours(1));
             int avgHeartRate = 0;
             String route;
             double distance;
             RouteContainer routeContainer = RouteContainer.getInstance();
-            if(trackLocationSwitch.isChecked()){
+            if (trackLocationSwitch.isChecked()) {
                 route = routeContainer.getRouteAsText();
                 distance = routeContainer.getRouteLength();
             }
@@ -265,7 +269,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             }
             String comment = "";
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
-            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, String.format("%.2f", distance), comment};
+            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().plusHours(1).toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, String.format("%.2f", distance), comment};
             //Time to send all recorded data into SaveExerciseActivity
             Intent intentForSaveActivity = new Intent(this, SaveExerciseActivity.class);
             intentForSaveActivity.putExtra(REPLY_RECORDED_EXERCISE, dataForIntent);
@@ -324,9 +328,9 @@ public class StartExerciseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(timerIsRunning){
+        if (timerIsRunning) {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(StartExerciseActivity.this);
             notificationManager.cancel(notificationID);
         }
@@ -356,7 +360,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
 
     /**
-     *@author Jukka-Pekka Jaakkola
+     * @author Jukka-Pekka Jaakkola
      */
 
     public void toggleLocationTracking(View view) {
@@ -366,10 +370,9 @@ public class StartExerciseActivity extends AppCompatActivity {
             //If it has, make sure that location services are enabled so location can be tracked.
             if (permissionState == PackageManager.PERMISSION_GRANTED) {
                 enableLocationServices();
-            }
-            else {
+            } else {
                 //Request result will be handled in onRequestPermissionsResult which is defined below.
-                String[] permissions = { Manifest.permission.ACCESS_FINE_LOCATION };
+                String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
                 requestPermissions(permissions, App.PERMISSION_CODE_FINE_LOCATION);
             }
         }

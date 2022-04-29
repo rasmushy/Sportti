@@ -1,4 +1,4 @@
-/*
+/**
  * Sportti, android application for fitness tracking and more.
  */
 
@@ -35,8 +35,9 @@ import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.customViews.CustomProgressBar;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
-/*
- * @author rasmushy, lassib
+/**
+ * @author lassib
+ * @version 0.5
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
@@ -73,10 +74,11 @@ public class MainActivity extends AppCompatActivity {
         initialStartUp();
     }
 
-    /*
-     * @author Rasmus Hyyppä
+    /**
      * Initial startup method to check do we have user that has saved personal information
      * If not, we create blank user, that can visit Application's activities freely.
+     *
+     * @author Rasmus Hyyppä
      */
     private void initialStartUp() {
 //        Log.d(TAG, "initialStartUp() launched");
@@ -104,37 +106,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
-     *@author Lassi Bågman
+    /**
+     * @author Lassi Bågman
      * Methods for buttons
      */
-    public void openStartExerciseActivity(View view){
+    public void openStartExerciseActivity(View view) {
         Intent intent = new Intent(this, NewRecordedExerciseActivity.class);
         startActivity(intent);
     }
 
-    public void openSaveExerciseActivity(View view){
+    public void openSaveExerciseActivity(View view) {
         Intent intent = new Intent(this, NewManualExerciseActivity.class);
         startActivity(intent);
     }
 
-    public void openHistoryActivity(View view){
+    public void openHistoryActivity(View view) {
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 
 
-    public void openProfileActivity(View view){
-       Intent intent = new Intent(this, ProfileActivity.class);
+    public void openProfileActivity(View view) {
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
 
     }
 
-    /*
-     *@author Lassi Bågman
+    /**
+     * @author Lassi Bågman
      * Method for pop up
      */
-    public void selectExerciseTypePopUp(View view){
+    public void selectExerciseTypePopUp(View view) {
         //Variables for exercise pop up
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         final View selectExercisePopUpView = getLayoutInflater().inflate(R.layout.pop_up_select_new_exercise_type, null);
@@ -151,11 +153,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     *@author Jukka-Pekka Jaakkola
+    /**
+     * @author Jukka-Pekka Jaakkola
      */
 
-    private void updateWeeklyGoalBar(){
+    private void updateWeeklyGoalBar() {
         HashMap<ZonedDateTime, Integer> dataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.DAILY_MINUTES);
         ZonedDateTime today = ZonedDateTime.now();
         int year = today.getYear();
@@ -164,13 +166,13 @@ public class MainActivity extends AppCompatActivity {
         ZoneId zone = ZoneId.systemDefault();
         today = ZonedDateTime.of(year, monthOfYear, today.getDayOfMonth(), 12, 0, 0, 0, zone);
         //Set date to first day of week.
-        ZonedDateTime firstDayOfWeek = today.minusDays(currentDayOfWeek-1);
+        ZonedDateTime firstDayOfWeek = today.minusDays(currentDayOfWeek - 1);
         ZonedDateTime keyDate;
         int minutes = 0;
-        if(dataMap != null){
-            for(int i = 0; i < 7; i++){
+        if (dataMap != null) {
+            for (int i = 0; i < 7; i++) {
                 keyDate = firstDayOfWeek.plusDays(i);
-                if(dataMap.containsKey(keyDate)){
+                if (dataMap.containsKey(keyDate)) {
                     minutes += dataMap.get(keyDate);
                 }
             }

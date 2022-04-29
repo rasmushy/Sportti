@@ -1,9 +1,10 @@
-package fi.sportti.app.constants;
+package fi.sportti.app.ui.constants;
 
 /**
  * Enum for our Exercise type constants with MET values to use in calorie calculations
  *
  * @author Rasmus Hyyppä
+ * @version 0.5
  */
 public enum ExerciseType {
     BASKETBALL("Basketball"),
