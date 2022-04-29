@@ -48,7 +48,6 @@ import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
-
 /**
  * Activity after StartExerciseActivity.
  * For user to view and save recorded exercise.
@@ -381,6 +380,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
                 dialogInterface.dismiss();
             }
         };
