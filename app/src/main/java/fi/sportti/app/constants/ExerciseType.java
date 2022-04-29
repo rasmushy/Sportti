@@ -1,21 +1,26 @@
 package fi.sportti.app.constants;
 
+/**
+ * Enum for our Exercise type constants with MET values to use in calorie calculations
+ *
+ * @author Rasmus Hyyppä
+ */
 public enum ExerciseType {
-    WALKING("Walking"),
-    RUNNING("Running"),
-    BICYCLING("Bicycling"),
-    YOGA("Yoga"),
-    GOLF("Golf"),
-    WEIGHT_LIFTING("Weight lifting"),
-    FOOTBALL("Football"),
-    TENNIS("Tennis"),
     BASKETBALL("Basketball"),
-    SWIMMING("Swimming"),
+    BICYCLING("Bicycling"),
     CROSSFIT("Crossfit"),
     DANCING("Dancing"),
-    ZUMBA("Zumba"),
+    FOOTBALL("Football"),
+    GOLF("Golf"),
+    OTHER("Other"),
+    RUNNING("Running"),
     SPINNING("Spinning"),
-    OTHER("Other");
+    SWIMMING("Swimming"),
+    TENNIS("Tennis"),
+    WALKING("Walking"),
+    WEIGHT_LIFTING("Weight lifting"),
+    YOGA("Yoga"),
+    ZUMBA("Zumba");
 
     /**
      * MET = https://en.wikipedia.org/wiki/Metabolic_equivalent_of_task
@@ -24,7 +29,7 @@ public enum ExerciseType {
     private final double metabolicEquivalentOfTask;
     private final String exerciseName;
 
-    private ExerciseType(String exerciseName) {
+    ExerciseType(String exerciseName) {
         this.exerciseName = exerciseName;
         switch (exerciseName) {
             case "Walking":

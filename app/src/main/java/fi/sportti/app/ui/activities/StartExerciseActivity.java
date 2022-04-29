@@ -265,7 +265,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             }
             String comment = "";
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
-            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, Double.toString(distance), comment};
+            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, String.format("%.2f", distance), comment};
             //Time to send all recorded data into SaveExerciseActivity
             Intent intentForSaveActivity = new Intent(this, SaveExerciseActivity.class);
             intentForSaveActivity.putExtra(REPLY_RECORDED_EXERCISE, dataForIntent);

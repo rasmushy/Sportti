@@ -57,7 +57,6 @@ public class HistoryActivity extends AppCompatActivity {
         populateListView();
         setSwipeListenerOnGraph();
         setClickListenerOnListView();
-
 //         createTestExercises();
         //mainViewModel.deleteAllExercises();
 
@@ -81,7 +80,6 @@ public class HistoryActivity extends AppCompatActivity {
         graph.showNextPeriod();
         graph.postInvalidate();
     }
-
     private void showDailyGraph() {
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         graph.setDataMap(dailyDataMap);

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="exercise_type_list">
-        <item>Walking</item>
-        <item>Running</item>
-        <item>Bicycling</item>
-        <item>Yoga</item>
-        <item>Golf</item>
-        <item>Weight lifting</item>
-        <item>Football</item>
-        <item>Tennis</item>
         <item>Basketball</item>
-        <item>Swimming</item>
+        <item>Bicycling</item>
         <item>Crossfit</item>
         <item>Dancing</item>
-        <item>Zumba</item>
-        <item>Spinning</item>
+        <item>Football</item>
+        <item>Golf</item>
         <item>Other</item>
+        <item>Running</item>
+        <item>Spinning</item>
+        <item>Swimming</item>
+        <item>Tennis</item>
+        <item>Walking</item>
+        <item>Weight lifting</item>
+        <item>Yoga</item>
+        <item>Zumba</item>
     </string-array>
 </resources>

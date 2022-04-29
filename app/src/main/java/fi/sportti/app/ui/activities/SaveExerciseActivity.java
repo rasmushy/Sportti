@@ -1,8 +1,8 @@
 package fi.sportti.app.ui.activities;
 
 import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateToUnixTime;
-import static fi.sportti.app.ui.utilities.TimeConversionUtilities.getUnixTimeDifference;
-import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFromLong;
+import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.*;
+import static fi.sportti.app.ui.utilities.TimeConversionUtilities.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -26,8 +26,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.NumberPicker;
 
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.time.ZonedDateTime;
@@ -56,13 +56,24 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 public class SaveExerciseActivity extends AppCompatActivity {
     private static final String TAG = "SaveExerciseActivity";
     private MainViewModel mainViewModel;
+
+    //Dialog
+    private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
+
+    //User
+    private User user;
+    private ZonedDateTime zonedStartTime;
+    private ZonedDateTime zonedDateEnd;
+
+    //Exercises
     private ListView exerciseListView;
     private List<String> exerciseDataList;
     String[] exerciseDataArray;
     private EditText userComment;
     private Button openMapButton;
-    private User user;
+
+//    private MapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +86,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         mainViewModel = MainActivity.getMainViewModel();
         getRecordedData();
         user = mainViewModel.getFirstUser();
+        dialogBuilder = new AlertDialog.Builder(this);
 
         //Set openMapButton invisible if user did not want to save route.
         if(!RouteContainer.getInstance().hasRoute()){
@@ -93,10 +105,10 @@ public class SaveExerciseActivity extends AppCompatActivity {
         //Dates
         String exerciseStartDate = exerciseDataArray[1];
         String exerciseEndDate = exerciseDataArray[2];
-        ZonedDateTime zonedStartTime = ZonedDateTime.parse(exerciseStartDate);
-        ZonedDateTime zonedDateEnd = ZonedDateTime.parse(exerciseEndDate);
+        zonedStartTime = ZonedDateTime.parse(exerciseStartDate);
+        zonedDateEnd = ZonedDateTime.parse(exerciseEndDate);
         //Method to format date into prettier form
-        exerciseStartDate = getDateAndTimeAsText(zonedStartTime);
+        exerciseStartDate = getDateAndTimeAsString(zonedStartTime);
 
         //Duration
         Long totalDurationLong = getUnixTimeDifference(zonedDateToUnixTime(zonedStartTime), zonedDateToUnixTime(zonedDateEnd));
@@ -134,65 +146,98 @@ public class SaveExerciseActivity extends AppCompatActivity {
         userComment = exerciseListView.findViewById(R.id.saveexercise_listview_header_edittext);
 
         //SetOnItemClickListener for Listview
-        exerciseListView.setOnItemClickListener((adapterView, view, position, l) -> {
+        setItemClickListenerForListView();
+    }
+
+    private void setItemClickListenerForListView() {
+        exerciseListView.setOnItemClickListener((adapterView, viewFromListView, position, l) -> {
+            TextView textViewForData = (TextView) viewFromListView.findViewById(R.id.saveexercise_listview_textview_data);
             switch (position) {
-                case 1:
-                    //position == 1 -> Exercise Type
-                    Log.d(TAG, "exerciseListView clicked exercise type: " + position);
-                    break;
-                case 2:
-                    //position == 2 -> Start Date
-                    Log.d(TAG, "exerciseListView clicked start date: " + position);
-                    break;
-                case 3:
-                    //position == 3 -> Duration
-                    Log.d(TAG, "exerciseListView clicked duration: " + position);
-                    break;
-                case 4:
-                    //position == 4 -> Calories
-                    Log.d(TAG, "exerciseListView clicked calories: " + position);
-                    break;
-                case 5:
-                    //position == 5 -> Avg HeartRate
-                    final NumberPicker heartRatePicker = new NumberPicker(this);
-                    heartRatePicker.setMaxValue(200);
-                    heartRatePicker.setMinValue(0);
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-                    dialogBuilder.setView(heartRatePicker)
-                            .setTitle("Average heart rate")
-                            .setMessage("Choose estimate:")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    setIntegerValueForTextView(view, heartRatePicker.getValue());
-                                }
-                            });
-                    dialog = dialogBuilder.create();
-                    dialog.show();
-                    break;
-                case 6:
-                    //position == 5 -> Distance
-                    Log.d(TAG, "exerciseListView clicked distance: " + position);
-                    break;
+                //TODO: Have to update popup's what they are in master.
+//                case 4:
+//                    //position == 4 -> Calories
+//                    final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
+//                    Button buttonSaveCalories = giveCaloriesPopUp.findViewById(R.id.buttonSaveCaloriesPopUp);
+//                    SeekBar seekBarCalories = giveCaloriesPopUp.findViewById(R.id.seekBarCalories);
+//                    TextView textViewSeekBarCaloriesValue = giveCaloriesPopUp.findViewById(R.id.textViewSeekBarCaloriesValue);
+//                    textViewSeekBarCaloriesValue.setText(exerciseDataArray[3] + " calories");
+//                    seekBarCalories.setProgress(Integer.parseInt(exerciseDataArray[3]));
+//                    seekBarCalories.setMax(350);
+//                    dialogBuilder.setView(giveCaloriesPopUp);
+//                    seekBarCalories.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//                        @Override
+//                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+//                        }
+//
+//                        @Override
+//                        public void onStartTrackingTouch(SeekBar seekBar) {
+//                        }
+//
+//                        @Override
+//                        public void onStopTrackingTouch(SeekBar seekBar) {
+//                            textViewSeekBarCaloriesValue.setText(seekBarCalories.getProgress() * 10 + " calories");
+//                        }
+//                    });
+//                    buttonSaveCalories.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            textViewForData.setText(Integer.toString(seekBarCalories.getProgress() * 10));
+//                            exerciseDataArray[3] = Integer.toString(seekBarCalories.getProgress() * 10);
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog = dialogBuilder.create();
+//                    dialog.show();
+//                    break;
+//                case 5:
+//                    //position == 5 -> Avg HeartRate
+//                    final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
+//                    Button buttonSavePulse = giveAveragePulsePopUp.findViewById(R.id.buttonSavePulsePopUp);
+//                    SeekBar seekBarPulse = giveAveragePulsePopUp.findViewById(R.id.seekBarPulse);
+//                    TextView textViewSeekBarPulseValue = giveAveragePulsePopUp.findViewById(R.id.textViewSeekBarPulseValue);
+//                    textViewSeekBarPulseValue.setText(exerciseDataArray[4] + " bpm");
+//                    dialogBuilder.setView(giveAveragePulsePopUp);
+//                    seekBarPulse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//                        @Override
+//                        public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//                            textViewSeekBarPulseValue.setText(seekBarPulse.getProgress() * 5 + 50 + " bpm");
+//                        }
+//
+//                        @Override
+//                        public void onStartTrackingTouch(SeekBar seekBar) {
+//                        }
+//
+//                        @Override
+//                        public void onStopTrackingTouch(SeekBar seekBar) {
+//                            textViewSeekBarPulseValue.setText((seekBarPulse.getProgress() * 5 + 50) + " bpm");
+//                        }
+//                    });
+//                    buttonSavePulse.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            textViewForData.setText(Integer.toString(seekBarPulse.getProgress() * 5 + 50));
+//                            exerciseDataArray[4] = Integer.toString(seekBarPulse.getProgress() * 5 + 50);
+//
+//                            //If Average heart rate is between 90 - 189 we calculate calorie estimate.
+//                            if (seekBarPulse.getProgress() * 5 + 50 > 89 && seekBarPulse.getProgress() * 5 + 50 < 190) {
+//                                View calorieView = exerciseListView.getChildAt(4);
+//                                TextView textViewForCalories = calorieView.findViewById(R.id.saveexercise_listview_textview_data);
+//                                int calories = getCaloriesWithHeartRate(user, (seekBarPulse.getProgress() * 5 + 50), zonedStartTime, zonedDateEnd);
+//                                Log.d(TAG, "textViewForCalories.setText " + calories);
+//                                exerciseDataArray[3] = Integer.toString(calories);
+//                                textViewForCalories.setText(Integer.toString(calories));
+//                            }
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog = dialogBuilder.create();
+//                    dialog.show();
+//                    break;
                 default:
                     Log.d(TAG, "exerciseListView clicked position: " + position);
             }
         });
-        //Comment box for user initialized
-        userComment = exerciseListView.findViewById(R.id.saveexercise_listview_header_edittext);
-    }
-
-    /**
-     * Currently used only to set avg heart rate (if user changes it)
-     *
-     * @param view  View data where we can find textview
-     * @param value Value that will be set to textview
-     */
-    public void setIntegerValueForTextView(View view, int value) {
-        String valueToString = Integer.toString(value);
-        TextView avgHeartRateView = (TextView) view.findViewById(R.id.saveexercise_listview_textview_data);
-        avgHeartRateView.setText(valueToString);
-        exerciseDataArray[4] = valueToString;
-        Log.d(TAG, "setIntegerValueForTextView() --> Avg heart rate set to: " + exerciseDataArray[4]);
     }
 
     /**
@@ -231,6 +276,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                     "\n   comment: " + exerciseDataArray[7]);
             //Send us back to MainActivity page after saving data.
             Intent intentForMainActivity = new Intent(this, MainActivity.class);
+            // FLAG_ACTIVITY_CLEAR_TOP to clear activity stack:  https://developer.android.com/guide/components/activities/tasks-and-back-stack
             intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intentForMainActivity);
         }
@@ -286,6 +332,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
         if (permissionState == PackageManager.PERMISSION_GRANTED){
             openMap();
+
         }
         //If not, request permission and disable openMapButton until permission request process is finished.
         else {
@@ -396,7 +443,100 @@ public class SaveExerciseActivity extends AppCompatActivity {
         } else {
             sb.append("0" + minute);
         }
+        //If not, request permission and disable openMapButton until permission request process is finished.
+        else {
+            openMapButton.setClickable(false);
+            String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+            requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+        }
+    }
 
-        return sb.toString();
+    private void openMap(){
+        //Starts Map Activity and passes route as extra.
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        String route = RouteContainer.getInstance().getRouteAsText();
+        mapIntent.putExtra(MapActivity.EXTRA_ROUTE, route);
+        startActivity(mapIntent);
+    }
+
+    //This method is called by Android when user responds to permission request.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == App.PERMISSION_CODE_READ_PHONE_STATE){
+            if(permissionGranted(grantResults)){
+                openMapButton.setClickable(true);
+                openMap();
+            }
+            else {
+                //Check if app should show informative message to user about why this permission is required.
+                //Android System decides if it is required or not.
+                if(shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+                    showInformativeDialog();
+                }
+                else {
+                    openMapButton.setClickable(true);
+                    showPermissionDeniedDialog();
+                }
+            }
+        }
+    }
+
+    private void showPermissionDeniedDialog(){
+        //Dialog where user is explained that map is not available because required permission was not granted.
+        //Create button for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.map_not_available);
+        String message = getResources().getString(R.string.required_permission_denied_message);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ok", positiveButton)
+                .create().show();
+    }
+
+
+    private void showInformativeDialog(){
+        //Informative dialog where user can see why permission is required.
+        //User can verify to deny this permission or show permission request window again.
+
+        //Create buttons for dialog.
+        DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String[] permissions = { Manifest.permission.READ_PHONE_STATE };
+                requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
+            }
+        };
+        DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                openMapButton.setClickable(true);
+
+            }
+        };
+        //Get texts for dialog
+        String title = getResources().getString(R.string.permission_denied);
+        String message = getResources().getString(R.string.informative_message_for_permissions);
+
+        //Build, create and show dialog.
+        new AlertDialog.Builder(this).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Ask again", positiveButton)
+                .setNegativeButton("I'm sure", negativeButton)
+                .create().show();
+    }
+
+    private boolean permissionGranted(int[] grantResults){
+        return grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 }
