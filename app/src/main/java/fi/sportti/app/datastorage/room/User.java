@@ -4,21 +4,21 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
-
 /**
- * @author Rasmus Hyyppä
  * Entity class for user
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
  */
 
 @Entity(tableName = "user_data")
 public class User {
 
     /**
-     * Default values for user in constructor. This allows user to look around in app without
-     * adding any personal information.
+     * Default values for user in constructor.
+     * These values are purely magic numbers that are not based on anything.
+     * This allows user to look around in app without adding any personal information.
      */
-
     public User() {
         this.userName = "username";
         this.gender = "Male";
@@ -26,8 +26,9 @@ public class User {
         this.weight = 70;
         this.weeklyGoalMinute = 0;
         this.weeklyGoalHour = 2;
-        this.age = new Date(0);
+        this.age = 52;
         this.restHeartRate = 0;
+        this.maxHeartRate = 172; // Max HeartRate calculated from age 208-(0,7 * 52) = 171,6
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -36,7 +37,9 @@ public class User {
 
     @ColumnInfo(name = "username", index = true)
     private String userName;
-    
+
+    @ColumnInfo(name = "maxHeartRate")
+    private int maxHeartRate;
     @ColumnInfo(name = "restHeartRate")
     private int restHeartRate;
     @ColumnInfo(name = "gender", index = true)
@@ -46,7 +49,7 @@ public class User {
     @ColumnInfo(name = "height", index = true)
     private int height;
     @ColumnInfo(name = "age", index = true)
-    private Date age;
+    private int age;
     @ColumnInfo(name = "weeklyGoalMinute", index = true)
     private int weeklyGoalMinute;
     @ColumnInfo(name = "weeklyGoalHour", index = true)
@@ -69,7 +72,7 @@ public class User {
         this.height = height;
     }
 
-    public void setAge(Date age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -93,7 +96,7 @@ public class User {
         return height;
     }
 
-    public Date getAge() {
+    public int getAge() {
         return age;
     }
 
@@ -119,5 +122,13 @@ public class User {
 
     public void setRestHeartRate(int restHeartRate) {
         this.restHeartRate = restHeartRate;
+    }
+
+    public int getMaxHeartRate() {
+        return maxHeartRate;
+    }
+
+    public void setMaxHeartRate(int maxHeartRate) {
+        this.maxHeartRate = maxHeartRate;
     }
 }

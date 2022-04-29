@@ -14,9 +14,10 @@ import java.util.List;
 import fi.sportti.app.R;
 
 /**
- * @author Rasmus Hyyppä
- * @version 0.1
  * Custom adapter for listing exercise types.
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
  */
 
 public class ExerciseTypeAdapter extends ArrayAdapter<String> {

@@ -2,12 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "50548f2d39dee5366b96e1e5cd6f4b34",
+    "identityHash": "cc132bf05b873d06179f4959af9f2ea7",
     "entities": [
       {
         "tableName": "user_data",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `restHeartRate` INTEGER NOT NULL, `gender` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
-
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `maxHeartRate` INTEGER NOT NULL, `restHeartRate` INTEGER NOT NULL, `gender` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER NOT NULL, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "uid",
@@ -22,13 +21,18 @@
             "notNull": false
           },
           {
+            "fieldPath": "maxHeartRate",
+            "columnName": "maxHeartRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "restHeartRate",
             "columnName": "restHeartRate",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-
             "fieldPath": "gender",
             "columnName": "gender",
             "affinity": "TEXT",
@@ -50,7 +54,7 @@
             "fieldPath": "age",
             "columnName": "age",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "weeklyGoalMinute",
@@ -328,8 +332,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '50548f2d39dee5366b96e1e5cd6f4b34')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc132bf05b873d06179f4959af9f2ea7')"
     ]
   }
 }
