@@ -112,7 +112,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 calendar.set(year, month, day);
                 startDateLong = calendar.getTimeInMillis();
                 startYear = year;
-                startMonth = month;
+                startMonth = month + 1;
                 startDay = day;
                 dateSelected = true;
             }
