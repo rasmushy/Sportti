@@ -23,11 +23,10 @@ import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 /**
  *@author Jukka-Pekka Jaakkola
  * Own class for creating custom views so we can draw graphs.
+ * Basic idea on how to build own custom Views learnt from this article.
+ * How the coordinates work, how to draw lines on canvas etc..
+ * https://medium.com/@mayurjajoomj/custom-graphs-custom-view-android-862e16813cc
  */
-
-/*
-* Basic idea how to build own custom Views learnt from this article
-* https://medium.com/@mayurjajoomj/custom-graphs-custom-view-android-862e16813cc */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CustomGraph extends View  {
@@ -49,20 +48,17 @@ public class CustomGraph extends View  {
     private double oneHourHeight;
     private HashMap<ZonedDateTime, Integer> dataMap;
 
-    public CustomGraph(Context context) {
-        super(context);
-    }
-
+    /**
+     * Constructor that has to be implemented because this class extends View.
+     * Explanation from Android Developer documentation:
+     * "To allow Android Studio to interact with your view, at a minimum you must provide
+     * a constructor that takes a Context and an AttributeSet object as parameters.
+     * This constructor allows the layout editor to create and edit an instance of your view."
+     * @param context
+     * @param attrs
+     */
     public CustomGraph(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public CustomGraph(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public CustomGraph(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     //This method is called when graph is first created and everytime its updated with different values.
@@ -166,9 +162,18 @@ public class CustomGraph extends View  {
 
     private void drawAxis() {
         //y-axis
-        canvas.drawLine(origoX, origoY, origoX, yTopOffset-50, axisPaint);
+        int startX = origoX;
+        int startY = origoY;
+        int stopX = origoX;
+        int stopY = yTopOffset - 50;
+        canvas.drawLine(startX, startY, stopX, stopY, axisPaint);
+
         //x-axis
-        canvas.drawLine(origoX, origoY, viewWidth - origoX, origoY, axisPaint);
+        stopX = viewWidth - origoX;
+        stopY = origoY;
+        canvas.drawLine(startX, startY, stopX, stopY, axisPaint);
+
+        //Text on top of y-axis.
         String text = getResources().getString(R.string.customgraph_y_axis_name);
         canvas.drawText(text, 30, 30, textPaint);
     }

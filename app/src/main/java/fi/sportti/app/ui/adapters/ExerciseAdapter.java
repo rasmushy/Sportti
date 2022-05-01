@@ -29,6 +29,12 @@ public class ExerciseAdapter extends ArrayAdapter<Exercise> {
     private int resourceLayout;
     private Context context;
 
+    /**
+     * Basic constructor which takes same parameters as normal Adapter.
+     * @param context
+     * @param resource ID of layout file to use.
+     * @param list
+     */
     public ExerciseAdapter(Context context, int resource, ArrayList<Exercise> list){
         super(context, resource, list);
         resourceLayout = resource;

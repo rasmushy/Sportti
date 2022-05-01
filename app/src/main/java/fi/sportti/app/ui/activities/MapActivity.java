@@ -31,6 +31,7 @@ import fi.sportti.app.location.RouteContainer;
 
 public class MapActivity extends AppCompatActivity {
     public static final String TAG = "TESTI";
+    /** Id for String extra that is passed to this class with Intent */
     public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
     private MapView mapView;
 

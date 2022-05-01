@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * @author Jukka-Pekka Jaakkola
      */
-
     private void initializeProgressBar(){
         //Update weekly goal bar once MainViewModel has loaded exercises from database or if there is
         //changes in exercise list.
@@ -152,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @author Jukka-Pekka Jaakkola
+     */
     private void updateWeeklyGoalBar() {
         //Calculate how many percentages user's total exercise time during current week is of weekly goal.
         //Set that information on screen and draw progress bar again with correct value.

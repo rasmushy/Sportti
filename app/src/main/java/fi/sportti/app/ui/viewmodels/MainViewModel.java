@@ -32,8 +32,11 @@ import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainViewModel extends AndroidViewModel {
     public static final String TAG = "TESTI";
+    /** Constant variable used to tell how you want exercise times to be summed up in HashMap.*/
     public static final int DAILY_MINUTES = 1;
+    /** Constant variable used to tell how you want exercise times to be summed up in HashMap.*/
     public static final int MONTHLY_MINUTES = 2;
+
     private final SporttiDatabaseController databaseController;
     private final LiveData<List<User>> listAllUsers;
     private final LiveData<List<Exercise>> listAllExercises;
@@ -128,12 +131,12 @@ public class MainViewModel extends AndroidViewModel {
 
 
     /**
-     * @author Jukka-Pekka Jaakkola
      * Go through all exercises and sum up total exercise time of each day.
      * @param type Use constants in this class.
      *             DAILY_MINUTES if you want to get total exercise time of each day.
      *             MONTHLY_MINUTES if you want to get total exercise time of each month.
      * @return dataMap
+     * @author Jukka-Pekka Jaakkola
      */
     public HashMap<ZonedDateTime, Integer> getExerciseTimesForGraph(int type) {
         List<Exercise> list = listAllExercises.getValue();
@@ -161,6 +164,7 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * Returns exercises sorted by date. From most recent to oldest.
      * @return list
+     * @author Jukka-Pekka Jaakkola
      */
     public List<Exercise> getSortedExerciseList(){
         if(!exerciseListIsSorted && listAllExercises.getValue() != null){
@@ -178,6 +182,7 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * Returns total exercise times of each day of current week.
      * @return exerciseTimeInMinutes
+     * @author Jukka-Pekka Jaakkola
      */
     public int getExerciseTimeForThisWeek(){
         HashMap<ZonedDateTime, Integer> dataMap = getExerciseTimesForGraph(DAILY_MINUTES);
