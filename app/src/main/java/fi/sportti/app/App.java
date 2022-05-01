@@ -12,7 +12,7 @@ import android.os.Build;
  * */
 
 public class App extends Application {
-    /** One common TAG that can be used in other classes during development. */
+    /** One common TAG that can be used while printing something to Logcat in other classes during development. */
     public static final String TAG = "TESTI";
 
     /** One Notification channel ID that all classes can use. */

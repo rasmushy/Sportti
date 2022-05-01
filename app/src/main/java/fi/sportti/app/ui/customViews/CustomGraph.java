@@ -192,7 +192,7 @@ public class CustomGraph extends View  {
         else if(drawMonthlyGraph()){
             drawDataPointsForYear();
         }
-        //At end draw full path/line from Path object.
+        //At end if graph type is line, draw line that was built with Path object.
         if(graphType == LINE_GRAPH){
             canvas.drawPath(path, linePaint);
         }
@@ -232,7 +232,6 @@ public class CustomGraph extends View  {
         }
         String text = getTextForDataPoint(date);
         canvas.drawText(text, xPos, origoY + 50, textPaint);
-        //canvas.drawText(String.valueOf(minutes/60), xPos, origoY - 30, textPaint);
     }
 
     private void drawBar(int xPos, int yPos){

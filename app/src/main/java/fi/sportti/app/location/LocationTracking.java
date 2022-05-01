@@ -35,7 +35,6 @@ import fi.sportti.app.ui.activities.StartExerciseActivity;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationTracking extends Service {
-
     /**
      * Time in milliseconds how often FusedLocationProviderClient gives new location update.
      * In normal use default interval would be around 20000-30000 (20-30 seconds).
