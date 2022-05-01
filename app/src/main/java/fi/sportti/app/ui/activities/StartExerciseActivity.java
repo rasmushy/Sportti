@@ -253,23 +253,31 @@ public class StartExerciseActivity extends AppCompatActivity {
             //getCalories(User user, String sportType, ZonedDateTime startDate, ZonedDateTime endDate)
             int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime().plusHours(1));
             int avgHeartRate = 0;
-            String route;
-            double distance;
+            String route = "";
+            double distance = 0;
             RouteContainer routeContainer = RouteContainer.getInstance();
             if (trackLocationSwitch.isChecked()) {
                 route = routeContainer.getRouteAsText();
                 distance = routeContainer.getRouteLength();
             }
-            //Default route used for development purpose and testing.
-            else {
-                route = "60.2207383&24.8393433_60.2204833&24.8341083_60.223965&24.82633_60.2254553&24.8258409_60.2259226&24.8256875_60.2264232&24.8295127_60.2260967&24.83517_60.2254073&24.8361407_60.2252246&24.8398707_60.2252449&24.8404679_60.2259026&24.8424576_60.2260579&24.8428381_60.2258996&24.8461283_60.2248365&24.8492301_60.2246494&24.8495303_60.2213233&24.842465_";
-                routeContainer.resetRoute();
-                routeContainer.setRoute(route);
-                distance = routeContainer.getRouteLength();
-            }
+//            Default route used for development purpose and testing.
+//            else {
+//                route = "60.2207383&24.8393433_60.2204833&24.8341083_60.223965&24.82633_60.2254553&24.8258409_60.2259226&24.8256875_60.2264232&24.8295127_60.2260967&24.83517_60.2254073&24.8361407_60.2252246&24.8398707_60.2252449&24.8404679_60.2259026&24.8424576_60.2260579&24.8428381_60.2258996&24.8461283_60.2248365&24.8492301_60.2246494&24.8495303_60.2213233&24.842465_";
+//                routeContainer.resetRoute();
+//                routeContainer.setRoute(route);
+//                distance = routeContainer.getRouteLength();
+//            }
             String comment = "";
             //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
-            String[] dataForIntent = {ExerciseType.values()[exerciseType].getExerciseName(), recordController.getStartTime().toString(), recordController.getStopTime().plusHours(1).toString(), Integer.toString(calorieAmount), Integer.toString(avgHeartRate), route, String.format("%.2f", distance), comment};
+            String[] dataForIntent = {
+                    ExerciseType.values()[exerciseType].getExerciseName(),
+                    recordController.getStartTime().toString(),
+                    recordController.getStopTime().plusHours(1).toString(),
+                    Integer.toString(calorieAmount),
+                    Integer.toString(avgHeartRate),
+                    route,
+                    String.format("%.2f", distance),
+                    comment};
             //Time to send all recorded data into SaveExerciseActivity
             Intent intentForSaveActivity = new Intent(this, SaveExerciseActivity.class);
             intentForSaveActivity.putExtra(REPLY_RECORDED_EXERCISE, dataForIntent);
@@ -330,6 +338,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        //Remove notification if its on when app is opened.
         if (timerIsRunning) {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(StartExerciseActivity.this);
             notificationManager.cancel(notificationID);
@@ -363,6 +372,12 @@ public class StartExerciseActivity extends AppCompatActivity {
      * @author Jukka-Pekka Jaakkola
      */
 
+    /**
+     * Method attached to Location tracking switch in layout. When turned on, checks if app has required
+     * permissions needed to track location. If app has permissions, makes sure that location services are enabled.
+     * If app does not have permissions, requests them from user.
+     * @params view Required parameter for methods that are attached to buttons in layout.
+     * */
     public void toggleLocationTracking(View view) {
         if (trackLocationSwitch.isChecked()) {
             //Check if app has permission to use device location.
@@ -370,7 +385,8 @@ public class StartExerciseActivity extends AppCompatActivity {
             //If it has, make sure that location services are enabled so location can be tracked.
             if (permissionState == PackageManager.PERMISSION_GRANTED) {
                 enableLocationServices();
-            } else {
+            }
+            else {
                 //Request result will be handled in onRequestPermissionsResult which is defined below.
                 String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
                 requestPermissions(permissions, App.PERMISSION_CODE_FINE_LOCATION);
@@ -408,12 +424,14 @@ public class StartExerciseActivity extends AppCompatActivity {
         }
     }
 
-    //Code to check if location service is enabled is from Android developer documentation.
+    /*
+     * Checks if phone has location services enabled. If it doesn't, shows request to user to enable them.
+     * Code to check if location service is enabled is from Android developer documentation.
+     * */
     private void enableLocationServices() {
         //Check if location services are enabled.
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(LocationTracking.DEFAULT_INTERVAL);
-        locationRequest.setFastestInterval(LocationTracking.FAST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
 

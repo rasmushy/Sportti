@@ -5,28 +5,19 @@
 
 package fi.sportti.app.ui.activities;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import fi.sportti.app.R;
@@ -63,14 +54,7 @@ public class MainActivity extends AppCompatActivity {
         weeklyGoalInfoTv = findViewById(R.id.main_tv_weekly_goal_info);
         mainViewModel.getAllUsers().observe(this, users -> userList = users);
 
-        //Update weekly goal bar once MainViewModel has loaded exercises from database.
-        mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(List<Exercise> exercises) {
-                updateWeeklyGoalBar();
-            }
-        });
-
+        initializeProgressBar();
         initialStartUp();
     }
 
@@ -156,31 +140,32 @@ public class MainActivity extends AppCompatActivity {
     /**
      * @author Jukka-Pekka Jaakkola
      */
-
-    private void updateWeeklyGoalBar() {
-        HashMap<ZonedDateTime, Integer> dataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.DAILY_MINUTES);
-        ZonedDateTime today = ZonedDateTime.now();
-        int year = today.getYear();
-        int monthOfYear = today.getMonthValue();
-        int currentDayOfWeek = today.getDayOfWeek().getValue();
-        ZoneId zone = ZoneId.systemDefault();
-        today = ZonedDateTime.of(year, monthOfYear, today.getDayOfMonth(), 12, 0, 0, 0, zone);
-        //Set date to first day of week.
-        ZonedDateTime firstDayOfWeek = today.minusDays(currentDayOfWeek - 1);
-        ZonedDateTime keyDate;
-        int minutes = 0;
-        if (dataMap != null) {
-            for (int i = 0; i < 7; i++) {
-                keyDate = firstDayOfWeek.plusDays(i);
-                if (dataMap.containsKey(keyDate)) {
-                    minutes += dataMap.get(keyDate);
-                }
+    private void initializeProgressBar(){
+        //Update weekly goal bar once MainViewModel has loaded exercises from database or if there is
+        //changes in exercise list.
+        mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(List<Exercise> exercises) {
+                updateWeeklyGoalBar();
             }
-        }
-        int weeklyGoalInMinutes = user.getWeeklyGoalHour() * 60 + user.getWeeklyGoalMinute();
+        });
+    }
+
+    /**
+     * @author Jukka-Pekka Jaakkola
+     */
+    private void updateWeeklyGoalBar() {
         //Calculate how many percentages user's total exercise time during current week is of weekly goal.
         //Set that information on screen and draw progress bar again with correct value.
-        float multiplier = 1.0f * minutes / weeklyGoalInMinutes;
+        int exerciseTime = mainViewModel.getExerciseTimeForThisWeek();
+        int weeklyGoal = user.getWeeklyGoalHour() * 60 + user.getWeeklyGoalMinute();
+        float multiplier = 1;
+        // If user has exercised less than weekly goal, calculate how many % that is of weekly goal.
+        // Other wise keep default value 1, meaning 100%
+        if(exerciseTime < weeklyGoal){
+            multiplier = 1.0f * exerciseTime / weeklyGoal;
+        }
+
         int valueOnScreen = Math.round(multiplier * 100);
         weeklyGoalValueTv.setText(valueOnScreen + "%");
         weeklyGoalInfoTv.setText("You have completed " + valueOnScreen + "% of your weekly exercise goal!");

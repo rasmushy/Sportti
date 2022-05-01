@@ -27,12 +27,15 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
  *@author Jukka-Pekka Jaakkola
+ * Activity for displaying user's exercise history. Contains graph where exercise durations are summed up
+ * for days/months. Also has all exercises listed so user can open Activity to view all exercise's information.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class HistoryActivity extends AppCompatActivity {
-    public static final String TAG = "TESTI";
-    public static String SELECTED_EXERCISE_INDEX = "index_of_selected_exercise_on_history_activity";
+    /** Intent extra ID for index of selected exercise which is passed to ExerciseDetailsActivity */
+    public static String SELECTED_EXERCISE_INDEX = "fi.sportti.app.index_of_selected_exercise_on_history_activity";
+
     private MainViewModel mainViewModel;
     private CustomGraph graph;
     private ListView exerciseListView;
@@ -66,14 +69,10 @@ public class HistoryActivity extends AppCompatActivity {
         setSwipeListenerOnGraph();
     }
 
-    //Override onBackPressed to prevent situation where user can go back to exercise details page
-    //of exercise that user just deleted.
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
+    /**
+     * Method to change what data is shown on graph.
+     * @param view View object which is required because this method is attached to button in layout.
+     */
     public void changeTimePeriod(View view) {
         if (changeTimePeriodSwitch.isChecked()) {
             showMonthlyGraph();
@@ -92,6 +91,7 @@ public class HistoryActivity extends AppCompatActivity {
         graph.showNextPeriod();
         graph.postInvalidate();
     }
+
     private void showDailyGraph() {
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         graph.setDataMap(dailyDataMap);
@@ -105,14 +105,18 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void updateGraph() {
+        //Load new data from mainViewModel and set correct data for graph. Then redraw graph.
         dailyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.DAILY_MINUTES);
         monthlyDataMap = mainViewModel.getExerciseTimesForGraph(MainViewModel.MONTHLY_MINUTES);
-        if (graph.getGraphTimePeriod() == CustomGraph.DAYS_OF_WEEK) {
+        int timePeriod = graph.getGraphTimePeriod();
+        if (timePeriod == CustomGraph.DAYS_OF_WEEK) {
             graph.setDataMap(dailyDataMap);
-        } else if (graph.getGraphTimePeriod() == CustomGraph.MONTHS_OF_YEAR) {
+        }
+        else if (timePeriod == CustomGraph.MONTHS_OF_YEAR) {
             graph.setDataMap(monthlyDataMap);
         }
         graph.postInvalidate();
+
     }
 
     private void addExercisesToListView(){
@@ -120,6 +124,7 @@ public class HistoryActivity extends AppCompatActivity {
         ArrayList<Exercise> list = (ArrayList<Exercise>) mainViewModel.getSortedExerciseList();
         ExerciseAdapter adapter = new ExerciseAdapter(this, R.layout.exercise_on_history_listview, list);
         exerciseListView.setAdapter(adapter);
+
     }
 
     private void setSwipeListenerOnGraph(){
@@ -168,39 +173,4 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
     }
-
-    //Used for development purpose and testing.
-
-//    private void createTestExercises() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                String running = "juoksu";
-//                Exercise exercise1;
-//                Exercise exercise2;
-//                ZonedDateTime today = ZonedDateTime.now();
-//                ZonedDateTime start;
-//                ZonedDateTime end;
-//                int hours;
-//                Random rand = new Random();
-//                //Create data for 300 previous and 300 future days.
-//                List<Exercise> list = new ArrayList<>();
-//                for (int i = 1; i <= 100; i++) {
-//                    hours = rand.nextInt(4) + 1;
-//                    start = today.plusDays(i);
-//                    end = start.plusHours(hours);
-//                    exercise1 = new Exercise(running, 1, start, end, 200, 0, "", 0.0, "");
-//                    hours = rand.nextInt(4) + 1;
-//                    start = today.minusDays(i);
-//                    end = start.plusHours(hours);
-//                    exercise2 = new Exercise(running, 1, start, end, 200, 0, "", 0.0, "");
-//                    list.add(exercise1);
-//                    list.add(exercise2);
-//                }
-//                mainViewModel.insertExercisesFromList(list);
-//                Log.d(TAG, "createTestExercises: New exercises added");
-//            }
-//        });
-//        thread.start();
-//    }
 }

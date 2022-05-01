@@ -12,12 +12,15 @@ import android.os.Build;
  * */
 
 public class App extends Application {
+    /** One common TAG that can be used while printing something to Logcat in other classes during development. */
+    public static final String TAG = "TESTI";
 
+    /** One Notification channel ID that all classes can use. */
     public static final String NOTIFICATION_CHANNEL_ID = "fi.sportti.app.Sportti_Notification_Channel";
+    /** Assigned codes for different permissions that other classes can use. */
     public static final int PERMISSION_CODE_FINE_LOCATION = 100;
     public static final int PERMISSION_CODE_READ_PHONE_STATE = 101;
     public static final int PERMISSION_CODE_ENABLE_LOCATION_SERVICES = 102;
-
 
     @Override
     public void onCreate() {

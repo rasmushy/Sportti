@@ -14,7 +14,7 @@ import fi.sportti.app.R;
 
 /**
  *@author Jukka-Pekka Jaakkola
- * Custom View used to draw round progress bars.
+ * Custom View used to draw round progress bars that can be filled.
  */
 
 public class CustomProgressBar extends View {
@@ -23,18 +23,17 @@ public class CustomProgressBar extends View {
     private boolean init = false;
     private Paint greyPaint, whitePaint, greenPaint;
 
-    //Constructors that are needed because class extends View class.
-    public CustomProgressBar(Context context) {
-        super(context);
-    }
+    /**
+     * Constructor that has to be implemented because this class extends View.
+     * Explanation from Android Developer documentation:
+     * "To allow Android Studio to interact with your view, at a minimum you must provide
+     * a constructor that takes a Context and an AttributeSet object as parameters.
+     * This constructor allows the layout editor to create and edit an instance of your view."
+     * @param context
+     * @param attrs
+     */
     public CustomProgressBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-    }
-    public CustomProgressBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-    public CustomProgressBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
@@ -75,11 +74,21 @@ public class CustomProgressBar extends View {
 
     }
 
-    public void setMultiplier(float value){
-        this.multiplier = value;
+    /**
+     * Sets multiplier for progress bar which determines how much bar will fill. Example:
+     * @param multiplier multiplier between 0-1
+     */
+    public void setMultiplier(float multiplier){
+        if(multiplier > 1){
+            this.multiplier = 1f;
+        }
+        else {
+            this.multiplier = multiplier;
+        }
     }
 
     private void init(){
+        //Initialize all Paints.
         init = true;
         greyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         whitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);

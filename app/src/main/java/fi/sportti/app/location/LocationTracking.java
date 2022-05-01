@@ -29,32 +29,34 @@ import fi.sportti.app.ui.activities.StartExerciseActivity;
 
 /**
  *@author Jukka-Pekka Jaakkola
+ * Service which is started as foreground service when user records new exercise and has location tracking enabled.
+ * Resposible for tracking device's location and passing updated location to RouteContainer which holds route data.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationTracking extends Service {
-    private static final String TAG = "TESTI"; // TAG for Log.d
-    public static boolean serviceRunning = false;
-    //Time in milliseconds how often FusedLocationProviderClient gives new location update.
-    //In normal use default interval would be around 20000-30000 (20-30 seconds). Because this App
-    //is mostly tested with emulator, interval is faster so it is easier and faster to create route
-    //while recording exercise.
+    /**
+     * Time in milliseconds how often FusedLocationProviderClient gives new location update.
+     * In normal use default interval would be around 20000-30000 (20-30 seconds).
+     * Because this App is mostly tested with emulator, interval is faster so it is easier and faster to create route
+     * while recording exercise. */
     public static int DEFAULT_INTERVAL = 2000;
-    public static int FAST_INTERVAL = 1500;
+    /** Static variable that other classes can use to check if this Service is running. */
+    public static boolean serviceRunning = false;
+
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallBack;
     private RouteContainer routeContainer;
     private Notification notification;
 
-
+    //Method called by Android when this Service is created for first time.
     @Override
     public void onCreate(){
         super.onCreate();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(DEFAULT_INTERVAL);
-        locationRequest.setFastestInterval(FAST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         routeContainer = RouteContainer.getInstance();
 
@@ -70,12 +72,15 @@ public class LocationTracking extends Service {
         };
     }
 
+    //Method called by Android when this Service is started.
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         serviceRunning = true;
         startTracking();
         createNotification();
         int notificationID = 1001;
+        //Because this Service is started as foreground service, this service has to call its startForeground method within 5 seconds
+        //of startService call. Otherwise Android will kill this Service.
         startForeground(notificationID, notification);
 
         //Tells Android System that it has to recreate this Service once it can, if for some reason it has to kill it.
