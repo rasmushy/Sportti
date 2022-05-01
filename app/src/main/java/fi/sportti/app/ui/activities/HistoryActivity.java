@@ -33,8 +33,9 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class HistoryActivity extends AppCompatActivity {
-    public static final String TAG = "TESTI";
-    public static String SELECTED_EXERCISE_INDEX = "index_of_selected_exercise_on_history_activity";
+    /** Intent extra ID for index of selected exercise which is passed to ExerciseDetailsActivity */
+    public static String SELECTED_EXERCISE_INDEX = "fi.sportti.app.index_of_selected_exercise_on_history_activity";
+
     private MainViewModel mainViewModel;
     private CustomGraph graph;
     private ListView exerciseListView;
@@ -60,16 +61,8 @@ public class HistoryActivity extends AppCompatActivity {
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
-                //Do these operations outside of UI thread because they require sorting list and creating
-                //HashMaps which contains correct data.
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addExercisesToListView();
-                        updateGraph();
-                    }
-                });
-                thread.start();
+                addExercisesToListView();
+                updateGraph();
             }
         });
         setClickListenerOnListView();

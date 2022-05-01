@@ -7,6 +7,8 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.ArrayList;
 
+import fi.sportti.app.App;
+
 /**
  * @author Jukka-Pekka Jaakkola
  * Class which holds the route data while user is recording exercise with location tracking on.
@@ -17,7 +19,6 @@ import java.util.ArrayList;
  */
 
 public class RouteContainer {
-    private static final String TAG = "TESTI";
     private static final RouteContainer instance = new RouteContainer();
     private ArrayList<LatLng> locationList;
     private StringBuilder sb;
@@ -131,7 +132,7 @@ public class RouteContainer {
             locationList.add(newLocation);
             currentLat = newLat;
             currentLon = newLon;
-            Log.d(TAG, "Added new location to route (" + locationList.size() + ")");
+            Log.d(App.TAG, "Added new location to route (" + locationList.size() + ")");
         }
     }
 

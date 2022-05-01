@@ -32,6 +32,7 @@ import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainViewModel extends AndroidViewModel {
     public static final String TAG = "TESTI";
+
     /** Constant variable used to tell how you want exercise times to be summed up in HashMap.*/
     public static final int DAILY_MINUTES = 1;
     /** Constant variable used to tell how you want exercise times to be summed up in HashMap.*/

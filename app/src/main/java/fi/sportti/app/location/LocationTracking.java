@@ -35,19 +35,21 @@ import fi.sportti.app.ui.activities.StartExerciseActivity;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationTracking extends Service {
-    public static boolean serviceRunning = false;
-    //Time in milliseconds how often FusedLocationProviderClient gives new location update.
-    //In normal use default interval would be around 20000-30000 (20-30 seconds).
-    //Because this App is mostly tested with emulator, interval is faster so it is easier and faster to create route
-    //while recording exercise.
+
+    /**
+     * Time in milliseconds how often FusedLocationProviderClient gives new location update.
+     * In normal use default interval would be around 20000-30000 (20-30 seconds).
+     * Because this App is mostly tested with emulator, interval is faster so it is easier and faster to create route
+     * while recording exercise. */
     public static int DEFAULT_INTERVAL = 2000;
-    public static int FAST_INTERVAL = 1500;
+    /** Static variable that other classes can use to check if this Service is running. */
+    public static boolean serviceRunning = false;
+
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallBack;
     private RouteContainer routeContainer;
     private Notification notification;
-
 
     //Method called by Android when this Service is created for first time.
     @Override
@@ -56,7 +58,6 @@ public class LocationTracking extends Service {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(DEFAULT_INTERVAL);
-        locationRequest.setFastestInterval(FAST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         routeContainer = RouteContainer.getInstance();
 

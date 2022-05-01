@@ -30,7 +30,6 @@ import fi.sportti.app.location.RouteContainer;
  */
 
 public class MapActivity extends AppCompatActivity {
-    public static final String TAG = "TESTI";
     /** Id for String extra that is passed to this class with Intent */
     public static final String EXTRA_ROUTE = "fi.sportti.app.route_as_extra_for_map";
     private MapView mapView;
@@ -124,10 +123,10 @@ public class MapActivity extends AppCompatActivity {
             zoom = 13;
         }
         else if(distance <= 5){
-            zoom = 12;
+            zoom = 11.5;
         }
         else if(distance <= 10){
-            zoom = 9;
+            zoom = 9.5;
         }
         else if(distance <= 100){
             zoom = 8;

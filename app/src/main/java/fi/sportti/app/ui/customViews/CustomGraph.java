@@ -22,7 +22,8 @@ import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 
 /**
  *@author Jukka-Pekka Jaakkola
- * Own class for creating custom views so we can draw graphs.
+ * Own class for creating custom views so we can draw graphs. Different possible graph types are
+ * bar and line graphs. However in our app only bar graphs are used.
  * Basic idea on how to build own custom Views learnt from this article.
  * How the coordinates work, how to draw lines on canvas etc..
  * https://medium.com/@mayurjajoomj/custom-graphs-custom-view-android-862e16813cc
@@ -30,11 +31,16 @@ import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class CustomGraph extends View  {
-    public static final String TAG = "testailua";
+
+    /** Constant variable for graph type that has data displayed for days of week. */
     public static final int DAYS_OF_WEEK = 7;
+    /** Constant variable for graph type that has data displayed for months of year. */
     public static final int MONTHS_OF_YEAR = 12;
+    /** Constant variable for bar graph style */
     public static final int BAR_GRAPH = 1;
+    /** Constant variable for line graph style */
     public static final int LINE_GRAPH = 2;
+
     private final int xOffset = 100;
     private final int yTopOffset = 100;
     private final int yBottomOffset = 50;

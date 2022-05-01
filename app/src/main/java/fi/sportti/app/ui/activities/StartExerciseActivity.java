@@ -432,7 +432,6 @@ public class StartExerciseActivity extends AppCompatActivity {
         //Check if location services are enabled.
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(LocationTracking.DEFAULT_INTERVAL);
-        locationRequest.setFastestInterval(LocationTracking.FAST_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
 
