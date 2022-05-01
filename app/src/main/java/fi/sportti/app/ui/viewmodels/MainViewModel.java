@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
+import java.sql.Time;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ public class MainViewModel extends AndroidViewModel {
     private final SporttiDatabaseController databaseController;
     private final LiveData<List<User>> listAllUsers;
     private final LiveData<List<Exercise>> listAllExercises;
+    private boolean exerciseListIsSorted;
 
 
     public MainViewModel(@NonNull Application application) {
@@ -42,6 +45,7 @@ public class MainViewModel extends AndroidViewModel {
         databaseController = new SporttiDatabaseController(application);
         listAllUsers = databaseController.getAllUsers();
         listAllExercises = databaseController.getAllExercises();
+        exerciseListIsSorted = false;
         Log.d(TAG, "MainViewModel created.");
     }
 
@@ -107,6 +111,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void insertExercise(Exercise newExercise) {
         databaseController.insertExercise(newExercise);
+        exerciseListIsSorted = false;
     }
 
     public void insertExercisesFromList(List<Exercise> exerciseList) {
@@ -149,7 +154,6 @@ public class MainViewModel extends AndroidViewModel {
                     dataMap.put(keyDate, minutes);
                 }
             }
-
         }
         return dataMap;
     }
@@ -159,21 +163,23 @@ public class MainViewModel extends AndroidViewModel {
      * @return list
      */
     public List<Exercise> getSortedExerciseList(){
-        List<Exercise> list = listAllExercises.getValue();
-        list.sort(new Comparator<Exercise>() {
-            @Override
-            public int compare(Exercise exercise, Exercise t1) {
-                return t1.getStartDate().compareTo(exercise.getStartDate());
-            }
-        });
-        return list;
+        if(!exerciseListIsSorted && listAllExercises.getValue() != null){
+            listAllExercises.getValue().sort(new Comparator<Exercise>() {
+                @Override
+                public int compare(Exercise exercise, Exercise t1) {
+                    return t1.getStartDate().compareTo(exercise.getStartDate());
+                }
+            });       
+            exerciseListIsSorted = true;
+        }
+        return listAllExercises.getValue();
     }
 
     /**
      * Returns total exercise times of each day of current week.
      * @return exerciseTimeInMinutes
      */
-    public int getExerciseTimeForCurrentWeek(){
+    public int getExerciseTimeForThisWeek(){
         HashMap<ZonedDateTime, Integer> dataMap = getExerciseTimesForGraph(DAILY_MINUTES);
 
         ZonedDateTime firstDayOfWeek = TimeConversionUtilities.getFirstDayOfWeek();
@@ -190,16 +196,16 @@ public class MainViewModel extends AndroidViewModel {
         return exerciseTimeInMinutes;
     }
 
+    //Returns ZonedDateTime object with default times which is used as key in HashMaps where exercise times are added.
     private ZonedDateTime getKeyDate(Exercise exercise, int type) {
-        ZonedDateTime keyDate = ZonedDateTime.now();
+        ZonedDateTime keyDate = ZonedDateTime.now(); //Just initialize keyDate with some value.
         ZonedDateTime startDate = exercise.getStartDate();
         if (type == DAILY_MINUTES) {
             keyDate = TimeConversionUtilities.getDateWithDefaultTime(startDate);
         }
         else if(type == MONTHLY_MINUTES) {
-            int month = startDate.getMonthValue();
-            int year = startDate.getYear();
-            keyDate = TimeConversionUtilities.getDateWithDefaultTime(year, month, 1);
+            //When exercise times are summed up to months, key value for each month is first day of month.
+            keyDate = TimeConversionUtilities.getFirstDayOfMonth(startDate);
         }
         return keyDate;
     }

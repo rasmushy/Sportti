@@ -406,6 +406,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         //User can verify to deny this permission or show permission request window again.
 
         //Create buttons for dialog.
+        //With positive button, show permission request window again.
         DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -413,6 +414,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                 requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
             }
         };
+        //Negative button just closes this dialog because user verified not to give permission.
         DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

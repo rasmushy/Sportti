@@ -35,11 +35,10 @@ import fi.sportti.app.ui.activities.StartExerciseActivity;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class LocationTracking extends Service {
-    private static final String TAG = "TESTI"; // TAG for Log.d
     public static boolean serviceRunning = false;
     //Time in milliseconds how often FusedLocationProviderClient gives new location update.
-    //In normal use default interval would be around 20000-30000 (20-30 seconds). Because this App
-    //is mostly tested with emulator, interval is faster so it is easier and faster to create route
+    //In normal use default interval would be around 20000-30000 (20-30 seconds).
+    //Because this App is mostly tested with emulator, interval is faster so it is easier and faster to create route
     //while recording exercise.
     public static int DEFAULT_INTERVAL = 2000;
     public static int FAST_INTERVAL = 1500;

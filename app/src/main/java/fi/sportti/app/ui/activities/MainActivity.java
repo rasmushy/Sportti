@@ -5,28 +5,19 @@
 
 package fi.sportti.app.ui.activities;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import fi.sportti.app.R;
@@ -63,14 +54,7 @@ public class MainActivity extends AppCompatActivity {
         weeklyGoalInfoTv = findViewById(R.id.main_tv_weekly_goal_info);
         mainViewModel.getAllUsers().observe(this, users -> userList = users);
 
-        //Update weekly goal bar once MainViewModel has loaded exercises from database.
-        mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(List<Exercise> exercises) {
-                updateWeeklyGoalBar();
-            }
-        });
-
+        initializeProgressBar();
         initialStartUp();
     }
 
@@ -157,11 +141,22 @@ public class MainActivity extends AppCompatActivity {
      * @author Jukka-Pekka Jaakkola
      */
 
+    private void initializeProgressBar(){
+        //Update weekly goal bar once MainViewModel has loaded exercises from database or if there is
+        //changes in exercise list.
+        mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(List<Exercise> exercises) {
+                updateWeeklyGoalBar();
+            }
+        });
+    }
+
     private void updateWeeklyGoalBar() {
-        int exerciseTime = mainViewModel.getExerciseTimeForCurrentWeek();
-        int weeklyGoal = user.getWeeklyGoalHour() * 60 + user.getWeeklyGoalMinute();
         //Calculate how many percentages user's total exercise time during current week is of weekly goal.
         //Set that information on screen and draw progress bar again with correct value.
+        int exerciseTime = mainViewModel.getExerciseTimeForThisWeek();
+        int weeklyGoal = user.getWeeklyGoalHour() * 60 + user.getWeeklyGoalMinute();
         float multiplier = 1;
         // If user has exercised less than weekly goal, calculate how many % that is of weekly goal.
         // Other wise keep default value 1, meaning 100%

@@ -54,12 +54,13 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         distanceTv = findViewById(R.id.exercisedetails_tv_length_value);
         commentTv = findViewById(R.id.exercisedetails_tv_comment_value);
         openMapButton = findViewById(R.id.exercisedetails_button_open_map);
+        mainViewModel = MainActivity.getMainViewModel();
 
+        //Get correct Exercise.
         Bundle b = getIntent().getExtras();
         int index = b.getInt(HistoryActivity.SELECTED_EXERCISE_INDEX);
-        mainViewModel = MainActivity.getMainViewModel();
-        //Get correct Exercise.
         exercise = mainViewModel.getSortedExerciseList().get(index);
+
         setInformationOnScreen(exercise);
         if(exercise.hasRoute()){
             route = exercise.getRoute();
@@ -154,6 +155,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
         //User can verify to deny this permission or show permission request window again.
 
         //Create buttons for dialog.
+        //With positive button, show permission request window again.
         DialogInterface.OnClickListener positiveButton = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -161,6 +163,7 @@ public class ExerciseDetailsActivity extends AppCompatActivity {
                 requestPermissions(permissions, App.PERMISSION_CODE_READ_PHONE_STATE);
             }
         };
+        //Negative button just closes this dialog because user verified not to give permission.
         DialogInterface.OnClickListener negativeButton = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

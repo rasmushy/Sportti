@@ -38,11 +38,11 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapQuest.start(getApplicationContext());
-        Intent intent = getIntent();
-        String route = intent.getExtras().getString(EXTRA_ROUTE);
         setContentView(R.layout.activity_map);
         mapView = findViewById(R.id.saveexercise_mapView_map_for_route);
 
+        Intent intent = getIntent();
+        String route = intent.getExtras().getString(EXTRA_ROUTE);
         mapView.onCreate(savedInstanceState);
         //Create callback that is called when map is ready to be used.
         mapView.getMapAsync(new OnMapReadyCallback() {
@@ -62,6 +62,7 @@ public class MapActivity extends AppCompatActivity {
                 startMarker.position(startPosition);
                 startMarker.setTitle(startMarkerText);
                 mapboxMap.addMarker(startMarker);
+
                 MarkerOptions endMarker = new MarkerOptions();
                 endMarker.position(endPosition);
                 endMarker.setTitle(endMarkerText);

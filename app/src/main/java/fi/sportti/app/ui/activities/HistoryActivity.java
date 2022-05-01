@@ -60,14 +60,26 @@ public class HistoryActivity extends AppCompatActivity {
         mainViewModel.getAllExercises().observe(this, new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
-                addExercisesToListView();
-                updateGraph();
+                //Do these operations outside of UI thread because they require sorting list and creating
+                //HashMaps which contains correct data.
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addExercisesToListView();
+                        updateGraph();
+                    }
+                });
+                thread.start();
             }
         });
         setClickListenerOnListView();
         setSwipeListenerOnGraph();
     }
 
+    /**
+     * Method to change what data is shown on graph.
+     * @param view View object which is required because this method is attached to button in layout.
+     */
     public void changeTimePeriod(View view) {
         if (changeTimePeriodSwitch.isChecked()) {
             showMonthlyGraph();
@@ -86,6 +98,7 @@ public class HistoryActivity extends AppCompatActivity {
         graph.showNextPeriod();
         graph.postInvalidate();
     }
+
     private void showDailyGraph() {
         graph.setGraphTimePeriod(CustomGraph.DAYS_OF_WEEK);
         graph.setDataMap(dailyDataMap);
@@ -110,6 +123,7 @@ public class HistoryActivity extends AppCompatActivity {
             graph.setDataMap(monthlyDataMap);
         }
         graph.postInvalidate();
+
     }
 
     private void addExercisesToListView(){
@@ -117,6 +131,7 @@ public class HistoryActivity extends AppCompatActivity {
         ArrayList<Exercise> list = (ArrayList<Exercise>) mainViewModel.getSortedExerciseList();
         ExerciseAdapter adapter = new ExerciseAdapter(this, R.layout.exercise_on_history_listview, list);
         exerciseListView.setAdapter(adapter);
+
     }
 
     private void setSwipeListenerOnGraph(){
