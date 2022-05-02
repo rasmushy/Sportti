@@ -15,4 +15,8 @@
         <item name="colorControlActivated">@color/teal_200</item>
     </style>
 
+    <style name="HiddenTitleTheme.Sportti" parent="Theme.Sportti">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
 </resources>

@@ -10,9 +10,11 @@ import androidx.room.Update;
 
 import java.util.List;
 
-/*
+/**
+ * Data access object (DAO) for Exercise entities
+ *
  * @author Rasmus Hyyppä
- * Dao for Exercise entities
+ * @version 0.5
  */
 
 @Dao

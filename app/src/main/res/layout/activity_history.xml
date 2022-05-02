@@ -7,7 +7,7 @@
     android:layout_weight="1.0"
     tools:context=".ui.activities.HistoryActivity">
 
-    <fi.sportti.app.ui.CustomGraph
+    <fi.sportti.app.ui.customViews.CustomGraph
         android:id="@+id/history_customgraph_exercise_hours"
         android:layout_width="match_parent"
         android:layout_height="225dp"
@@ -18,19 +18,24 @@
 
     <ListView
         android:id="@+id/history_listview_exercises"
-        android:layout_width="409dp"
-        android:layout_height="320dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/history_textview_old_exercises" />
 
     <Switch
         android:id="@+id/history_switch_toggle_graph_timeperiod"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
         android:onClick="changeTimePeriod"
-        app:layout_constraintStart_toEndOf="@+id/history_textview_daytext_for_switch"
+        app:layout_constraintEnd_toStartOf="@+id/history_textview_monthtext_for_switch"
         app:layout_constraintTop_toBottomOf="@+id/history_customgraph_exercise_hours"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
@@ -38,29 +43,29 @@
         android:id="@+id/history_textview_daytext_for_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Päivä"
+        android:layout_marginEnd="16dp"
+        android:text="@string/history_days"
         android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/history_switch_toggle_graph_timeperiod"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/history_switch_toggle_graph_timeperiod" />
 
     <TextView
         android:id="@+id/history_textview_monthtext_for_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Kuukausi"
+        android:layout_marginEnd="8dp"
+        android:text="@string/history_months"
         android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/history_switch_toggle_graph_timeperiod"
-        app:layout_constraintStart_toEndOf="@+id/history_switch_toggle_graph_timeperiod" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/history_textview_old_exercises"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Suoritukset"
+        android:text="@string/history_old_exercises"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/history_listview_exercises"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/history_switch_toggle_graph_timeperiod" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/history_textview_daytext_for_switch"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

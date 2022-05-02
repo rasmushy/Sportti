@@ -7,76 +7,166 @@
     tools:context=".ui.activities.ExerciseDetailsActivity">
 
     <TextView
-        android:id="@+id/exercisedetails_textview_sport_name"
+        android:id="@+id/exercisedetails_tv_sport_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:text="@string/exercisedetails_sport_default_value"
         android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_end_date_value"
+        android:id="@+id/exercisedetails_tv_start_date_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_textview_end_date"
-        app:layout_constraintStart_toEndOf="@+id/exercisedetails_textview_end_date" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_start_date"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_start_date" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_start_date_value"
+        android:id="@+id/exercisedetails_tv_duration_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_textview_start_date"
-        app:layout_constraintStart_toEndOf="@+id/exercisedetails_textview_start_date" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_duration"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_duration" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_duration_value"
+        android:id="@+id/exercisedetails_tv_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
+        android:layout_marginTop="32dp"
+        android:text="@string/exercisedetails_start_date"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_textview_duration"
-        app:layout_constraintStart_toEndOf="@+id/exercisedetails_textview_duration" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_sport_name" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_start_date"
+        android:id="@+id/exercisedetails_tv_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Aloitus:"
+        android:text="@string/exercisedetails_duration"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_textview_sport_name" />
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_start_date" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_end_date"
+        android:id="@+id/exercisedetails_tv_calories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Lopetus:"
+        android:text="@string/exercisedetails_calories"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_textview_start_date" />
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_duration" />
 
     <TextView
-        android:id="@+id/exercisedetails_textview_duration"
+        android:id="@+id/exercisedetails_tv_length_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_length"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_length" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_pulse_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_pulse"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_pulse" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_calories_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/exercisedetails_tv_calories"
+        app:layout_constraintStart_toEndOf="@+id/exercisedetails_tv_calories" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Kesto:"
+        android:text="@string/exercisedetails_length"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_textview_end_date" />
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_pulse" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_pulse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/exercisedetails_pulse"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_calories" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/exercisedetails_comment"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_length" />
+
+    <TextView
+        android:id="@+id/exercisedetails_tv_comment_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:maxLines="4"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exercisedetails_tv_comment" />
+
+    <Button
+        android:id="@+id/exercisedetails_button_delete_exercise"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#EF3B3B"
+        android:onClick="deleteExercise"
+        android:text="@string/exercisedetails_delete_exercise"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/exercisedetails_button_open_map"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#5DA54A"
+        android:onClick="openMapButtonClicked"
+        android:text="@string/button_open_map"
+        app:layout_constraintBottom_toTopOf="@+id/exercisedetails_button_delete_exercise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

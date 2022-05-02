@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5c66a2e87df1aca98333f807281cebf3",
+    "identityHash": "cc132bf05b873d06179f4959af9f2ea7",
     "entities": [
       {
         "tableName": "user_data",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `maxHeartRate` INTEGER NOT NULL, `restHeartRate` INTEGER NOT NULL, `gender` TEXT, `weight` INTEGER NOT NULL, `height` INTEGER NOT NULL, `age` INTEGER NOT NULL, `weeklyGoalMinute` INTEGER NOT NULL, `weeklyGoalHour` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "uid",
@@ -17,6 +17,24 @@
           {
             "fieldPath": "userName",
             "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "maxHeartRate",
+            "columnName": "maxHeartRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "restHeartRate",
+            "columnName": "restHeartRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gender",
+            "columnName": "gender",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -36,7 +54,7 @@
             "fieldPath": "age",
             "columnName": "age",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "weeklyGoalMinute",
@@ -75,6 +93,15 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_username` ON `${TABLE_NAME}` (`username`)"
+          },
+          {
+            "name": "index_user_data_gender",
+            "unique": false,
+            "columnNames": [
+              "gender"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_data_gender` ON `${TABLE_NAME}` (`gender`)"
           },
           {
             "name": "index_user_data_weight",
@@ -126,7 +153,7 @@
       },
       {
         "tableName": "exercise_data",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `sportType` TEXT, `startDate` INTEGER, `endDate` INTEGER, `calories` INTEGER NOT NULL, FOREIGN KEY(`userId`) REFERENCES `user_data`(`uid`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exerciseId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `sportType` TEXT, `startDate` INTEGER, `endDate` INTEGER, `calories` INTEGER NOT NULL, `avgHeartRate` INTEGER NOT NULL, `route` TEXT, `distance` REAL NOT NULL, `comment` TEXT, FOREIGN KEY(`userId`) REFERENCES `user_data`(`uid`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "exerciseId",
@@ -163,6 +190,30 @@
             "columnName": "calories",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "avgHeartRate",
+            "columnName": "avgHeartRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "route",
+            "columnName": "route",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distance",
+            "columnName": "distance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -225,6 +276,42 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_calories` ON `${TABLE_NAME}` (`calories`)"
+          },
+          {
+            "name": "index_exercise_data_avgHeartRate",
+            "unique": false,
+            "columnNames": [
+              "avgHeartRate"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_avgHeartRate` ON `${TABLE_NAME}` (`avgHeartRate`)"
+          },
+          {
+            "name": "index_exercise_data_route",
+            "unique": false,
+            "columnNames": [
+              "route"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_route` ON `${TABLE_NAME}` (`route`)"
+          },
+          {
+            "name": "index_exercise_data_distance",
+            "unique": false,
+            "columnNames": [
+              "distance"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_distance` ON `${TABLE_NAME}` (`distance`)"
+          },
+          {
+            "name": "index_exercise_data_comment",
+            "unique": false,
+            "columnNames": [
+              "comment"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_data_comment` ON `${TABLE_NAME}` (`comment`)"
           }
         ],
         "foreignKeys": [
@@ -245,7 +332,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5c66a2e87df1aca98333f807281cebf3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc132bf05b873d06179f4959af9f2ea7')"
     ]
   }
 }

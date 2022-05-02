@@ -1,17 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Sportti</string>
+    <string name="channel_name">Exercise</string>
+    <string name="channel_description">Exercise recording is active</string>
     <string name="new_exercise">New exercise</string>
+    <string name="duration">Duration</string>
     <string name="button_text_continue">Continue</string>
     <string name="button_text_start">Start</string>
     <string name="button_text_stop">Stop</string>
     <string name="button_text_end">End</string>
     <string name="button_text_reset">Reset</string>
     <string name="button_text_resume">Resume</string>
+    <string name="button_text_save">Save</string>
     <string name="place_holder_time">00:00:00</string>
-    <string name="startexercise_textview_title_text">Duration</string>
     <string name="place_holder_exercise_name">Exercise name loading&#8230;</string>
-    <string name="channel_name">Exercise</string>
-    <string name="channel_description">Exercise recording is active</string>
+    <string name="comment_your_exercise">How was the exercise?</string>
+    <string name="comment">Comment:</string>
+    <string name="save_exercise">Save exercise</string>
+    <string name="delete">Delete</string>
+
+
+    <string name="pop_up_placeholder">Placeholder</string>
+
+     <!-- Record exercise -->
+    <string name="recordexercise_switch_text">Save route</string>
+    <string name="toast_location_services_not_enabled">Route cannot be saved because location services are disabled.</string>
+
+    <!-- History page -->
+    <string name="history_days">Days</string>
+    <string name="history_months">Months</string>
+    <string name="history_old_exercises">Exercises</string>
+
+    <string name="button_open_map">Open map</string>
+
+    <!-- Exercise details page -->
+    <string name="exercisedetails_sport_default_value">Sport</string>
+    <string name="exercisedetails_start_date">Start:</string>
+    <string name="exercisedetails_duration">Duration:</string>
+    <string name="exercisedetails_calories">Calories:</string>
+    <string name="exercisedetails_length">Length:</string>
+    <string name="exercisedetails_pulse">Average pulse:</string>
+    <string name="exercisedetails_comment">Comment:</string>
+    <string name="exercisedetails_delete_exercise">Delete exercise</string>
+
+    <!-- Location tracking notification texts -->
+    <string name="notification_location_tracking_title">Sportti</string>
+    <string name="notification_location_tracking_on_message">Tracking location</string>
+
+    <!-- Custom graph -->
+    <string name="customgraph_y_axis_name">Hours</string>
+
+    <!-- Text for maps -->
+    <string name="map_start_marker">Start</string>
+    <string name="map_end_marker">End</string>
+
+    <!-- Text for new exercise activity -->
+    <string name="new_exercise_button_pulse">Average pulse</string>
+    <string name="new_exercise_button_calories">Calories</string>
+    <string name="new_exercise_button_distance">Give distance</string>
+    <string name="new_exercise_button_duration">Select duration</string>
+    <string name="new_exercise_exercise_type_text">Exercise type:</string>
+    <string name="new_exercise_comment_here">Comment here:</string>
+
+    <!--Permissions -->
+    <string name="permission_denied">Permission denied!</string>
+    <string name="informative_message_for_permissions">"Sportti needs this permission to display exercise routes on map.\n\nAre you sure you want to deny this permission?"</string>
+    <string name="required_permission_denied_message">"Permission required to display map was denied.\nYou can change this in phone's settings"</string>
+    <string name="map_not_available">Map is not available</string>
+    <!-- Text for duration pop up -->
+    <string name="duration_pop_up_tittle_text">Give duration</string>
+    <string name="duration_pop_up_duration_default">00h 00m</string>
+
+    <!-- Text for distance pop up -->
+    <string name="distance_pop_up_title_text">Give distance</string>
+    <string name="distance_pop_up_minus_10">-10</string>
+    <string name="distance_pop_up_minus_100">-100</string>
+    <string name="distance_pop_up_minus_1000">-1000</string>
+    <string name="distance_pop_up_plus_10">+10</string>
+    <string name="distance_pop_up_plus_1000">+1000</string>
+    <string name="distance_pop_up_plus_100">+100</string>
+    <string name="distance_pop_up_distance_default">00000m</string>
+
+    <!-- Text for calories pop up -->
+    <string name="calories_pop_up_calories_default">0000kcal</string>
+    <string name="calories_pop_up_plus_1">+1</string>
+    <string name="calories_pop_up_minus_1">-1</string>
+    <string name="calories_pop_up_tittle_text">Give calories</string>
+    <string name="calories_pop_up_minus_10">-10</string>
+    <string name="calories_pop_up_plus_10">+10</string>
+    <string name="calories_pop_up_plus_100">+100</string>
+    <string name="calories_pop_up_minus_100">-100</string>
+
+    <!-- Text for pulse pop up -->
+    <string name="pulse_pop_up_give_average_pulse">Give average pulse</string>
+    <string name="pulse_pop_up_pulse_default">000bpm</string>
+    <string name="pulse_pop_up_plus_ten">+10</string>
+    <string name="pulse_pop_up_plus_100">+100</string>
+    <string name="pulse_pop_up_plus_1">+1</string>
+    <string name="pulse_pop_up_minus_10">-10</string>
+    <string name="pulse_pop_up_minus_1">-1</string>
+    <string name="pulse_pop_up_minus_100">-100</string>
+
     <string name="button_text_profile">Profile</string>
 
     <!-- User profile -->

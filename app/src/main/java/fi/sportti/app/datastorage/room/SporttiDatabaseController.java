@@ -1,18 +1,20 @@
 package fi.sportti.app.datastorage.room;
 
 import android.app.Application;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+/**
+ * @author Rasmus Hyyppä
+ * @version 0.5
+ * Database controller with commands from our DAO's
+ */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SporttiDatabaseController {
@@ -107,7 +109,7 @@ public class SporttiDatabaseController {
         SporttiDatabase.executor.execute(() -> exerciseDao.deleteExercise(uselessExercise));
     }
 
-    public void deleteAllExercises(){
+    public void deleteAllExercises() {
         SporttiDatabase.executor.execute(() -> exerciseDao.deleteAllExercises());
     }
 

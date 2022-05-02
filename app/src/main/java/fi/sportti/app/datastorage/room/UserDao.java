@@ -10,9 +10,11 @@ import androidx.room.Update;
 
 import java.util.List;
 
-/*
- * @author rasmushy
- * Dao for User entities
+/**
+ * Data access object for User entity (this app only has one user)
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
  */
 
 @Dao

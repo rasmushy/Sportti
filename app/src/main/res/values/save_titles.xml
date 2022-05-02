@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="save_topic_list">
+        <item>Exercise:</item>
+        <item>Start date:</item>
+        <item>Duration:</item>
+        <item>Calories:</item>
+        <item>Heart rate:</item>
+        <item>Distance:</item>
+    </string-array>
+</resources>

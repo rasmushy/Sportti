@@ -15,17 +15,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import fi.sportti.app.R;
+import fi.sportti.app.ui.constants.ExerciseType;
 import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
 
-/*
+/**
+ * Activity where user selects what exercise will be recorded.
+ *
  * @author Rasmus Hyyppä
- * User wants to record exercise, here we choose what type of exercise we are planning to do
+ * @version 0.5
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class NewRecordedExerciseActivity extends AppCompatActivity {
 
-    private static final String TAG = "RecordExerciseActivity"; // TAG for Log.d
+    private static final String TAG = "TESTI"; // TAG for Log.d
     public static final String REPLY_EXERCISE_TYPE = "fi.sportti.app.REPLY_EXERCISE_POSITION";
 
     private ListView exerciseListView;
@@ -36,26 +39,29 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_recorded_exercise);
-        Log.d(TAG, "OnCreate()");
+
         //Find views
+
         exerciseListView = findViewById(R.id.recordexercise_listview_all_exercises);
+
         //Exercise list from resources. Best way seems to be translating it from string arr to list.
         exerciseTypeList = Arrays.asList(getResources().getStringArray(R.array.exercise_type_list));
+
         //Create ArrayAdapter that fills listview
-        ExerciseTypeAdapter adapter = new ExerciseTypeAdapter(this, R.layout.recordexercise_listview_item, exerciseTypeList);
+        ExerciseTypeAdapter adapter = new ExerciseTypeAdapter(this, R.layout.recordexercise_listview_layout, exerciseTypeList);
+
+        //Set our adapter to listview
         exerciseListView.setAdapter(adapter);
+
+        //When user clicks one of the list items, it will select them as a sport type.
         exerciseListView.setOnItemClickListener((parent, view, position, id) -> {
-            //When user clicks one of the list items, it will select them as a sport type.
-            Log.d(TAG, "selected item position: " + exerciseListView.getItemAtPosition(position));
-            exerciseType = exerciseListView.getItemAtPosition(position).toString();
-            Log.d(TAG, "exerciseType: " + exerciseType);
+            exerciseType = ExerciseType.values()[position].getExerciseName().toUpperCase();
         });
     }
 
     // Button method to start activity
     public void continuePressed(View caller) {
         //Create Integer variable to check nulls
-        Log.d(TAG, "continuePressed(), sportType is: " + exerciseType);
         if (exerciseType != null) {
             Intent startExerciseActivity = new Intent(NewRecordedExerciseActivity.this, StartExerciseActivity.class);
             startExerciseActivity.putExtra(REPLY_EXERCISE_TYPE, exerciseType);

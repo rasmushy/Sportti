@@ -3,26 +3,51 @@
     package="fi.sportti.app">
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sportti">
+        <activity
+            android:name=".ui.activities.MapActivity"
+            android:exported="false" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <activity
             android:name=".ui.activities.SaveExerciseActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/save_exercise" />
         <activity
             android:name=".ui.activities.StartExerciseActivity"
-            android:exported="false" />
+            android:launchMode="singleTop"
+            android:exported="false"
+            android:theme="@style/HiddenTitleTheme.Sportti"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.ExerciseDetailsActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.HistoryActivity"/>
+            android:parentActivityName=".ui.activities.HistoryActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activities.HistoryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- Added User's Profile -->
+        <activity android:name=".ui.activities.ProfileActivity"
+            android:label="Profile"
+            android:parentActivityName=".ui.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
+
         <activity
             android:name=".ui.activities.NewManualExerciseActivity"
             android:label="@string/new_exercise"
@@ -35,29 +60,25 @@
             android:name=".ui.activities.NewRecordedExerciseActivity"
             android:label="@string/new_exercise"
             android:parentActivityName=".ui.activities.MainActivity">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
+        <!--MainActivity is landing page when you open application-->
         <activity
             android:name=".ui.activities.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Added User's Profile -->
-        <activity android:name=".ui.activities.ProfileActivity"
-                  android:label="Profile"
-                  android:parentActivityName=".ui.activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
-        </activity>
 
+
+        <service android:name=".location.LocationTracking" android:foregroundServiceType="location" />
     </application>
 
 </manifest>

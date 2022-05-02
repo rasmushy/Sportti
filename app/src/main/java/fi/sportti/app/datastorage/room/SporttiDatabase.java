@@ -13,6 +13,13 @@ import androidx.room.TypeConverters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Room Database for application to save user data.
+ * Database uses TypeConverters for difficult data types (ZonedDateTime etc.)
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
+ */
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Database(entities = {User.class, Exercise.class}, version = 1)
 @TypeConverters({TypeConversionUtilities.class})
@@ -33,7 +40,7 @@ public abstract class SporttiDatabase extends RoomDatabase {
                             Room.databaseBuilder(
                                     context.getApplicationContext(),
                                     SporttiDatabase.class,
-                                    "sportti_test_database") //Name will be changed in future
+                                    "sportti_test_database_version_8") //Name will be changed in future
                                     .build();
                 }
             }

@@ -6,6 +6,16 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.RequiresApi;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
+
+/**
+ * Time conversion utilities to help us handle time.
+ *
+ * @author Rasmus Hyyppä
+ * @version 0.5
+ */
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class TimeConversionUtilities {
 
@@ -23,5 +33,94 @@ public class TimeConversionUtilities {
     @SuppressLint("DefaultLocale")
     public static String makeTimeString(Long hours, Long minutes, Long seconds) {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    /**
+     * (Rasmus Hyyppä copied from: ExerciseDetailsActivity)
+     *
+     * @param date ZonedDateTime that we want to format
+     * @return String of ZonedDateTime that looks pretty
+     * @author Jukka-Pekka Jaakkola
+     * Date formated to fit better.
+     */
+    public static String getDateAndTimeAsString(ZonedDateTime date) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(date.getDayOfMonth() + ".");
+        sb.append(date.getMonthValue() + ".");
+        sb.append(date.getYear() + " ");
+        sb.append(date.getHour() + ":");
+        int minute = date.getMinute();
+        if (minute >= 10) {
+            sb.append(minute);
+        } else {
+            sb.append("0" + minute);
+        }
+        return sb.toString();
+    }
+    /**
+     * @author Jukka-Pekka Jaakkola
+     * Methods to convert date's times to default time so they can be found from HashMap.
+     * @param date pass in date to convert.
+     * @return ZonedDateTime with default time.
+     */
+    public static ZonedDateTime getDateWithDefaultTime(ZonedDateTime date){
+        int year = date.getYear();
+        int month = date.getMonthValue();
+        int day = date.getDayOfMonth();
+        return getDateWithDefaultTime(year, month, day);
+    }
+
+    /**
+     * Overloaded version, pass in date as year,month and day.
+     * @param year
+     * @param month
+     * @param date
+     * @return ZonedDateTime with default time.
+     */
+    public static ZonedDateTime getDateWithDefaultTime(int year, int month, int date){
+        ZoneId zone = ZoneId.systemDefault();
+        //Set times to 12:00:00:00 so this date can be found from HashMap.
+        return ZonedDateTime.of(year, month, date, 12, 0, 0, 0, zone);
+    }
+
+    /**
+     * Returns first day of current week with default times.
+     * @return ZonedDateTime with default time.
+     */
+    public static ZonedDateTime getFirstDayOfWeek(){
+        ZonedDateTime today = ZonedDateTime.now();
+        return getFirstDayOfWeek(today);
+    }
+
+    /**
+     * Overloaded version, pass in date and methods returns first day of that date's week.
+     * @param date
+     * @return ZonedDateTime with default time.
+     */
+    public static ZonedDateTime getFirstDayOfWeek(ZonedDateTime date){
+        int dayOfWeek = date.getDayOfWeek().getValue();
+        //Set date to first day of week.
+        ZonedDateTime firstDayOfWeek = getDateWithDefaultTime(date).minusDays(dayOfWeek - 1);
+        return firstDayOfWeek;
+    }
+
+    /**
+     * Returns first day of current date's month with default times.
+     * @return ZonedDateTime with default time.
+     */
+    public static ZonedDateTime getFirstDayOfMonth(){
+        ZonedDateTime today = ZonedDateTime.now();
+        return getFirstDayOfMonth(today);
+    }
+
+    /**
+     * Overloaded version, give date as parameter and method returns first day of that date's year and month.
+     * @param date
+     * @return ZonedDateTime with default time.
+     */
+    public static ZonedDateTime getFirstDayOfMonth(ZonedDateTime date){
+        int month = date.getMonthValue();
+        int year = date.getYear();
+        return getDateWithDefaultTime(year, month, 1);
     }
 }
