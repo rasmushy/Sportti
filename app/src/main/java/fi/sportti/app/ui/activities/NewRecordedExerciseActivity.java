@@ -19,9 +19,10 @@ import fi.sportti.app.ui.constants.ExerciseType;
 import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
 
 /**
+ * Activity where user selects what exercise will be recorded.
+ *
  * @author Rasmus Hyyppä
  * @version 0.5
- * User wants to record exercise: Activity to choose exercise.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -32,7 +33,7 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
 
     private ListView exerciseListView;
     private List<String> exerciseTypeList;
-    private int exerciseType;
+    private String exerciseType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +55,14 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
 
         //When user clicks one of the list items, it will select them as a sport type.
         exerciseListView.setOnItemClickListener((parent, view, position, id) -> {
-            exerciseType = position;
+            exerciseType = ExerciseType.values()[position].getExerciseName().toUpperCase();
         });
     }
 
     // Button method to start activity
     public void continuePressed(View caller) {
         //Create Integer variable to check nulls
-        Log.d(TAG, "continuePressed(), sportType is: " + ExerciseType.values()[exerciseType].getExerciseName());
-        if (exerciseType >= 0) {
+        if (exerciseType != null) {
             Intent startExerciseActivity = new Intent(NewRecordedExerciseActivity.this, StartExerciseActivity.class);
             startExerciseActivity.putExtra(REPLY_EXERCISE_TYPE, exerciseType);
             startActivity(startExerciseActivity);

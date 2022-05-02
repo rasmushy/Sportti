@@ -51,22 +51,12 @@ public class RecordController {
         //Get date from string constants (SharedPreferences), so time will be updated
         String startString = sharedPreferences.getString(START_TIME_KEY, null);
         if (startString != null) {
-            try {
-                startTime = ZonedDateTime.parse(startString); // try&catch probably not needed
-            } catch (DateTimeParseException e) {
-                Log.d(TAG, "DateTimeParseException on startTime: " + e);
-                e.printStackTrace();
-            }
+            startTime = ZonedDateTime.parse(startString);
         }
 
         String stopString = sharedPreferences.getString(STOP_TIME_KEY, null);
         if (stopString != null) {
-            try {
-                stopTime = ZonedDateTime.parse(stopString);
-            } catch (DateTimeParseException e) {
-                Log.d(TAG, "DateTimeParseException on stopTime: " + e);
-                e.printStackTrace();
-            }
+            stopTime = ZonedDateTime.parse(stopString);
         }
     }
 
@@ -107,7 +97,6 @@ public class RecordController {
 
 
     public boolean getTimerCounting() {
-        //Log.d(TAG, ", is timer running: " + timerCounting);
         return this.timerCounting;
     }
 
