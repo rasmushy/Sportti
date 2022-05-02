@@ -62,7 +62,7 @@
 
     <!-- Text for duration pop up -->
     <string name="duration_pop_up_tittle_text">Give duration</string>
-    <string name="duration_pop_up_duration_default">00h00m00s</string>
+    <string name="duration_pop_up_duration_default">00h 00m</string>
 
     <!-- Text for distance pop up -->
     <string name="distance_pop_up_title_text">Give distance</string>

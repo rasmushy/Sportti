@@ -61,11 +61,11 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     private EditText editTextComment;
 
     private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance,
-            durationHours, durationMinutes, durationSeconds, calories, pulse;
+            durationHours, durationMinutes, calories, pulse;
     private double distanceDouble;
     private long startDateLong;
     private boolean dateSelected;
-    private String secondsString, minutesString, hoursString, distanceString, caloriesString,
+    private String minutesString, hoursString, distanceString, caloriesString,
             pulseString, exerciseType, startDate, comment;
     private ZonedDateTime startTimeData, endTimeData;
 
@@ -105,7 +105,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
         //Sets up defaults for text views
         textViewStartTime.setText(dateAndTimeFormatter.format(new Date()));
-        textViewDuration.setText("0h 0min 0sec");
+        textViewDuration.setText("0h 0min");
         textViewDistance.setText("0 meters");
         textViewCalories.setText("0 calories");
         textViewPulse.setText("0 bpm");
@@ -198,8 +198,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
         //Finds views in pop up
         Button buttonSaveDistance = selectDurationPopUp.findViewById(R.id.buttonSaveDurationPopUp);
-        ImageButton buttonSecondsPlus = selectDurationPopUp.findViewById(R.id.imageButtonSecondsPlus);
-        ImageButton buttonSecondsMinus = selectDurationPopUp.findViewById(R.id.imageButtonSecondsMinus);
         ImageButton buttonMinutesPlus = selectDurationPopUp.findViewById(R.id.imageButtonMinutesPlus);
         ImageButton buttonMinutesMinus = selectDurationPopUp.findViewById(R.id.imageButtonMinutesMinus);
         ImageButton buttonHoursPlus = selectDurationPopUp.findViewById(R.id.imageButtonHoursPlus);
@@ -207,17 +205,16 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         TextView textViewDurationPopUp = selectDurationPopUp.findViewById(R.id.textViewDistancePopUp);
 
         //Sets default text for pop up text view
-        textViewDurationPopUp.setText("00h00m00s");
+        textViewDurationPopUp.setText("00h 00m");
 
-        CounterUtility counterUtilitySeconds = new CounterUtility(0, 59, 0, 1, true);
         CounterUtility counterUtilityMinutes = new CounterUtility(0, 59, 0, 1, true);
         CounterUtility counterUtilityHours = new CounterUtility(0, 99, 0, 1, true);
 
-        //Listener for seconds plus button
-        buttonSecondsPlus.setOnClickListener(new View.OnClickListener() {
+        //Listener for minutes plus button
+        buttonMinutesPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counterUtilitySeconds.addToCounter();
+                counterUtilityMinutes.addToCounter(5);
 
                 /*This is section of code is same for all the onClick methods. Java does not support
                 methods in methods so for time being easiest way was to copy it to all corresponding
@@ -225,16 +222,10 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 */
 
                 //Get updated values
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
                 //Check if we want to add zeros to the front of the number show
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -247,86 +238,20 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 }
 
                 //Updates text view with corresponding value
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
-        //Listener for seconds minus button
-        buttonSecondsMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                counterUtilitySeconds.minusToCounter();
-
-                //See comment at line 222
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
-                durationMinutes = counterUtilityMinutes.returnCounterInt();
-                durationHours = counterUtilityHours.returnCounterInt();
-
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
-
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
-            }
-        });
-
-        //Same as above but for minutes
-        buttonMinutesPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                counterUtilityMinutes.addToCounter();
-
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
-                durationMinutes = counterUtilityMinutes.returnCounterInt();
-                durationHours = counterUtilityHours.returnCounterInt();
-
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
-
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
-            }
-        });
-
-        // -//-
+        // Listener for minutes minus button
         buttonMinutesMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counterUtilityMinutes.minusToCounter();
+                counterUtilityMinutes.minusToCounter(5);
 
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                //See comment at line 222
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -338,7 +263,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     hoursString = String.valueOf(durationHours);
                 }
 
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
@@ -347,15 +272,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 counterUtilityHours.addToCounter();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -367,7 +286,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     hoursString = String.valueOf(durationHours);
                 }
 
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
@@ -376,15 +295,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 counterUtilityHours.minusToCounter();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -396,7 +309,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     hoursString = String.valueOf(durationHours);
                 }
 
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
@@ -407,14 +320,11 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 dialog.dismiss();
                 durationHours = counterUtilityHours.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
                 endTimeData = startTimeData;
-                endTimeData = endTimeData.plusHours(durationHours).plusMinutes(durationMinutes)
-                        .plusSeconds(durationSeconds);
+                endTimeData = endTimeData.plusHours(durationHours).plusMinutes(durationMinutes);
                 exerciseDataArray[2] = endTimeData.toString();
                 textViewDuration.setText(counterUtilityHours.returnCounter() + "h " +
-                        counterUtilityMinutes.returnCounter() + "min " +
-                        counterUtilitySeconds.returnCounter() + "sec");
+                        counterUtilityMinutes.returnCounter() + "min");
             }
         });
     }
