@@ -55,12 +55,55 @@
     <string name="map_start_marker">Start</string>
     <string name="map_end_marker">End</string>
 
+    <!-- Text for new exercise activity -->
+    <string name="new_exercise_button_pulse">Average pulse</string>
+    <string name="new_exercise_button_calories">Calories</string>
+    <string name="new_exercise_button_distance">Give distance</string>
+    <string name="new_exercise_button_duration">Select duration</string>
+    <string name="new_exercise_exercise_type_text">Exercise type:</string>
+    <string name="new_exercise_comment_here">Comment here:</string>
 
     <!--Permissions -->
     <string name="permission_denied">Permission denied!</string>
     <string name="informative_message_for_permissions">"Sportti needs this permission to display exercise routes on map.\n\nAre you sure you want to deny this permission?"</string>
     <string name="required_permission_denied_message">"Permission required to display map was denied.\nYou can change this in phone's settings"</string>
     <string name="map_not_available">Map is not available</string>
+    <!-- Text for duration pop up -->
+    <string name="duration_pop_up_tittle_text">Give duration</string>
+    <string name="duration_pop_up_duration_default">00h 00m</string>
+
+    <!-- Text for distance pop up -->
+    <string name="distance_pop_up_title_text">Give distance</string>
+    <string name="distance_pop_up_minus_10">-10</string>
+    <string name="distance_pop_up_minus_100">-100</string>
+    <string name="distance_pop_up_minus_1000">-1000</string>
+    <string name="distance_pop_up_plus_10">+10</string>
+    <string name="distance_pop_up_plus_1000">+1000</string>
+    <string name="distance_pop_up_plus_100">+100</string>
+    <string name="distance_pop_up_distance_default">00000m</string>
+
+    <!-- Text for calories pop up -->
+    <string name="calories_pop_up_calories_default">0000kcal</string>
+    <string name="calories_pop_up_plus_1">+1</string>
+    <string name="calories_pop_up_minus_1">-1</string>
+    <string name="calories_pop_up_tittle_text">Give calories</string>
+    <string name="calories_pop_up_minus_10">-10</string>
+    <string name="calories_pop_up_plus_10">+10</string>
+    <string name="calories_pop_up_plus_100">+100</string>
+    <string name="calories_pop_up_minus_100">-100</string>
+
+    <!-- Text for pulse pop up -->
+    <string name="pulse_pop_up_give_average_pulse">Give average pulse</string>
+    <string name="pulse_pop_up_pulse_default">000bpm</string>
+    <string name="pulse_pop_up_plus_ten">+10</string>
+    <string name="pulse_pop_up_plus_100">+100</string>
+    <string name="pulse_pop_up_plus_1">+1</string>
+    <string name="pulse_pop_up_minus_10">-10</string>
+    <string name="pulse_pop_up_minus_1">-1</string>
+    <string name="pulse_pop_up_minus_100">-100</string>
+
+    <!-- Not used currently  -->
+    <string name="informative_message_for_permissions">Sportti asks permission to make and manage phone calls in order to display maps on App.</string>
 
 
     <string name="button_text_profile">Profile</string>
@@ -74,7 +117,6 @@
     <string name="user_change_gender">Choose your gender</string>
     <string name="user_change_weight">Enter your weight</string>
     <string name="user_change_height">Enter your height</string>
-
 
 
 </resources>

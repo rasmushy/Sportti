@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,24 +34,21 @@ import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.utilities.CounterUtility;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
+/**
+ * @author Lassi Bågman
+ * @version 0.1
+ * User wants to manually add exercise or activity he has done in past
+ */
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class NewManualExerciseActivity extends AppCompatActivity {
+
+    //Variables needed to share data between methods
     private static final String TAG = "SaveManualExerciseAct";
 
     private MainViewModel mainViewModel;
     private User user;
-    String[] exerciseDataArray;
-
-    private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
-    private EditText editTextComment;
-    private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance, duration,
-            durationHours, durationMinutes, durationSeconds, calories, pulse;
-    private double distanceDouble;
-    private long startDateLong;
-    private boolean dateSelected;
-    private String secondsString, minutesString, hoursString, distanceString, caloriesString,
-            pulseString, exerciseType, startDate, comment;
-    private ZonedDateTime startTimeData, endTimeData;
+    private String[] exerciseDataArray;
 
     private AlertDialog.Builder dialogBuilder;
     private Spinner spinnerSelectExercise;
@@ -61,24 +57,41 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat dateAndTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
+    private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
+    private EditText editTextComment;
+
+    private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance,
+            durationHours, durationMinutes, calories, pulse;
+    private double distanceDouble;
+    private long startDateLong;
+    private boolean dateSelected;
+    private String minutesString, hoursString, distanceString, caloriesString,
+            pulseString, exerciseType, startDate, comment;
+    private ZonedDateTime startTimeData, endTimeData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_manual_exercise);
 
+        //Define string array for storing the user inputs in string format
         exerciseDataArray = new String[8];
 
+        //Set view model for saving the data to the database
         mainViewModel = MainActivity.getMainViewModel();
         user = mainViewModel.getFirstUser();
 
+        //Set up spinner for this activity
         spinnerSelectExercise = findViewById(R.id.spinnerSelectActivity);
         adapter = ArrayAdapter.createFromResource(this, R.array.exercise_type_list,
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSelectExercise.setAdapter(adapter);
 
+        //Define dialog builder for pop ups
         dialogBuilder = new AlertDialog.Builder(this);
 
+        //Get views for this activity
         textViewStartTime = findViewById(R.id.textViewStartTime);
         textViewDuration = findViewById(R.id.textViewDuration);
         textViewDistance = findViewById(R.id.textViewDistance);
@@ -86,25 +99,40 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         textViewPulse = findViewById(R.id.textViewPulse);
         editTextComment = findViewById(R.id.editTextTextComment);
 
+        //Get time and save it
+        startTimeData = ZonedDateTime.now();
+        exerciseDataArray[1] = startTimeData.toString();
+
+        //Sets up defaults for text views
         textViewStartTime.setText(dateAndTimeFormatter.format(new Date()));
-        textViewDuration.setText("0h 0min 0sec");
+        textViewDuration.setText("0h 0min");
         textViewDistance.setText("0 meters");
         textViewCalories.setText("0 calories");
         textViewPulse.setText("0 bpm");
+
     }
 
-
+    /**
+     * Method for opening and handling start time selection pop ups
+     *
+     * @param view
+     */
     public void openSelectStartTime(View view) {
+
+        //Sets up pop up and shows it
         final View selectStartDatePopUp = getLayoutInflater().inflate(R.layout.pop_up_select_start_date, null);
         dialogBuilder.setView(selectStartDatePopUp);
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
 
+        //Boolean to prevent crashing
         dateSelected = false;
 
+        //Finds views in pop up
         CalendarView calendarView = selectStartDatePopUp.findViewById(R.id.calendarViewPopUp);
         Button buttonSaveTime = selectStartDatePopUp.findViewById(R.id.buttonNextPopUp);
 
+        //Listener for when user if user changes the date
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
@@ -118,6 +146,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             }
         });
 
+        //Listener for when user wants to advance to time picker
         buttonSaveTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,9 +156,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                             .setHour(12)
                             .setMinute(10)
                             .build();
-
                     materialTimePicker.show(getSupportFragmentManager(), "fragment_tag");
 
+                    //Listener to save when user dismisses time picker
                     materialTimePicker.addOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialogInterface) {
@@ -139,6 +168,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
                             startDate = dateFormatter.format(startDateLong);
 
+                            //Updates text view with user inputs
                             textViewStartTime.setText(startDate + " " + startTimeHour + ":" + startTimeMinute);
                             startTimeData = ZonedDateTime.of(startYear, startMonth, startDay,
                                     startTimeHour, startTimeMinute, 0, 0, ZoneId.systemDefault());
@@ -147,103 +177,55 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                         }
                     });
                 } else {
+                    //Toast if user has not selected date and tries to advance to time picker
                     Toast.makeText(getApplicationContext(), "Select date!", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
+    /**
+     * Method for opening and handling duration pop up
+     *
+     * @param view
+     */
     public void openSelectDuration(View view) {
+        //Sets up pop up and shows it
         final View selectDurationPopUp = getLayoutInflater().inflate(R.layout.pop_up_select_duration, null);
         dialogBuilder.setView(selectDurationPopUp);
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
 
+        //Finds views in pop up
         Button buttonSaveDistance = selectDurationPopUp.findViewById(R.id.buttonSaveDurationPopUp);
-        ImageButton buttonSecondsPlus = selectDurationPopUp.findViewById(R.id.imageButtonSecondsPlus);
-        ImageButton buttonSecondsMinus = selectDurationPopUp.findViewById(R.id.imageButtonSecondsMinus);
         ImageButton buttonMinutesPlus = selectDurationPopUp.findViewById(R.id.imageButtonMinutesPlus);
         ImageButton buttonMinutesMinus = selectDurationPopUp.findViewById(R.id.imageButtonMinutesMinus);
         ImageButton buttonHoursPlus = selectDurationPopUp.findViewById(R.id.imageButtonHoursPlus);
         ImageButton buttonHoursMinus = selectDurationPopUp.findViewById(R.id.imageButtonHoursMinus);
         TextView textViewDurationPopUp = selectDurationPopUp.findViewById(R.id.textViewDistancePopUp);
 
-        textViewDurationPopUp.setText("00h00m00s");
+        //Sets default text for pop up text view
+        textViewDurationPopUp.setText("00h 00m");
 
-        CounterUtility counterUtilitySeconds = new CounterUtility(0, 59, 0, 1, true);
         CounterUtility counterUtilityMinutes = new CounterUtility(0, 59, 0, 1, true);
         CounterUtility counterUtilityHours = new CounterUtility(0, 99, 0, 1, true);
 
-        buttonSecondsPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                counterUtilitySeconds.addToCounter();
-
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
-                durationMinutes = counterUtilityMinutes.returnCounterInt();
-                durationHours = counterUtilityHours.returnCounterInt();
-
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
-
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
-            }
-        });
-
-        buttonSecondsMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                counterUtilitySeconds.minusToCounter();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
-                durationMinutes = counterUtilityMinutes.returnCounterInt();
-                durationHours = counterUtilityHours.returnCounterInt();
-
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
-
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
-            }
-        });
-
+        //Listener for minutes plus button
         buttonMinutesPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counterUtilityMinutes.addToCounter();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                counterUtilityMinutes.addToCounter(5);
+
+                /*This is section of code is same for all the onClick methods. Java does not support
+                methods in methods so for time being easiest way was to copy it to all corresponding
+                methods. Code blocs responsibility is to update the pop ups text view with user inputs
+                */
+
+                //Get updated values
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
+                //Check if we want to add zeros to the front of the number show
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -255,23 +237,21 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     hoursString = String.valueOf(durationHours);
                 }
 
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                //Updates text view with corresponding value
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
+        // Listener for minutes minus button
         buttonMinutesMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counterUtilityMinutes.minusToCounter();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
+                counterUtilityMinutes.minusToCounter(5);
+
+                //See comment at line 222
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -283,23 +263,18 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     hoursString = String.valueOf(durationHours);
                 }
 
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
+        // -//-
         buttonHoursPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 counterUtilityHours.addToCounter();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -311,23 +286,18 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     hoursString = String.valueOf(durationHours);
                 }
 
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
+        // -//-
         buttonHoursMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 counterUtilityHours.minusToCounter();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                if (durationSeconds < 10) {
-                    secondsString = "0" + durationSeconds;
-                } else {
-                    secondsString = String.valueOf(durationSeconds);
-                }
                 if (durationMinutes < 10) {
                     minutesString = "0" + durationMinutes;
                 } else {
@@ -339,28 +309,31 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                     hoursString = String.valueOf(durationHours);
                 }
 
-                textViewDurationPopUp.setText(hoursString + "h" + minutesString + "m" + secondsString + "s");
+                textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
 
+        // -//-
         buttonSaveDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
                 durationHours = counterUtilityHours.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
-                durationSeconds = counterUtilitySeconds.returnCounterInt();
                 endTimeData = startTimeData;
-                endTimeData = endTimeData.plusHours(durationHours).plusMinutes(durationMinutes)
-                        .plusSeconds(durationSeconds);
+                endTimeData = endTimeData.plusHours(durationHours).plusMinutes(durationMinutes);
                 exerciseDataArray[2] = endTimeData.toString();
                 textViewDuration.setText(counterUtilityHours.returnCounter() + "h " +
-                        counterUtilityMinutes.returnCounter() + "min " +
-                        counterUtilitySeconds.returnCounter() + "sec");
+                        counterUtilityMinutes.returnCounter() + "min");
             }
         });
     }
 
+    /**
+     * Method for opening and handling distance pop up. Comments from above count here as well
+     *
+     * @param view
+     */
     public void openGiveDistance(View view) {
         final View giveDistancePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_distance, null);
         dialogBuilder.setView(giveDistancePopUp);
@@ -520,6 +493,11 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method for opening and handling calories pop up. Comments from above count here as well
+     *
+     * @param view
+     */
     public void openGiveCalories(View view) {
         final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
         dialogBuilder.setView(giveCaloriesPopUp);
@@ -658,6 +636,11 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method for opening and handling pulse pop up. Comments from above count here as well
+     *
+     * @param view
+     */
     public void openGiveAveragePulse(View view) {
         final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
         dialogBuilder.setView(giveAveragePulsePopUp);
@@ -712,7 +695,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         imageButtonPulsePlus100.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counterUtilityPulse.addToCounter(10);
+                counterUtilityPulse.addToCounter(100);
                 pulse = counterUtilityPulse.returnCounterInt();
                 if (pulse < 10) {
                     pulseString = "00" + pulse + "bpm";
@@ -784,34 +767,53 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method for "save" button click
+     *
+     * @param view
+     */
     public void onClickSaveExercise(View view) {
         saveExerciseData();
-        Log.d(TAG, "Save exercise pressed");
     }
 
+    /**
+     * Method for converting some of the user inputs and sending them to the database
+     *
+     */
     private void saveExerciseData() {
+
+        //Get user selection from spinner
         exerciseType = spinnerSelectExercise.getSelectedItem().toString();
         exerciseDataArray[0] = exerciseType;
 
+        //Check if user has made a comment
         if (editTextComment.getText().toString().length() > 0) {
             comment = editTextComment.getText().toString();
             exerciseDataArray[7] = comment;
         }
 
+        //Check if there is user input data in the array
         if (exerciseDataArray != null) {
+
+            //Check if user has at least selected start date and time, and duration of exercise
             if (startTimeData == null || endTimeData == null) {
+                //Toast to warn user
                 Toast.makeText(getApplicationContext(), "At least select start date and duration!",
                         Toast.LENGTH_LONG).show();
             } else {
                 Integer userId = 1; //Integer to get null check (Currently useless cause its set to 1)
-                //Create exercise from our data
+
+                //Create exercise from our data and send it to our database
                 Exercise exercise = new Exercise(exerciseType, userId, startTimeData, endTimeData,
                         calories, pulse, "", distanceDouble, comment);
                 mainViewModel.insertExercise(exercise);
                 Log.d(TAG, "savePressed() --> Exercise saved to database" + exercise);
 
+                //Intent for moving back to main page
                 Intent intentForMainActivity = new Intent(this, MainActivity.class);
+                // Clears activity history to prevent moving back
                 intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                 startActivity(intentForMainActivity);
             }
         }

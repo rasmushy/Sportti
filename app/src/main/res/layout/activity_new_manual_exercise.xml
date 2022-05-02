@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="openGiveAveragePulse"
-        android:text="Average pulse"
+        android:text="@string/new_exercise_button_pulse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="TextView"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonPulse"
@@ -36,7 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="TextView"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonCalories"
@@ -49,7 +47,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="openGiveCalories"
-        android:text="Calories"
+        android:text="@string/new_exercise_button_calories"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,13 +58,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="TextView"
         android:textSize="16sp"
-        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonDistance"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDuration"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewDuration" />
 
     <Button
         android:id="@+id/buttonDistance"
@@ -75,13 +70,11 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="openGiveDistance"
-        android:text="Give distance"
-        android:visibility="visible"
+        android:text="@string/new_exercise_button_distance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonDuration"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonDuration" />
 
     <Spinner
         android:id="@+id/spinnerSelectActivity"
@@ -104,7 +97,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="16dp"
-        android:text="Exercise type:"
+        android:text="@string/new_exercise_exercise_type_text"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -121,7 +114,6 @@
         android:layout_marginTop="34dp"
         android:onClick="openSelectStartTime"
         android:text="Select start time"
-        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -134,18 +126,16 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="openSelectDuration"
-        android:text="Select duration"
+        android:text="@string/new_exercise_button_duration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonStartTime"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonStartTime" />
 
     <TextView
         android:id="@+id/textViewStartTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -159,12 +149,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="TextView"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonDuration"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStartTime"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewStartTime" />
 
     <Button
         android:id="@+id/buttonSaveExercise"
@@ -186,12 +174,14 @@
         android:layout_width="300dp"
         android:layout_height="90dp"
         android:ems="10"
-        android:hint="Comment here:"
+        android:hint="@string/new_exercise_comment_here"
         android:inputType="textMultiLine"
         android:maxLength="255"
+        android:textColorHint="#78909C"
         app:layout_constraintBottom_toTopOf="@+id/buttonSaveExercise"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPulse" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonPulse"
+        android:importantForAutofill="no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
