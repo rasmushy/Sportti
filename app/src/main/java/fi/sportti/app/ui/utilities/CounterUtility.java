@@ -1,7 +1,5 @@
 package fi.sportti.app.ui.utilities;
 
-import java.lang.reflect.Constructor;
-
 /**
  * Counter utility for getting user input from our pop ups
  *
@@ -24,11 +22,7 @@ public class CounterUtility {
      * @param roll Boolean to determine if user wants rolling counter
      */
     public CounterUtility(int min, int max, int start, int step, boolean roll) {
-        this.counter = start;
-        this.min = min;
-        this.max = max;
-        this.step = step;
-        this.start = start;
+        this(min, max, start, step);
         this.roll = roll;
     }
 
@@ -48,7 +42,7 @@ public class CounterUtility {
     }
 
     /**
-     * Constructor if developer want counter with default values
+     * Constructor if developer wants counter with default values
      */
     public CounterUtility() {
         this.counter = 0;
@@ -77,13 +71,7 @@ public class CounterUtility {
      * Adds step amount to counter
      */
     public void addToCounter() {
-        if (this.counter + this.step <= this.max) {
-            this.counter += this.step;
-        } else if (this.roll && this.counter == this.max) {
-            this.counter = this.min;
-        } else {
-            this.counter = this.max;
-        }
+        addToCounter(this.step);
     }
 
     /**
@@ -104,13 +92,7 @@ public class CounterUtility {
      * Removes step amount to counter
      */
     public void minusToCounter() {
-        if (this.counter - this.step >= this.min) {
-            this.counter -= this.step;
-        } else if (this.roll && this.counter == this.min) {
-            this.counter = this.max;
-        } else {
-            this.counter = this.min;
-        }
+        minusToCounter(this.step);
     }
 
 

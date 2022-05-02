@@ -214,26 +214,17 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityMinutes.addToCounter(5);
 
-                /*This is section of code is same for all the onClick methods. Java does not support
-                methods in methods so for time being easiest way was to copy it to all corresponding
-                methods. Code blocs responsibility is to update the pop ups text view with user inputs
+                /*This is section of code is same for all the following onClick methods. Java does not support
+                making methods inside methods so for time being easiest way was to copy it to all corresponding
+                onClick methods. Code blocs responsibility is to update the pop ups text view with user inputs
                 */
 
                 //Get updated values
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
-                //Check if we want to add zeros to the front of the number show
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
+                //Check if we want to add zeros to the front of the number shown
+                timeToString();
 
                 //Updates text view with corresponding value
                 textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
@@ -246,21 +237,10 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityMinutes.minusToCounter(5);
 
-                //See comment at line 220
+                //See comment at line 217
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
-
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
-
+                timeToString();
                 textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
@@ -272,18 +252,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 counterUtilityHours.addToCounter();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
-
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
-
+                timeToString();
                 textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
@@ -295,18 +264,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 counterUtilityHours.minusToCounter();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
-
-                if (durationMinutes < 10) {
-                    minutesString = "0" + durationMinutes;
-                } else {
-                    minutesString = String.valueOf(durationMinutes);
-                }
-                if (durationHours < 10) {
-                    hoursString = "0" + durationHours;
-                } else {
-                    hoursString = String.valueOf(durationHours);
-                }
-
+                timeToString();
                 textViewDurationPopUp.setText(hoursString + "h " + minutesString + "m");
             }
         });
@@ -357,18 +315,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityDistance.addToCounter(10);
                 distance = counterUtilityDistance.returnCounterInt();
-
-                if (distance < 10) {
-                    distanceString = "0000" + distance + "m";
-                } else if (distance < 100) {
-                    distanceString = "000" + distance + "m";
-                } else if (distance < 1000) {
-                    distanceString = "00" + distance + "m";
-                } else if (distance < 10000) {
-                    distanceString = "0" + distance + "m";
-                } else {
-                    distanceString = distance + "m";
-                }
+                distanceToString();
                 textViewDistanceValue.setText(distanceString);
             }
         });
@@ -378,18 +325,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityDistance.addToCounter(100);
                 distance = counterUtilityDistance.returnCounterInt();
-
-                if (distance < 10) {
-                    distanceString = "0000" + distance + "m";
-                } else if (distance < 100) {
-                    distanceString = "000" + distance + "m";
-                } else if (distance < 1000) {
-                    distanceString = "00" + distance + "m";
-                } else if (distance < 10000) {
-                    distanceString = "0" + distance + "m";
-                } else {
-                    distanceString = distance + "m";
-                }
+                distanceToString();
                 textViewDistanceValue.setText(distanceString);
             }
         });
@@ -399,18 +335,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityDistance.addToCounter(1000);
                 distance = counterUtilityDistance.returnCounterInt();
-
-                if (distance < 10) {
-                    distanceString = "0000" + distance + "m";
-                } else if (distance < 100) {
-                    distanceString = "000" + distance + "m";
-                } else if (distance < 1000) {
-                    distanceString = "00" + distance + "m";
-                } else if (distance < 10000) {
-                    distanceString = "0" + distance + "m";
-                } else {
-                    distanceString = distance + "m";
-                }
+                distanceToString();
                 textViewDistanceValue.setText(distanceString);
             }
         });
@@ -420,18 +345,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityDistance.minusToCounter(10);
                 distance = counterUtilityDistance.returnCounterInt();
-
-                if (distance < 10) {
-                    distanceString = "0000" + distance + "m";
-                } else if (distance < 100) {
-                    distanceString = "000" + distance + "m";
-                } else if (distance < 1000) {
-                    distanceString = "00" + distance + "m";
-                } else if (distance < 10000) {
-                    distanceString = "0" + distance + "m";
-                } else {
-                    distanceString = distance + "m";
-                }
+                distanceToString();
                 textViewDistanceValue.setText(distanceString);
             }
         });
@@ -441,18 +355,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityDistance.minusToCounter(100);
                 distance = counterUtilityDistance.returnCounterInt();
-
-                if (distance < 10) {
-                    distanceString = "0000" + distance + "m";
-                } else if (distance < 100) {
-                    distanceString = "000" + distance + "m";
-                } else if (distance < 1000) {
-                    distanceString = "00" + distance + "m";
-                } else if (distance < 10000) {
-                    distanceString = "0" + distance + "m";
-                } else {
-                    distanceString = distance + "m";
-                }
+                distanceToString();
                 textViewDistanceValue.setText(distanceString);
             }
         });
@@ -462,18 +365,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityDistance.minusToCounter(1000);
                 distance = counterUtilityDistance.returnCounterInt();
-
-                if (distance < 10) {
-                    distanceString = "0000" + distance + "m";
-                } else if (distance < 100) {
-                    distanceString = "000" + distance + "m";
-                } else if (distance < 1000) {
-                    distanceString = "00" + distance + "m";
-                } else if (distance < 10000) {
-                    distanceString = "0" + distance + "m";
-                } else {
-                    distanceString = distance + "m";
-                }
+                distanceToString();
                 textViewDistanceValue.setText(distanceString);
             }
         });
@@ -520,15 +412,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityCalories.addToCounter();
                 calories = counterUtilityCalories.returnCounterInt();
-                if (calories < 10) {
-                    caloriesString = "000" + calories + "kcal";
-                } else if (calories < 100) {
-                    caloriesString = "00" + calories + "kcal";
-                } else if (calories < 1000) {
-                    caloriesString = "0" + calories + "kcal";
-                } else {
-                    caloriesString = calories + "kcal";
-                }
+                caloriesToString();
                 textViewCaloriesPopUp.setText(caloriesString);
             }
         });
@@ -538,15 +422,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityCalories.addToCounter(10);
                 calories = counterUtilityCalories.returnCounterInt();
-                if (calories < 10) {
-                    caloriesString = "000" + calories + "kcal";
-                } else if (calories < 100) {
-                    caloriesString = "00" + calories + "kcal";
-                } else if (calories < 1000) {
-                    caloriesString = "0" + calories + "kcal";
-                } else {
-                    caloriesString = calories + "kcal";
-                }
+                caloriesToString();
                 textViewCaloriesPopUp.setText(caloriesString);
             }
         });
@@ -556,15 +432,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityCalories.addToCounter(100);
                 calories = counterUtilityCalories.returnCounterInt();
-                if (calories < 10) {
-                    caloriesString = "000" + calories + "kcal";
-                } else if (calories < 100) {
-                    caloriesString = "00" + calories + "kcal";
-                } else if (calories < 1000) {
-                    caloriesString = "0" + calories + "kcal";
-                } else {
-                    caloriesString = calories + "kcal";
-                }
+                caloriesToString();
                 textViewCaloriesPopUp.setText(caloriesString);
             }
         });
@@ -574,15 +442,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityCalories.minusToCounter();
                 calories = counterUtilityCalories.returnCounterInt();
-                if (calories < 10) {
-                    caloriesString = "000" + calories + "kcal";
-                } else if (calories < 100) {
-                    caloriesString = "00" + calories + "kcal";
-                } else if (calories < 1000) {
-                    caloriesString = "0" + calories + "kcal";
-                } else {
-                    caloriesString = calories + "kcal";
-                }
+                caloriesToString();
                 textViewCaloriesPopUp.setText(caloriesString);
             }
         });
@@ -592,15 +452,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityCalories.minusToCounter(10);
                 calories = counterUtilityCalories.returnCounterInt();
-                if (calories < 10) {
-                    caloriesString = "000" + calories + "kcal";
-                } else if (calories < 100) {
-                    caloriesString = "00" + calories + "kcal";
-                } else if (calories < 1000) {
-                    caloriesString = "0" + calories + "kcal";
-                } else {
-                    caloriesString = calories + "kcal";
-                }
+                caloriesToString();
                 textViewCaloriesPopUp.setText(caloriesString);
             }
         });
@@ -610,15 +462,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityCalories.minusToCounter(100);
                 calories = counterUtilityCalories.returnCounterInt();
-                if (calories < 10) {
-                    caloriesString = "000" + calories + "kcal";
-                } else if (calories < 100) {
-                    caloriesString = "00" + calories + "kcal";
-                } else if (calories < 1000) {
-                    caloriesString = "0" + calories + "kcal";
-                } else {
-                    caloriesString = calories + "kcal";
-                }
+                caloriesToString();
                 textViewCaloriesPopUp.setText(caloriesString);
             }
         });
@@ -663,13 +507,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityPulse.addToCounter();
                 pulse = counterUtilityPulse.returnCounterInt();
-                if (pulse < 10) {
-                    pulseString = "00" + pulse + "bpm";
-                } else if (pulse < 100) {
-                    pulseString = "0" + pulse + "bpm";
-                } else {
-                    pulseString = pulse + "bpm";
-                }
+                pulseToString();
                 textViewPulsePopUp.setText(pulseString);
             }
         });
@@ -679,13 +517,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityPulse.addToCounter(10);
                 pulse = counterUtilityPulse.returnCounterInt();
-                if (pulse < 10) {
-                    pulseString = "00" + pulse + "bpm";
-                } else if (pulse < 100) {
-                    pulseString = "0" + pulse + "bpm";
-                } else {
-                    pulseString = pulse + "bpm";
-                }
+                pulseToString();
                 textViewPulsePopUp.setText(pulseString);
             }
         });
@@ -695,13 +527,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityPulse.addToCounter(100);
                 pulse = counterUtilityPulse.returnCounterInt();
-                if (pulse < 10) {
-                    pulseString = "00" + pulse + "bpm";
-                } else if (pulse < 100) {
-                    pulseString = "0" + pulse + "bpm";
-                } else {
-                    pulseString = pulse + "bpm";
-                }
+                pulseToString();
                 textViewPulsePopUp.setText(pulseString);
             }
         });
@@ -711,13 +537,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityPulse.minusToCounter();
                 pulse = counterUtilityPulse.returnCounterInt();
-                if (pulse < 10) {
-                    pulseString = "00" + pulse + "bpm";
-                } else if (pulse < 100) {
-                    pulseString = "0" + pulse + "bpm";
-                } else {
-                    pulseString = pulse + "bpm";
-                }
+                pulseToString();
                 textViewPulsePopUp.setText(pulseString);
             }
         });
@@ -727,13 +547,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityPulse.minusToCounter(10);
                 pulse = counterUtilityPulse.returnCounterInt();
-                if (pulse < 10) {
-                    pulseString = "00" + pulse + "bpm";
-                } else if (pulse < 100) {
-                    pulseString = "0" + pulse + "bpm";
-                } else {
-                    pulseString = pulse + "bpm";
-                }
+                pulseToString();
                 textViewPulsePopUp.setText(pulseString);
             }
         });
@@ -743,13 +557,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityPulse.minusToCounter(100);
                 pulse = counterUtilityPulse.returnCounterInt();
-                if (pulse < 10) {
-                    pulseString = "00" + pulse + "bpm";
-                } else if (pulse < 100) {
-                    pulseString = "0" + pulse + "bpm";
-                } else {
-                    pulseString = pulse + "bpm";
-                }
+                pulseToString();
                 textViewPulsePopUp.setText(pulseString);
             }
         });
@@ -763,6 +571,55 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 textViewPulse.setText(pulse + " bpm");
             }
         });
+    }
+
+    private void timeToString(){
+        if (durationMinutes < 10) {
+            minutesString = "0" + durationMinutes;
+        } else {
+            minutesString = String.valueOf(durationMinutes);
+        }
+        if (durationHours < 10) {
+            hoursString = "0" + durationHours;
+        } else {
+            hoursString = String.valueOf(durationHours);
+        }
+    }
+
+    private void distanceToString(){
+        if (distance < 10) {
+            distanceString = "0000" + distance + "m";
+        } else if (distance < 100) {
+            distanceString = "000" + distance + "m";
+        } else if (distance < 1000) {
+            distanceString = "00" + distance + "m";
+        } else if (distance < 10000) {
+            distanceString = "0" + distance + "m";
+        } else {
+            distanceString = distance + "m";
+        }
+    }
+
+    private void caloriesToString(){
+        if (calories < 10) {
+            caloriesString = "000" + calories + "kcal";
+        } else if (calories < 100) {
+            caloriesString = "00" + calories + "kcal";
+        } else if (calories < 1000) {
+            caloriesString = "0" + calories + "kcal";
+        } else {
+            caloriesString = calories + "kcal";
+        }
+    }
+
+    private void pulseToString(){
+        if (pulse < 10) {
+            pulseString = "00" + pulse + "bpm";
+        } else if (pulse < 100) {
+            pulseString = "0" + pulse + "bpm";
+        } else {
+            pulseString = pulse + "bpm";
+        }
     }
 
     /**
