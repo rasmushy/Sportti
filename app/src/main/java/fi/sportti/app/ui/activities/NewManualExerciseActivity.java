@@ -35,9 +35,10 @@ import fi.sportti.app.ui.utilities.CounterUtility;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
- * @author Lassi Bågman
- * @version 0.1
  * User wants to manually add exercise or activity he has done in past
+ *
+ * @author Lassi Bågman
+ * @version 0.5
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -48,18 +49,18 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
     private MainViewModel mainViewModel;
     private User user;
-    private String[] exerciseDataArray;
 
     private AlertDialog.Builder dialogBuilder;
-    private Spinner spinnerSelectExercise;
     private ArrayAdapter<CharSequence> adapter;
 
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat dateAndTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
+    private Spinner spinnerSelectExercise;
     private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
     private EditText editTextComment;
 
+    private String[] exerciseDataArray;
     private int startYear, startMonth, startDay, startTimeHour, startTimeMinute, distance,
             durationHours, durationMinutes, calories, pulse;
     private double distanceDouble;
@@ -248,7 +249,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityMinutes.minusToCounter(5);
 
-                //See comment at line 222
+                //See comment at line 220
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
 
