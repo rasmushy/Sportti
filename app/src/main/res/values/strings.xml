@@ -13,16 +13,13 @@
     <string name="channel_name">Exercise</string>
     <string name="channel_description">Exercise recording is active</string>
     <string name="button_text_profile">Profile</string>
-    <string name="user_name">Name</string>
-    <string name="user_birthday">Birthday</string>
-    <string name="user_gender">Gender</string>
-    <string name="user_weight">Weight</string>
-    <string name="user_height">Height</string>
-    <string name="user_change_name">Enter your name</string>
-    <string name="user_change_birthday">Enter your birthday</string>
-    <string name="user_change_gender">Choose your gender</string>
-    <string name="user_change_weight">Enter your weight</string>
-    <string name="user_change_height">Enter your height</string>
 
+    <!-- User profile -->
+    <string name="user_change_name">Enter your name</string>
+    <string name="user_change_birthday">Your birthday</string>
+    <string name="user_change_gender">Choose your gender</string>
+    <string name="user_change_weight">Choose your weight</string>
+    <string name="user_change_height">Choose your height</string>
+    <string name="user_set_up_birthday">Choose the date of your birthday</string>
 
 </resources>
