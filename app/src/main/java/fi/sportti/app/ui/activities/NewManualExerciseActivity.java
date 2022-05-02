@@ -48,10 +48,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     private static final String TAG = "SaveManualExerciseAct";
 
     private MainViewModel mainViewModel;
-    private User user;
-
     private AlertDialog.Builder dialogBuilder;
-    private ArrayAdapter<CharSequence> adapter;
 
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat dateAndTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -66,8 +63,8 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     private double distanceDouble;
     private long startDateLong;
     private boolean dateSelected;
-    private String minutesString, hoursString, distanceString, caloriesString,
-            pulseString, exerciseType, startDate, comment;
+    private String minutesString, hoursString, distanceString, caloriesString, pulseString,
+            startDate, comment;
     private ZonedDateTime startTimeData, endTimeData;
 
     @Override
@@ -80,12 +77,12 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
         //Set view model for saving the data to the database
         mainViewModel = MainActivity.getMainViewModel();
-        user = mainViewModel.getFirstUser();
+        User user = mainViewModel.getFirstUser();
 
         //Set up spinner for this activity
         spinnerSelectExercise = findViewById(R.id.spinnerSelectActivity);
-        adapter = ArrayAdapter.createFromResource(this, R.array.exercise_type_list,
-                android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.exercise_type_list, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSelectExercise.setAdapter(adapter);
 
@@ -116,7 +113,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     /**
      * Method for opening and handling start time selection pop ups
      *
-     * @param view
+     * @param view View that called method
      */
     public void openSelectStartTime(View view) {
 
@@ -188,7 +185,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     /**
      * Method for opening and handling duration pop up
      *
-     * @param view
+     * @param view View that called method
      */
     public void openSelectDuration(View view) {
         //Sets up pop up and shows it
@@ -333,7 +330,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     /**
      * Method for opening and handling distance pop up. Comments from above count here as well
      *
-     * @param view
+     * @param view View that called method
      */
     public void openGiveDistance(View view) {
         final View giveDistancePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_distance, null);
@@ -497,7 +494,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     /**
      * Method for opening and handling calories pop up. Comments from above count here as well
      *
-     * @param view
+     * @param view View that called method
      */
     public void openGiveCalories(View view) {
         final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
@@ -640,7 +637,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     /**
      * Method for opening and handling pulse pop up. Comments from above count here as well
      *
-     * @param view
+     * @param view View that called method
      */
     public void openGiveAveragePulse(View view) {
         final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
@@ -771,7 +768,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     /**
      * Method for "save" button click
      *
-     * @param view
+     * @param view View that called method
      */
     public void onClickSaveExercise(View view) {
         saveExerciseData();
@@ -784,7 +781,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     private void saveExerciseData() {
 
         //Get user selection from spinner
-        exerciseType = spinnerSelectExercise.getSelectedItem().toString();
+        String exerciseType = spinnerSelectExercise.getSelectedItem().toString();
         exerciseDataArray[0] = exerciseType;
 
         //Check if user has made a comment
