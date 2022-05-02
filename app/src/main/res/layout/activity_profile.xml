@@ -194,10 +194,12 @@
 
                         <TextView
                             android:id="@+id/text_weekly_goal_hours"
-                            android:layout_width="0dp"
+                            android:layout_width="70dp"
                             android:layout_height="0dp"
                             android:layout_marginTop="8dp"
                             android:gravity="center_horizontal"
+                            android:maxWidth="70dp"
+                            android:minWidth="70dp"
                             android:text="@string/_2_text"
                             android:textAlignment="gravity"
                             android:textSize="18sp"
@@ -221,9 +223,12 @@
 
                         <TextView
                             android:id="@+id/text_weekly_goal_minutes"
-                            android:layout_width="0dp"
+                            android:layout_width="70dp"
                             android:layout_height="0dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="32dp"
+                            android:maxWidth="70dp"
+                            android:minWidth="40dp"
                             android:text="@string/_0_text"
                             android:textAlignment="gravity"
                             android:textSize="18sp"

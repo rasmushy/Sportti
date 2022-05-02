@@ -36,14 +36,13 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
     private TextView textViewWeight, textViewHeight, textViewGender, textViewBirthday, textViewWeeklyGoalsHours, textViewWeeklyGoalsMinutes, textViewRestingHeartRate, textViewMaximumHeartRate, textViewBasalMetabolicRate;
     private EditText userName;
     private Button profileSaveButton;
-    private LinearLayout linearWeeklyGoalsLayout;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
     private User user;
     private MainViewModel mainViewModel;
 
     //static final for image requesting
-    static final int GALLERY_REQUEST = 1;
+    //static final int GALLERY_REQUEST = 1;
 
     //values for date set up
     private DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -64,7 +63,15 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
         textViewWeight = findViewById(R.id.text_weight);
         textViewGender = findViewById(R.id.text_gender);
         textViewBirthday = findViewById(R.id.text_date);
-        linearWeeklyGoalsLayout = findViewById(R.id.weekly_goals_layout);
+        LinearLayout linearWeeklyGoalsLayout = (LinearLayout) findViewById(R.id.weekly_goals_layout);
+        LinearLayout linearHeightSelectionLayout = findViewById(R.id.height_selection_layout);
+        LinearLayout linearWeightSelectionLayout = findViewById(R.id.weight_selection_layout);
+        LinearLayout linearAgeSelectionLayout = findViewById(R.id.age_selection_layout);
+        LinearLayout linearUserNameLayout = findViewById(R.id.username_selection_layout);
+        LinearLayout linearRestHeartRateLayout = findViewById(R.id.resting_heart_rate_layout);
+        LinearLayout linearMaxHeartRateLayout = findViewById(R.id.maximum_heartrate_layout);
+        LinearLayout linearGenderSelectionLayout = findViewById(R.id.gender_selection_layout);
+
         textViewRestingHeartRate = findViewById(R.id.text_resting_heart_rate);
         textViewMaximumHeartRate = findViewById(R.id.text_maximum_heart_rate);
         textViewBasalMetabolicRate = findViewById(R.id.text_estimated_metabolic_rate);
@@ -72,23 +79,25 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
         textViewWeeklyGoalsHours = findViewById(R.id.text_weekly_goal_hours);
         //Profile save button to update user data
         profileSaveButton = findViewById(R.id.profile_button_save);
-        updateBMRToUI();
-        profileSaveButton.setOnClickListener(this);
         textViewHeight.setText(Integer.toString(user.getHeight()) + " centimeters");
-        textViewHeight.setOnClickListener(this);
         textViewWeight.setText(Integer.toString(user.getWeight()) + " kilograms");
-        textViewWeight.setOnClickListener(this);
         textViewGender.setText(user.getGender());
-        textViewGender.setOnClickListener(this);
         textViewBirthday.setText(Integer.toString(user.getAge()) + " years");
-        textViewBirthday.setOnClickListener(this);
         textViewWeeklyGoalsMinutes.setText(Integer.toString(user.getWeeklyGoalMinute()) + " min");
         textViewWeeklyGoalsHours.setText(Integer.toString(user.getWeeklyGoalHour()) + " h, ");
-        linearWeeklyGoalsLayout.setOnClickListener(this);
         textViewRestingHeartRate.setText(Integer.toString(user.getRestHeartRate()) + " bpm");
-        textViewRestingHeartRate.setOnClickListener(this);
         textViewMaximumHeartRate.setText(Integer.toString(user.getMaxHeartRate()) + " bpm");
-        textViewMaximumHeartRate.setOnClickListener(this);
+        updateBMRToUI();
+
+        profileSaveButton.setOnClickListener(this);
+        linearWeeklyGoalsLayout.setOnClickListener(this);
+        linearHeightSelectionLayout.setOnClickListener(this);
+        linearWeightSelectionLayout.setOnClickListener(this);
+        linearAgeSelectionLayout.setOnClickListener(this);
+        linearUserNameLayout.setOnClickListener(this);
+        linearRestHeartRateLayout.setOnClickListener(this);
+        linearMaxHeartRateLayout.setOnClickListener(this);
+        linearGenderSelectionLayout.setOnClickListener(this);
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 int age = ZonedDateTime.now().getYear() - year;
@@ -139,7 +148,7 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.text_height:
+            case R.id.height_selection_layout:
                 final View selectHeightPopUp = getLayoutInflater().inflate(R.layout.pop_up_height, null);
                 Button selectHeightSaveButton = selectHeightPopUp.findViewById(R.id.buttonSaveHeightPopUp);
                 SeekBar seekBarHeight = selectHeightPopUp.findViewById(R.id.seekBarSelectHeightPopUp);
@@ -173,7 +182,7 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
                     dialog.dismiss();
                 });
                 break;
-            case R.id.text_weight:
+            case R.id.weight_selection_layout:
                 final View selectWeightPopUp = getLayoutInflater().inflate(R.layout.pop_up_weight, null);
                 Button selectWeightSaveButton = selectWeightPopUp.findViewById(R.id.buttonSaveWeightPopUp);
                 SeekBar seekBarWeight = selectWeightPopUp.findViewById(R.id.seekBarSelectWeightPopUp);
@@ -207,7 +216,7 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
                     dialog.dismiss();
                 });
                 break;
-            case R.id.text_gender:
+            case R.id.gender_selection_layout:
                 new AlertDialog.Builder(this)
                         .setTitle("Select gender")
                         .setMessage("Gender is used for calculating calories")
@@ -277,12 +286,12 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
                 selectWeeklyGoalButton.setOnClickListener(view1 -> {
                     user.setWeeklyGoalHour(seekBarHours.getProgress());
                     user.setWeeklyGoalMinute(seekBarMinutes.getProgress());
-                    textViewWeeklyGoalsMinutes.setText(Integer.toString(seekBarMinutes.getProgress()) + " h, ");
-                    textViewWeeklyGoalsHours.setText(Integer.toString(seekBarHours.getProgress()) + " min");
+                    textViewWeeklyGoalsMinutes.setText(Integer.toString(seekBarMinutes.getProgress()) + " min");
+                    textViewWeeklyGoalsHours.setText(Integer.toString(seekBarHours.getProgress()) + " h, ");
                     dialog.dismiss();
                 });
                 break;
-            case R.id.text_date:
+            case R.id.age_selection_layout:
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.YEAR, ZonedDateTime.now().getYear() - user.getAge());
                 int year = cal.get(Calendar.YEAR);
@@ -297,7 +306,7 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
                 datePickerDialog.show();
                 break;
 
-            case R.id.text_maximum_heart_rate:
+            case R.id.maximum_heartrate_layout:
                 final View selectMaximumHeartRate = getLayoutInflater().inflate(R.layout.pop_up_max_heart_rate, null);
                 Button selectMaximumHeartRateSaveButton = selectMaximumHeartRate.findViewById(R.id.buttonSaveMaximumHeartRatePopUp);
                 SeekBar seekBarMaximumHeartRate = selectMaximumHeartRate.findViewById(R.id.seekBarMaximumHeartRatePopUp);
@@ -330,7 +339,7 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
                     dialog.dismiss();
                 });
                 break;
-            case R.id.text_resting_heart_rate:
+            case R.id.resting_heart_rate_layout:
                 final View selectRestingHeartRate = getLayoutInflater().inflate(R.layout.pop_up_min_heart_rate, null);
                 Button selectRestingHeartRateSaveButton = selectRestingHeartRate.findViewById(R.id.buttonSaveRestingHeartRate);
                 SeekBar seekBarRestingHeartRate = selectRestingHeartRate.findViewById(R.id.seekBarRestingHeartRatePopUp);
