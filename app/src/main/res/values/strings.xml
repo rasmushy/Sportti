@@ -102,10 +102,6 @@
     <string name="pulse_pop_up_minus_1">-1</string>
     <string name="pulse_pop_up_minus_100">-100</string>
 
-    <!-- Not used currently  -->
-    <string name="informative_message_for_permissions">Sportti asks permission to make and manage phone calls in order to display maps on App.</string>
-
-
     <string name="button_text_profile">Profile</string>
     <string name="user_name">Name</string>
     <string name="user_birthday">Birthday</string>

@@ -64,7 +64,6 @@ import fi.sportti.app.location.RouteContainer;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class StartExerciseActivity extends AppCompatActivity {
     public static final String REPLY_RECORDED_EXERCISE = "fi.sportti.app.REPLY_RECORDED_EXERCISE";
-    //public static final String CHANNEL_ID = "Sportti";
     private static final String TAG = "TESTI";
 
     private static volatile RecordController recordController;
@@ -77,10 +76,9 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     private Timer timer;
 
-    private int exerciseType;
+    private String exerciseType;
     private int notificationID = 1;
     private boolean sendNotification;
-    private boolean timerIsRunning = false;
 
     @Override
 
@@ -102,8 +100,8 @@ public class StartExerciseActivity extends AppCompatActivity {
 
         //Set up our sport type to textview
         Intent intentExerciseType = getIntent();
-        exerciseType = intentExerciseType.getIntExtra(NewRecordedExerciseActivity.REPLY_EXERCISE_TYPE, 0);
-        exerciseTypeTextView.setText(ExerciseType.values()[exerciseType].getExerciseName());
+        exerciseType = intentExerciseType.getStringExtra(NewRecordedExerciseActivity.REPLY_EXERCISE_TYPE);
+        exerciseTypeTextView.setText(ExerciseType.valueOf(exerciseType).getExerciseName());
 
     }
 
@@ -139,7 +137,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     /**
      * @author Rasmus Hyyppä
-     * Private class for running TimerTask, even when user has locked screen.
+     * Private class for running TimerTask, to make sure it runs when app is OnPause()
      */
     private class RecordTask extends TimerTask {
         @Override
@@ -153,7 +151,6 @@ public class StartExerciseActivity extends AppCompatActivity {
             //Get time if timer is running
             if (recordController.getTimerCounting()) {
                 Long timeCounter = Instant.now().toEpochMilli() - recordController.getStartTime().toInstant().toEpochMilli();
-                //Log.d(TAG, "RecordTask run(): time in ms -> " + timeCounter);
                 totalTimeTextView.setText(timeStringFromLong(timeCounter));
             }
         }
@@ -173,7 +170,6 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     //Stops timer
     private void stopTimer() {
-        timerIsRunning = false;
         recordController.setTimerCounting(false);
         if (recordController.getTimerStartCount() > 0) {
             startButton.setText(R.string.button_text_resume);
@@ -183,7 +179,6 @@ public class StartExerciseActivity extends AppCompatActivity {
 
     //Starts timer
     private void startTimer() {
-        timerIsRunning = true;
         //If our timer is not yet active, create it.
         if (timer == null) {
             timer = new Timer();
@@ -250,7 +245,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             //We use previously selected exercise type as sportType
 
             //Variable types are currently set as they are in Exercise class
-            //getCalories(User user, String sportType, ZonedDateTime startDate, ZonedDateTime endDate)
+            //Method to calculate calories based on MET values: CalorieConversionUtilities.getCalories()
             int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime().plusHours(1));
             int avgHeartRate = 0;
             String route = "";
@@ -268,9 +263,16 @@ public class StartExerciseActivity extends AppCompatActivity {
 //                distance = routeContainer.getRouteLength();
 //            }
             String comment = "";
-            //Create string array of our exercise data, str exercisetype, zdt startdate, zdt stoptime, int calories
+
+
+            /*
+              Create string array for intent of our exercise data:
+              Variable types:
+              String exercisetype, ZonedDateTime startdate, ZonedDateTime stoptime, int calories,
+              int AverageHeartRate, String route, double distance, String comment
+             */
             String[] dataForIntent = {
-                    ExerciseType.values()[exerciseType].getExerciseName(),
+                    ExerciseType.valueOf(exerciseType).getExerciseName(),
                     recordController.getStartTime().toString(),
                     recordController.getStopTime().plusHours(1).toString(),
                     Integer.toString(calorieAmount),
@@ -313,7 +315,6 @@ public class StartExerciseActivity extends AppCompatActivity {
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
-                            Log.d(TAG, "onBackPressed() -> Alertdialog -> OnClick(): user wants to end exercise");
                             startActivity(new Intent(StartExerciseActivity.this, NewRecordedExerciseActivity.class));
                             exitRecordingExercise();
                         }
@@ -329,8 +330,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         //If timer has not started we wont send notifications
-        //recordController.getTimerStartCount() > 0
-        if (timerIsRunning && !trackLocationSwitch.isChecked()) {
+        if (recordController.getTimerCounting() && !trackLocationSwitch.isChecked()) {
             sendNotification = true;
         }
     }
@@ -339,7 +339,7 @@ public class StartExerciseActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         //Remove notification if its on when app is opened.
-        if (timerIsRunning) {
+        if (recordController.getTimerCounting()) {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(StartExerciseActivity.this);
             notificationManager.cancel(notificationID);
         }
@@ -356,7 +356,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(StartExerciseActivity.this, App.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_baseline_access_time_24)
-                .setContentTitle(ExerciseType.values()[exerciseType].getExerciseName())
+                .setContentTitle(ExerciseType.valueOf(exerciseType).getExerciseName())
                 .setContentText("Sportti is running in the background")
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -376,8 +376,9 @@ public class StartExerciseActivity extends AppCompatActivity {
      * Method attached to Location tracking switch in layout. When turned on, checks if app has required
      * permissions needed to track location. If app has permissions, makes sure that location services are enabled.
      * If app does not have permissions, requests them from user.
+     *
      * @params view Required parameter for methods that are attached to buttons in layout.
-     * */
+     */
     public void toggleLocationTracking(View view) {
         if (trackLocationSwitch.isChecked()) {
             //Check if app has permission to use device location.
@@ -385,8 +386,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             //If it has, make sure that location services are enabled so location can be tracked.
             if (permissionState == PackageManager.PERMISSION_GRANTED) {
                 enableLocationServices();
-            }
-            else {
+            } else {
                 //Request result will be handled in onRequestPermissionsResult which is defined below.
                 String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
                 requestPermissions(permissions, App.PERMISSION_CODE_FINE_LOCATION);

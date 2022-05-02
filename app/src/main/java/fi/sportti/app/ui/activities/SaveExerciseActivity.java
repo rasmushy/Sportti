@@ -2,8 +2,6 @@ package fi.sportti.app.ui.activities;
 
 import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateToUnixTime;
 import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.*;
-import static fi.sportti.app.ui.utilities.DialogUtilities.openGiveAveragePulse;
-import static fi.sportti.app.ui.utilities.DialogUtilities.openGiveCalories;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.*;
 
 import androidx.annotation.NonNull;
@@ -13,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,7 +27,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.time.ZonedDateTime;
@@ -46,6 +42,8 @@ import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
+import fi.sportti.app.ui.utilities.CounterUtility;
+import fi.sportti.app.ui.utilities.ExerciseDialogOnClickSetter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
@@ -177,54 +175,54 @@ public class SaveExerciseActivity extends AppCompatActivity {
      */
     private void setItemClickListenerForListView() {
         exerciseListView.setOnItemClickListener((adapterView, viewFromListView, position, l) -> {
-
             //Initialize our textview that has our data value (kcal/bpm)
             TextView textViewForData = (TextView) viewFromListView.findViewById(R.id.saveexercise_listview_textview_data);
-
-            switch (position) { //Switch case for different options (might change this to if)
-
-                case 4: //position == 4 -> Calories
-                    final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
-                    dialogBuilder.setView(giveCaloriesPopUp);
-                    dialog = dialogBuilder.create();
-                    //On dismiss dialog updates ui & data arrays
-                    dialog.setOnDismissListener(dialog -> {
-                        exerciseDataArray[3] = textViewForData.getText().toString();
-                    });
-                    //Initialize dialog with method DialogUtilities.openGiveCalories
-                    openGiveCalories(giveCaloriesPopUp, dialog, textViewForData);
-                    break;
-
-                case 5: //position == 5 -> Avg HeartRate
-                    final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
-                    dialogBuilder.setView(giveAveragePulsePopUp);
-                    dialog = dialogBuilder.create();
-                    //On dismiss dialog updates ui & data arrays
-                    dialog.setOnDismissListener(dialog -> {
-                        //User heart rate
-                        int heartRate = Integer.parseInt(textViewForData.getText().toString());
-                        //Set heart rate to our data arr
-                        exerciseDataArray[4] = textViewForData.getText().toString();
-                        //Set calories if heart rate is between 89 or 190
-                        if (heartRate > 89 && heartRate < 190) {
-                            //Calorie TextView
-                            TextView textViewForCalories = exerciseListView
-                                    .getChildAt(4)
-                                    .findViewById(R.id.saveexercise_listview_textview_data);
-                            //Calculate calories for that textview
-                            int calories = getCaloriesWithHeartRate(user, heartRate, zonedStartTime, zonedDateEnd);
-                            Log.d(TAG, "textViewForCalories.setText " + calories);
-                            //Add Finished result to string arr and Textview
-                            exerciseDataArray[3] = Integer.toString(calories);
-                            textViewForCalories.setText(Integer.toString(calories));
-                        }
-                    });
-                    //Initialize dialog with method DialogUtilities.openGiveAveragePulse
-                    openGiveAveragePulse(giveAveragePulsePopUp, dialog, textViewForData);
-                    break;
-
-                default:
-                    Log.d(TAG, "exerciseListView clicked position: " + position);
+            if (position == 4) {
+                //position == 4 -> Calories
+                final View giveCaloriesPopUp = getLayoutInflater().inflate(R.layout.pop_up_give_calories, null);
+                final TextView textViewCaloriesPopUp = giveCaloriesPopUp.findViewById(R.id.textViewCaloriesPopUpValue);
+                //Custom class for Counter Calculations
+                CounterUtility counterUtilityCalories = new CounterUtility(0, 9999, Integer.parseInt(textViewForData.getText().toString()), 1, true);
+                dialogBuilder.setView(giveCaloriesPopUp);
+                dialog = dialogBuilder.create();
+                //On dismiss dialog updates ui & data arrays
+                dialog.setOnDismissListener(dialog -> {
+                    exerciseDataArray[3] = textViewForData.getText().toString();
+                });
+                //Create custom class that handles onClickListeners in PopUpLayout
+                ExerciseDialogOnClickSetter caloriesDialog = new ExerciseDialogOnClickSetter(giveCaloriesPopUp, counterUtilityCalories, textViewCaloriesPopUp, dialog, textViewForData);
+                //Initialize dialog with method openGiveCalories()
+                caloriesDialog.openGiveCalories();
+            } else if (position == 5) { //position == 5 -> Avg HeartRate
+                final View giveAveragePulsePopUp = getLayoutInflater().inflate(R.layout.pop_up_give_average_pulse, null);
+                final TextView textViewPulsePopUp = giveAveragePulsePopUp.findViewById(R.id.textViewPulseValuePopUp);
+                //Custom class for Counter Calculations
+                CounterUtility counterUtilityPulse = new CounterUtility(0, 240, Integer.parseInt(textViewForData.getText().toString()), 1);
+                dialogBuilder.setView(giveAveragePulsePopUp);
+                dialog = dialogBuilder.create();
+                //On dismiss dialog updates ui & data arrays
+                dialog.setOnDismissListener(dialog -> {
+                    //User heart rate
+                    int heartRate = Integer.parseInt(textViewForData.getText().toString());
+                    //Set heart rate to our data arr
+                    exerciseDataArray[4] = textViewForData.getText().toString();
+                    //Set calories if heart rate is between 89 or 190
+                    if (heartRate > 89 && heartRate < 190) {
+                        //Calorie TextView
+                        TextView textViewForCalories = exerciseListView
+                                .getChildAt(4)
+                                .findViewById(R.id.saveexercise_listview_textview_data);
+                        //Calculate calories for that textview
+                        int calories = getCaloriesWithHeartRate(user, heartRate, zonedStartTime, zonedDateEnd);
+                        //Add Finished result to string arr and Textview
+                        exerciseDataArray[3] = Integer.toString(calories);
+                        textViewForCalories.setText(Integer.toString(calories));
+                    }
+                });
+                //Create custom class that handles onClickListeners in PopUpLayout
+                ExerciseDialogOnClickSetter pulseDialog = new ExerciseDialogOnClickSetter(giveAveragePulsePopUp, counterUtilityPulse, textViewPulsePopUp, dialog, textViewForData);
+                //Initialize dialog with method openGiveAveragePulse()
+                pulseDialog.openGiveAveragePulse();
             }
         });
     }
@@ -273,13 +271,13 @@ public class SaveExerciseActivity extends AppCompatActivity {
     /**
      * Override back press to make sure user really wants to leave activity
      * without saving it to database.
+     * <p>
+     * onBackPressed()
      *
-     * @Override onBackPressed()
      * @author Rasmus Hyyppä
      */
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed()");
         new AlertDialog.Builder(this)
                 .setTitle("Exit before saving")
                 .setMessage("Are you sure you want to exit without saving exercise?")
@@ -317,7 +315,6 @@ public class SaveExerciseActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause(): ");
         if (dialog != null) { //See if there is any active dialogs active when going onPause
             dialog.dismiss(); //If there is dismiss it.
         }
@@ -332,8 +329,9 @@ public class SaveExerciseActivity extends AppCompatActivity {
     /**
      * Method attached to button in layout. Checks if app has required permissions to display map.
      * If yes, opens map. Otherwise requests required permissions from user.
+     *
      * @params view Required parameter for methods that are attached to buttons in layout.
-     * */
+     */
     public void openMapButtonClicked(View view) {
         //Check if app has READ_PHONE_STATE permission which is required to display map.
         int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);

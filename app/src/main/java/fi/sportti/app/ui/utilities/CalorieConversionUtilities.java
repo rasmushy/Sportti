@@ -56,9 +56,9 @@ public class CalorieConversionUtilities {
      * @return Estimated calories burned as integer value
      * @author Rasmus Hyyppä
      */
-    public static int getCalories(@NonNull User user, int sportType, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public static int getCalories(@NonNull User user, String sportType, ZonedDateTime startDate, ZonedDateTime endDate) {
         int calories = (int) (ChronoUnit.MINUTES.between(startDate, endDate)
-                * ExerciseType.values()[sportType].getMetabolicEquivalentOfTask()
+                * ExerciseType.valueOf(sportType).getMetabolicEquivalentOfTask()
                 * user.getWeight())
                 / 200;
         Log.d("getCalories()", "int calories: " + calories);
