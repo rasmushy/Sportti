@@ -2,11 +2,9 @@ package fi.sportti.app.datastorage.sharedpreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 
@@ -19,9 +17,6 @@ import java.util.Locale;
  */
 
 public class RecordController {
-
-    private static final String TAG = "RecordController";
-
     private static final String PREFERENCES = "fi.sportti.app.preferences";
     private static final String START_TIME_KEY = "fi.sportti.app.startKey";
     private static final String STOP_TIME_KEY = "fi.sportti.app.stopKey";

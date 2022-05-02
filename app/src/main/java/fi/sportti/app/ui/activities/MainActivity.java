@@ -27,7 +27,7 @@ import fi.sportti.app.ui.customViews.CustomProgressBar;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**
- * @author lassib
+ * @author Lassi Bågman
  * @version 0.5
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -91,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
+     * onClick methods for moving to wanted activity
+     *
      * @author Lassi Bågman
-     * Methods for buttons
      */
     public void openStartExerciseActivity(View view) {
         Intent intent = new Intent(this, NewRecordedExerciseActivity.class);
@@ -109,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     public void openProfileActivity(View view) {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Method for new exercise pop up
      * @author Lassi Bågman
-     * Method for pop up
      */
     public void selectExerciseTypePopUp(View view) {
         //Variables for exercise pop up

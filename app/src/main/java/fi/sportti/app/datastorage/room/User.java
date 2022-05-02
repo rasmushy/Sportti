@@ -13,7 +13,6 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "user_data")
 public class User {
-
     /**
      * Default values for user in constructor.
      * These values are purely magic numbers that are not based on anything.
@@ -25,7 +24,6 @@ public class User {
         this.height = 170;
         this.weight = 70;
         this.weeklyGoalMinute = 0;
-
         this.weeklyGoalHour = 2;
         this.age = 52;
         this.restHeartRate = 0;
@@ -131,5 +129,21 @@ public class User {
 
     public void setMaxHeartRate(int maxHeartRate) {
         this.maxHeartRate = maxHeartRate;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid=" + uid +
+                ", userName='" + userName + '\'' +
+                ", maxHeartRate=" + maxHeartRate +
+                ", restHeartRate=" + restHeartRate +
+                ", gender='" + gender + '\'' +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", age=" + age +
+                ", weeklyGoalMinute=" + weeklyGoalMinute +
+                ", weeklyGoalHour=" + weeklyGoalHour +
+                '}';
     }
 }

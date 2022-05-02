@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/user_background">
+
+    <TextView
+        android:id="@+id/textViewSetYourMaximumHeartRatePopUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user_set_heart_rate_max"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarMaximumHeartRatePopUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/max_heart_rate_top_guideline3" />
+
+    <SeekBar
+        android:id="@+id/seekBarMaximumHeartRatePopUp"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="300dp"
+        android:layout_height="75dp"
+        android:progress="10"
+        app:layout_constraintBottom_toTopOf="@+id/textViewSeekBarMaxHeartRateValue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSetYourMaximumHeartRatePopUp" />
+
+    <TextView
+        android:id="@+id/textViewSeekBarMaxHeartRateValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user_set_heart"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSaveMaximumHeartRatePopUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarMaximumHeartRatePopUp" />
+
+    <Button
+        android:id="@+id/buttonSaveMaximumHeartRatePopUp"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="@string/button_text_save"
+        app:layout_constraintBottom_toTopOf="@+id/max_heart_rate_bottom_guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSeekBarMaxHeartRateValue"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/max_heart_rate_bottom_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="132dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/max_heart_rate_top_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="132dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
