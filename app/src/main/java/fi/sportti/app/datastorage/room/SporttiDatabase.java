@@ -40,7 +40,7 @@ public abstract class SporttiDatabase extends RoomDatabase {
                             Room.databaseBuilder(
                                     context.getApplicationContext(),
                                     SporttiDatabase.class,
-                                    "sportti_test_database_version_8") //Name will be changed in future
+                                    "sportti_test_database_version_9") //Name will be changed in future
                                     .build();
                 }
             }

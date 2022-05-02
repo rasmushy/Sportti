@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -41,7 +40,6 @@ public class NewRecordedExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_recorded_exercise);
 
         //Find views
-
         exerciseListView = findViewById(R.id.recordexercise_listview_all_exercises);
 
         //Exercise list from resources. Best way seems to be translating it from string arr to list.

@@ -32,15 +32,15 @@ public class CalorieConversionUtilities {
      * Currently not in use, this gives us daily energy consumption estimate
      *
      * @param user
-     * @return BMR as double
+     * @return BMR as int
      */
-    public static double getBasalMetabolicRate(@NonNull User user) {
+    public static int getBasalMetabolicRate(@NonNull User user) {
         if (user.getGender().equals("Male")) {
-            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * user.getAge() + 5);
+            return (int) ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * user.getAge() + 5);
         } else if (user.getGender().equals("Female")) {
-            return ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * user.getAge() - 161);
+            return (int) ((10 * user.getWeight() + 6.25 * user.getHeight()) - 5 * user.getAge() - 161);
         }
-        return 0.0;
+        return 0;
     }
 
     /**
@@ -61,7 +61,6 @@ public class CalorieConversionUtilities {
                 * ExerciseType.valueOf(sportType).getMetabolicEquivalentOfTask()
                 * user.getWeight())
                 / 200;
-        Log.d("getCalories()", "int calories: " + calories);
         return calories;
     }
 
@@ -78,14 +77,10 @@ public class CalorieConversionUtilities {
      * @author Rasmus Hyyppä
      */
     public static int getCaloriesWithHeartRate(@NonNull User user, int avgHeartRate, ZonedDateTime startDate, ZonedDateTime endDate) {
-
         double calories = 0;
-
         if (user.getRestHeartRate() > 20) {
             // VO2MAX calculations: https://www.mdapp.co/vo2-max-calculator-for-aerobic-capacity-369/
             double vo2MAX = 15.3 * (user.getMaxHeartRate() / user.getRestHeartRate());
-            Log.d("getCaloriesWithVOMax() ", "maxHR is: " + user.getMaxHeartRate());
-            Log.d("getCaloriesWithVOMax() ", "vo2MAX is: " + vo2MAX);
             if (user.getGender().equals("Male")) {
                 calories = ((-95.7735 + (0.634 * avgHeartRate)
                         + (0.404 * vo2MAX)
@@ -113,8 +108,6 @@ public class CalorieConversionUtilities {
                         * 60 * ChronoUnit.HOURS.between(startDate, endDate);
             }
         }
-
-        Log.d("getCaloriesWithVOMax() ", "Calories burned: " + calories);
         return (int) Math.abs(calories);
     }
 
