@@ -2,7 +2,6 @@ package fi.sportti.app.ui.utilities;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -12,11 +11,11 @@ import fi.sportti.app.R;
 
 /**
  * Dialog utilities class for onClickEvents on popup layout in one place with complex if methods.
- * Class for reducing code repetition
- * SaveExerciseActivity uses this
+ * Class for reducing code repetition, code rewritten from NewManualExerciseActivity to make it convergent
+ * SaveExerciseActivity uses this helper class.
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 public class ExerciseDialogOnClickSetter implements View.OnClickListener {
 
@@ -26,7 +25,13 @@ public class ExerciseDialogOnClickSetter implements View.OnClickListener {
     private TextView textViewPopUp;
     private TextView textViewForData;
 
-
+    /**
+     * @param givePopUp       This is view that is layout inflated, meaning it will be used to find views in layout
+     * @param counterUtility  Utility to use image buttons inside of layout's
+     * @param textViewPopUp   TextView in the popup,
+     * @param dialog
+     * @param textViewForData Textview outside of layout, transferring layout data to SaveExerciseActivity
+     */
     public ExerciseDialogOnClickSetter(View givePopUp, CounterUtility counterUtility, TextView textViewPopUp, Dialog dialog, TextView textViewForData) {
         this.counterUtility = counterUtility;
         this.givePopUp = givePopUp;
@@ -85,7 +90,7 @@ public class ExerciseDialogOnClickSetter implements View.OnClickListener {
     }
 
     /**
-     * Method for Counter, reduces amount of code.
+     * Method for setting up textviews in popup layout, reduces amount of code in SaveExerciseActivity.
      *
      * @param countUtiCalorie CounterUtility what we have created
      * @param textViewPopUp   Textview what we update
@@ -116,6 +121,13 @@ public class ExerciseDialogOnClickSetter implements View.OnClickListener {
         }
     }
 
+    /**
+     * All of the onClickListeners listed under one method
+     * This is done by implementing View.OnClickListener
+     *
+     * @param view View that is clicked
+     * @author Rasmus Hyyppä
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {

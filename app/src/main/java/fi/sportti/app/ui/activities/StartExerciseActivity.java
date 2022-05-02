@@ -58,13 +58,12 @@ import fi.sportti.app.location.RouteContainer;
  * This activity includes private class TimerTask: "RecordTask"
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class StartExerciseActivity extends AppCompatActivity {
     public static final String REPLY_RECORDED_EXERCISE = "fi.sportti.app.REPLY_RECORDED_EXERCISE";
-    private static final String TAG = "TESTI";
 
     private static volatile RecordController recordController;
 
@@ -246,7 +245,7 @@ public class StartExerciseActivity extends AppCompatActivity {
 
             //Variable types are currently set as they are in Exercise class
             //Method to calculate calories based on MET values: CalorieConversionUtilities.getCalories()
-            int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime().plusHours(1));
+            int calorieAmount = getCalories(mainViewModel.getFirstUser(), exerciseType, recordController.getStartTime(), recordController.getStopTime());
             int avgHeartRate = 0;
             String route = "";
             double distance = 0;
@@ -274,7 +273,7 @@ public class StartExerciseActivity extends AppCompatActivity {
             String[] dataForIntent = {
                     ExerciseType.valueOf(exerciseType).getExerciseName(),
                     recordController.getStartTime().toString(),
-                    recordController.getStopTime().plusHours(1).toString(),
+                    recordController.getStopTime().toString(),
                     Integer.toString(calorieAmount),
                     Integer.toString(avgHeartRate),
                     route,

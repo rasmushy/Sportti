@@ -22,7 +22,7 @@ import fi.sportti.app.ui.utilities.TimeConversionUtilities;
  * Main view model to distance our database from the ui.
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -37,7 +37,6 @@ public class MainViewModel extends AndroidViewModel {
     public static final int MONTHLY_MINUTES = 2;
 
     private final SporttiDatabaseController databaseController;
-    private final LiveData<List<User>> listAllUsers;
     private final LiveData<List<Exercise>> listAllExercises;
     private boolean exerciseListIsSorted;
 
@@ -45,14 +44,8 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application) {
         super(application);
         databaseController = new SporttiDatabaseController(application);
-        listAllUsers = databaseController.getAllUsers();
         listAllExercises = databaseController.getAllExercises();
         exerciseListIsSorted = false;
-    }
-
-    //Query where we get LiveData<List<User> from database
-    public LiveData<List<User>> getAllUsers() {
-        return this.listAllUsers;
     }
 
     //Query for first user of the database (used for initial setup)

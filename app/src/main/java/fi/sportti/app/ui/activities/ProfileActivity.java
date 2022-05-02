@@ -145,6 +145,13 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
 //        }
 //    }
 
+    /**
+     * Long onClick method for all listeners with switch method
+     * This is used to take inputs from pop up layouts
+     *
+     * @param view Clicked view
+     * @author Rasmus Hyyppä
+     */
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -382,11 +389,13 @@ public class ProfileActivity extends MainActivity implements View.OnClickListene
         }
     }
 
+    //Method to calculate maximum heart rate
     private int calculateMaximumHeartRate(int curAge) {
         // Max HeartRate calculated from age 208-(0,7 * 52) = 171,6
         return (int) (208 - (0.7 * curAge));
     }
 
+    //Method to update BMR
     private void updateBMRToUI() {
         int basalMetabolicRate = getBasalMetabolicRate(user);
         if (basalMetabolicRate == 1507) {

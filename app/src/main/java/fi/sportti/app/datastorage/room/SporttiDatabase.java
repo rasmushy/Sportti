@@ -16,13 +16,15 @@ import java.util.concurrent.Executors;
 /**
  * Room Database for application to save user data.
  * Database uses TypeConverters for difficult data types (ZonedDateTime etc.)
+ * Android Developer: https://github.com/googlecodelabs/android-room-with-a-view/tree/master/app/src/main/java/com/example/android/roomwordssample
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Database(entities = {User.class, Exercise.class}, version = 1)
 @TypeConverters({TypeConversionUtilities.class})
+//Type converters: see TypeConversionUtilities inside of room package
 public abstract class SporttiDatabase extends RoomDatabase {
 
     private static final int THREAD_AMOUNT = 4; //ExecutorService Threading pool amount
@@ -40,7 +42,7 @@ public abstract class SporttiDatabase extends RoomDatabase {
                             Room.databaseBuilder(
                                     context.getApplicationContext(),
                                     SporttiDatabase.class,
-                                    "sportti_test_database_version_9") //Name will be changed in future
+                                    "sportti_database_version_1")
                                     .build();
                 }
             }
@@ -48,6 +50,7 @@ public abstract class SporttiDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    //Init Dao's
     public abstract UserDao userDao();
 
     public abstract ExerciseDao exerciseDao();

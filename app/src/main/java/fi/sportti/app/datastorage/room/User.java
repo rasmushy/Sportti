@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
  * Entity class for user
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 @Entity(tableName = "user_data")

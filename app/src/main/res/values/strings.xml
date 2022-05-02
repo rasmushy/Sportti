@@ -4,8 +4,10 @@
     <string name="app_name">Sportti</string>
     <string name="channel_name">Exercise</string>
     <string name="channel_description">Exercise recording is active</string>
+
+    <!--NewRecordExerciseActivity constants -->
     <string name="new_exercise">New exercise</string>
-    <string name="duration">Duration</string>
+    <string name="record_timer_duration">Duration</string>
     <string name="button_text_continue">Continue</string>
     <string name="button_text_start">Start</string>
     <string name="button_text_stop">Stop</string>
@@ -116,34 +118,30 @@
     <string name="user_weekly_goal">Your weekly goal: </string>
 
     <!-- text for profile activity pop up -->
+    <string name="choose_the_date_of_your_birthday_text">Choose the date of your birthday</string>
+    <string name="user_set_heart_rate_max">Set your maximum heart rate</string>
+    <string name="user_set_heart_rate_min">Set your minimum heart rate</string>
     <string name="user_set_weekly_goal">Set your weekly goal</string>
     <string name="user_set_weight">Set your weight</string>
     <string name="user_set_height">Set your height</string>
-    <string name="user_set_heart_rate_max">Set your maximum heart rate</string>
-    <string name="user_set_heart_rate_min">Set your minimum heart rate</string>
+    <string name="choose_your_weight_text">Choose your weight</string>
+    <string name="choose_your_height_text">Choose your height</string>
     <string name="user_set_minutes">Minutes</string>
     <string name="user_set_kg">Kilograms</string>
     <string name="user_set_cm">Centimeters</string>
     <string name="user_set_heart">Beats per minute</string>
-    <string name="username">Username:</string>
     <string name="birthday">Birthday</string>
-    <string name="gender">Gender:</string>
-    <string name="gender_text">Gender</string>
-    <string name="female_text">Female</string>
-    <string name="weekly_goal_text">Weekly goal:</string>
-    <string name="_2_text">2</string>
-    <string name="_0_text">0</string>
-    <string name="age_text">Age:</string>
-    <string name="choose_the_date_of_your_birthday_text">Choose the date of your birthday</string>
-    <string name="weight_text">Weight:</string>
-    <string name="choose_your_weight_text">Choose your weight</string>
-    <string name="choose_your_height_text">Choose your height</string>
-    <string name="input_resting_heart_rate_text">Input resting heart rate</string>
-    <string name="estimated_bmr_text">Estimated BMR</string>
-    <string name="height_text">Height:</string>
-    <string name="input_maximum_heart_rate_text">Input maximum heart rate</string>
-    <string name="rest_heart_rate_text">Rest heart rate:</string>
-    <string name="max_heart_rate_text">Max heart rate:</string>
+
+    <!-- ProfileActivity string constants -->
+    <string name="profile_activity_username">Username:</string>
+    <string name="profile_activity_gender">Gender:</string>
+    <string name="profile_activity_weekly_goal_text">Weekly goal:</string>
+    <string name="profile_activity_age_text">Age:</string>
+    <string name="profile_activity_weight_text">Weight:</string>
+    <string name="profile_activity_height_text">Height:</string>
+    <string name="profile_activity_rest_heart_rate_text">Rest heart rate:</string>
+    <string name="profile_activity_max_heart_rate_text">Max heart rate:</string>
+    <string name="profile_activity_estimated_bmr_text">Estimated BMR</string>
 
 
 </resources>

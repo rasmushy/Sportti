@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
  * Entity class for User created Exercises
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)

@@ -21,13 +21,12 @@ import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
  * Activity where user selects what exercise will be recorded.
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class NewRecordedExerciseActivity extends AppCompatActivity {
 
-    private static final String TAG = "TESTI"; // TAG for Log.d
     public static final String REPLY_EXERCISE_TYPE = "fi.sportti.app.REPLY_EXERCISE_POSITION";
 
     private ListView exerciseListView;
