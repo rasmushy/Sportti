@@ -122,6 +122,7 @@
     <string name="user_set_minutes">Minutes</string>
     <string name="user_set_kg">Kilograms</string>
     <string name="user_set_cm">Centimeters</string>
+    <string name="user_set_heart">Beats per minute</string>
 
 
 
