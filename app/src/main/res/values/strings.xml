@@ -108,8 +108,22 @@
     <string name="user_change_name">Enter your name</string>
     <string name="user_change_birthday">Your birthday</string>
     <string name="user_change_gender">Choose your gender</string>
-    <string name="user_change_weight">Choose your weight</string>
-    <string name="user_change_height">Choose your height</string>
     <string name="user_set_up_birthday">Choose the date of your birthday</string>
+    <string name="user_heart_rate_max">Your max hear rate: </string>
+    <string name="user_heart_rate_min">Your min hear rate: </string>
+    <string name="user_weekly_goal">Your weekly goal: </string>
+
+    <!-- text for profile activity pop up -->
+    <string name="user_set_weekly_goal">Set your weekly goal</string>
+    <string name="user_set_weight">Set your weight</string>
+    <string name="user_set_height">Set your height</string>
+    <string name="user_set_heart_rate_max">Set your maximum heart rate</string>
+    <string name="user_set_heart_rate_min">Set your minimum heart rate</string>
+    <string name="user_set_minutes">Minutes</string>
+    <string name="user_set_kg">Kilograms</string>
+    <string name="user_set_cm">Centimeters</string>
+    <string name="user_set_heart">Beats per minute</string>
+
+
 
 </resources>
