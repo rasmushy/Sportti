@@ -120,6 +120,8 @@
     <string name="user_set_heart_rate_max">Set your maximum heart rate</string>
     <string name="user_set_heart_rate_min">Set your minimum heart rate</string>
     <string name="user_set_minutes">Minutes</string>
+    <string name="user_set_kg">Kilograms</string>
+    <string name="user_set_cm">Centimeters</string>
 
 
 
