@@ -45,9 +45,14 @@
             android:parentActivityName=".ui.activities.MainActivity"
             android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".ui.activities.ProfileActivity"
-            android:exported="false" />
+        <!-- Added User's Profile -->
+        <activity android:name=".ui.activities.ProfileActivity"
+            android:label="Profile"
+            android:parentActivityName=".ui.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
 
         <activity
             android:name=".ui.activities.NewManualExerciseActivity"
@@ -76,7 +81,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <service android:name=".location.LocationTracking" android:foregroundServiceType="location" />
     </application>
 
