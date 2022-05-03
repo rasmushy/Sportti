@@ -11,16 +11,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * @author Rasmus Hyyppä
- * @version 0.5
  * Database controller with commands from our DAO's
+ * Android Developer: https://github.com/googlecodelabs/android-room-with-a-view/tree/master/app/src/main/java/com/example/android/roomwordssample
+ *
+ * @author Rasmus Hyyppä
+ * @version 1.0.0
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SporttiDatabaseController {
     private UserDao userDao;
     private ExerciseDao exerciseDao;
-    private LiveData<List<User>> listAllUsers;
     private LiveData<List<Exercise>> listAllExercises;
 
 
@@ -28,13 +29,7 @@ public class SporttiDatabaseController {
         SporttiDatabase db = SporttiDatabase.getDatabase(application);
         userDao = db.userDao();
         exerciseDao = db.exerciseDao();
-        listAllUsers = userDao.getAllUsers();
         listAllExercises = exerciseDao.getAllExercises();
-    }
-
-    //Query where we get every single user from room database
-    public LiveData<List<User>> getAllUsers() {
-        return this.listAllUsers;
     }
 
     public void updateUser(User user) {

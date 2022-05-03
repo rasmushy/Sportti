@@ -38,9 +38,8 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
  * User wants to manually add exercise or activity he has done in past
  *
  * @author Lassi Bågman
- * @version 0.5
+ * @version 1.0.0
  */
-
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class NewManualExerciseActivity extends AppCompatActivity {
 

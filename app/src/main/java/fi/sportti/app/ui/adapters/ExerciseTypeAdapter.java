@@ -17,7 +17,7 @@ import fi.sportti.app.R;
  * Custom adapter for listing exercise types.
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 public class ExerciseTypeAdapter extends ArrayAdapter<String> {

@@ -20,7 +20,7 @@ import fi.sportti.app.R;
  * Custom adapter for listview to display recorded data after recorded exercise.
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 public class ExerciseSaveAdapter extends ArrayAdapter<String> {

@@ -11,9 +11,11 @@ import java.util.List;
 
 /**
  * Data access object (DAO) for Exercise entities
+ * LiveData: https://developer.android.com/topic/libraries/architecture/livedata.html
+ * Room Database with LiveData: https://betterprogramming.pub/create-an-app-that-uses-livedata-and-viewmodel-in-java-f8086ca94229?gi=c6b2f66ec4dc
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 @Dao

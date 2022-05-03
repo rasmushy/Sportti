@@ -51,7 +51,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
  * For user to view and save recorded exercise.
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -169,7 +169,8 @@ public class SaveExerciseActivity extends AppCompatActivity {
 
     /**
      * Method to set on click listeners for listview.
-     * Mainly to make sure user can still change Average Heartrate & calories.
+     * To make sure user can still change average heart rate & calories after recorded exercise.
+     * Calculations after changing avg heart rate is done to calories instantly.
      *
      * @author Rasmus Hyyppä
      */
@@ -231,6 +232,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
      * Save button where data goes to database
      *
      * @param caller Save button
+     * @author Rasmus Hyyppä
      */
     public void savePressed(View caller) {
         //Check for comment value
@@ -239,39 +241,37 @@ public class SaveExerciseActivity extends AppCompatActivity {
         }
 
         if (exerciseDataArray != null) {
+            Integer userId = mainViewModel.getFirstUser().getuid(); //Integer to get null check
+            if (userId != null) {
+                //Create exercise from our data
+                Exercise exercise = new Exercise(exerciseDataArray[0], userId,
+                        ZonedDateTime.parse(exerciseDataArray[1]),
+                        ZonedDateTime.parse(exerciseDataArray[2]),
+                        Integer.parseInt(exerciseDataArray[3]),
+                        Integer.parseInt(exerciseDataArray[4]),
+                        exerciseDataArray[5],
+                        Double.parseDouble(exerciseDataArray[6]),
+                        exerciseDataArray[7]);
 
-            //Integer to get null check (Currently useless cause its set to 1)
-            Integer userId = 1;
+                //Inserting exercise to database
+                mainViewModel.insertExercise(exercise);
+                RouteContainer.getInstance().resetRoute();
 
-            //Create exercise from our data
-            Exercise exercise = new Exercise(exerciseDataArray[0], userId,
-                    ZonedDateTime.parse(exerciseDataArray[1]),
-                    ZonedDateTime.parse(exerciseDataArray[2]),
-                    Integer.parseInt(exerciseDataArray[3]),
-                    Integer.parseInt(exerciseDataArray[4]),
-                    exerciseDataArray[5],
-                    Double.parseDouble(exerciseDataArray[6]),
-                    exerciseDataArray[7]);
+                Log.d(TAG, "savePressed() --> Exercise saved to database" + exercise);
 
-            //Inserting exercise to database
-            mainViewModel.insertExercise(exercise);
-            RouteContainer.getInstance().resetRoute();
+                //Send us back to MainActivity page after saving data.
+                Intent intentForMainActivity = new Intent(this, MainActivity.class);
 
-            Log.d(TAG, "savePressed() --> Exercise saved to database" + exercise);
-
-            //Send us back to MainActivity page after saving data.
-            Intent intentForMainActivity = new Intent(this, MainActivity.class);
-
-            // FLAG_ACTIVITY_CLEAR_TOP to clear activity stack:  https://developer.android.com/guide/components/activities/tasks-and-back-stack
-            intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intentForMainActivity);
+                // FLAG_ACTIVITY_CLEAR_TOP to clear activity stack:  https://developer.android.com/guide/components/activities/tasks-and-back-stack
+                intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentForMainActivity);
+            }
         }
     }
 
     /**
      * Override back press to make sure user really wants to leave activity
      * without saving it to database.
-     * <p>
      * onBackPressed()
      *
      * @author Rasmus Hyyppä

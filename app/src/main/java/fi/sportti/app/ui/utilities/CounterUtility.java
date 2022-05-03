@@ -4,7 +4,7 @@ package fi.sportti.app.ui.utilities;
  * Counter utility for getting user input from our pop ups
  *
  * @author Lassi Bågman
- * @version 0.5
+ * @version 1.0.0
  */
 
 public class CounterUtility {
@@ -15,11 +15,12 @@ public class CounterUtility {
 
     /**
      * Constructor if developer wants rolling counter with custom values
-     * @param min Minimum value for counter
-     * @param max Maximum value for counter
+     *
+     * @param min   Minimum value for counter
+     * @param max   Maximum value for counter
      * @param start Value where the counter will start
-     * @param step Value of how big will the default step be
-     * @param roll Boolean to determine if user wants rolling counter
+     * @param step  Value of how big will the default step be
+     * @param roll  Boolean to determine if user wants rolling counter
      */
     public CounterUtility(int min, int max, int start, int step, boolean roll) {
         this(min, max, start, step);
@@ -28,10 +29,11 @@ public class CounterUtility {
 
     /**
      * Constructor if developer wants counter with custom values
-     * @param min Minimum value for counter
-     * @param max Maximum value for counter
+     *
+     * @param min   Minimum value for counter
+     * @param max   Maximum value for counter
      * @param start Value where the counter will start
-     * @param step Value of how big will the default step be
+     * @param step  Value of how big will the default step be
      */
     public CounterUtility(int min, int max, int start, int step) {
         this.counter = start;
@@ -53,6 +55,7 @@ public class CounterUtility {
 
     /**
      * Returns counter value in string
+     *
      * @return Counter value in string
      */
     public String returnCounter() {
@@ -61,6 +64,7 @@ public class CounterUtility {
 
     /**
      * Returns counter value in integer
+     *
      * @return Counter value in integer
      */
     public int returnCounterInt() {
@@ -76,6 +80,7 @@ public class CounterUtility {
 
     /**
      * Adds amount of inputted value to counter
+     *
      * @param i Value of how much to add
      */
     public void addToCounter(int i) {
@@ -98,6 +103,7 @@ public class CounterUtility {
 
     /**
      * Removes amount of inputted value to counter
+     *
      * @param i Value of how much to remove
      */
     public void minusToCounter(int i) {

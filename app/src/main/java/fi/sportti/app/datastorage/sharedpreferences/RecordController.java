@@ -13,7 +13,7 @@ import java.util.Locale;
  * It saves timer data to shared preferences
  *
  * @author Rasmus Hyyppä
- * @version 0.5
+ * @version 1.0.0
  */
 
 public class RecordController {
@@ -30,16 +30,18 @@ public class RecordController {
     private ZonedDateTime startTime;
     private ZonedDateTime stopTime;
 
+    /**
+     * RecordController saves timer recorded data into shared preferences.
+     *
+     * @param context Context from StartExerciseActivity
+     */
     public RecordController(Context context) {
 
         //Initialize
-        startTime = ZonedDateTime.now();
-        stopTime = ZonedDateTime.now();
         timerStartCount = 0;
 
         this.sharedPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         this.dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
-
         //Are we counting?
         timerCounting = sharedPreferences.getBoolean(COUNTING_KEY, false);
 
