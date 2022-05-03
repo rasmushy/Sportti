@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,13 +43,11 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 public class NewManualExerciseActivity extends AppCompatActivity {
 
     //Variables needed to share data between methods
-    private static final String TAG = "SaveManualExerciseAct";
-
     private MainViewModel mainViewModel;
     private AlertDialog.Builder dialogBuilder;
 
-    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-    private SimpleDateFormat dateAndTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+    private final SimpleDateFormat dateAndTimeFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     private Spinner spinnerSelectExercise;
     private TextView textViewStartTime, textViewDuration, textViewDistance, textViewCalories, textViewPulse;
@@ -74,7 +71,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         //Define string array for storing the user inputs in string format
         exerciseDataArray = new String[8];
 
-        //Set view model for saving the data to the database
+        //Set up view model for saving the data to the database
         mainViewModel = MainActivity.getMainViewModel();
         User user = mainViewModel.getFirstUser();
 
@@ -88,7 +85,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         //Define dialog builder for pop ups
         dialogBuilder = new AlertDialog.Builder(this);
 
-        //Get views for this activity
+        //Get views of this activity
         textViewStartTime = findViewById(R.id.textViewStartTime);
         textViewDuration = findViewById(R.id.textViewDuration);
         textViewDistance = findViewById(R.id.textViewDistance);
@@ -96,12 +93,12 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         textViewPulse = findViewById(R.id.textViewPulse);
         editTextComment = findViewById(R.id.editTextTextComment);
 
-        //Get time and save it
+        //Get users current local time, save and format it for text view
         startTimeData = ZonedDateTime.now();
         exerciseDataArray[1] = startTimeData.toString();
+        textViewStartTime.setText(dateAndTimeFormatter.format(new Date()));
 
         //Sets up defaults for text views
-        textViewStartTime.setText(dateAndTimeFormatter.format(new Date()));
         textViewDuration.setText("0h 0min");
         textViewDistance.setText("0 meters");
         textViewCalories.setText("0 calories");
@@ -121,14 +118,14 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
 
-        //Boolean to prevent crashing
+        //Boolean to prevent crashing if user has not selected date yet
         dateSelected = false;
 
         //Finds views in pop up
         CalendarView calendarView = selectStartDatePopUp.findViewById(R.id.calendarViewPopUp);
         Button buttonSaveTime = selectStartDatePopUp.findViewById(R.id.buttonNextPopUp);
 
-        //Listener for when user if user changes the date
+        //Listener for when user user changes the date
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
@@ -147,21 +144,17 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (dateSelected) {
+                    //Sets up and shows material time picker
                     MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
-                            .setTimeFormat(TimeFormat.CLOCK_24H)
-                            .setHour(12)
-                            .setMinute(10)
-                            .build();
+                            .setTimeFormat(TimeFormat.CLOCK_24H).setHour(12).setMinute(10).build();
                     materialTimePicker.show(getSupportFragmentManager(), "fragment_tag");
 
-                    //Listener to save when user dismisses time picker
-                    materialTimePicker.addOnDismissListener(new DialogInterface.OnDismissListener() {
+                    //Listener to save when user presses save button in time picker
+                    materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
                         @Override
-                        public void onDismiss(DialogInterface dialogInterface) {
+                        public void onClick(View view) {
                             startTimeHour = materialTimePicker.getHour();
-                            startTimeMinute = 0;
                             startTimeMinute = materialTimePicker.getMinute();
-
                             startDate = dateFormatter.format(startDateLong);
 
                             //Updates text view with user inputs
@@ -203,6 +196,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         //Sets default text for pop up text view
         textViewDurationPopUp.setText("00h 00m");
 
+        //Sets up counters for pop up
         CounterUtility counterUtilityMinutes = new CounterUtility(0, 59, 0, 1, true);
         CounterUtility counterUtilityHours = new CounterUtility(0, 99, 0, 1, true);
 
@@ -212,7 +206,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterUtilityMinutes.addToCounter(5);
 
-                /*This is section of code is same for all the following onClick methods. Java does not support
+                /*This is section of code is almost same for all the following onClick methods. Java does not support
                 making methods inside methods so for time being easiest way was to copy it to all corresponding
                 onClick methods. Code blocs responsibility is to update the pop ups text view with user inputs
                 */
@@ -229,13 +223,13 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             }
         });
 
-        // Listener for minutes minus button
+        //Listener for minutes minus button
         buttonMinutesMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 counterUtilityMinutes.minusToCounter(5);
 
-                //See comment at line 217
+                //See comment at line 209
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 durationHours = counterUtilityHours.returnCounterInt();
                 timeToString();
@@ -267,11 +261,10 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             }
         });
 
-        // -//-
+        //On click listener to know when user wants to confirm selection
         buttonSaveDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
                 durationHours = counterUtilityHours.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
                 endTimeData = startTimeData;
@@ -279,6 +272,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 exerciseDataArray[2] = endTimeData.toString();
                 textViewDuration.setText(counterUtilityHours.returnCounter() + "h " +
                         counterUtilityMinutes.returnCounter() + "min");
+                dialog.dismiss();
             }
         });
     }
@@ -306,7 +300,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         textViewDistanceValue.setText("00000m");
 
         CounterUtility counterUtilityDistance = new CounterUtility(0, 99999, 0, 1);
-
 
         imageButtonPlus10.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -371,12 +364,12 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         buttonSaveDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
                 distance = counterUtilityDistance.returnCounterInt();
                 distanceDouble = distance;
                 distanceDouble = distanceDouble / 1000;
                 exerciseDataArray[6] = String.valueOf(distanceDouble);
                 textViewDistance.setText(counterUtilityDistance.returnCounter() + " meters");
+                dialog.dismiss();
             }
         });
     }
@@ -468,10 +461,10 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         buttonSaveCalories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
                 calories = counterUtilityCalories.returnCounterInt();
                 exerciseDataArray[3] = String.valueOf(calories);
                 textViewCalories.setText(calories + " kcal");
+                dialog.dismiss();
             }
         });
     }
@@ -563,14 +556,17 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         buttonSavePulse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
                 pulse = counterUtilityPulse.returnCounterInt();
                 exerciseDataArray[4] = String.valueOf(pulse);
                 textViewPulse.setText(pulse + " bpm");
+                dialog.dismiss();
             }
         });
     }
 
+    /**
+     * Method for converting recieved user values to wanted format
+     */
     private void timeToString() {
         if (durationMinutes < 10) {
             minutesString = "0" + durationMinutes;
@@ -584,6 +580,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method for converting recieved user value to wanted format
+     */
     private void distanceToString() {
         if (distance < 10) {
             distanceString = "0000" + distance + "m";
@@ -598,6 +597,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method for converting recieved user value to wanted format
+     */
     private void caloriesToString() {
         if (calories < 10) {
             caloriesString = "000" + calories + "kcal";
@@ -610,6 +612,9 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method for converting recieved user value to wanted format
+     */
     private void pulseToString() {
         if (pulse < 10) {
             pulseString = "00" + pulse + "bpm";
@@ -630,7 +635,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
     }
 
     /**
-     * Method for converting some of the user inputs and sending them to the database
+     * Method for converting remaining user inputs and sending all of them to the database
      */
     private void saveExerciseData() {
 
@@ -659,7 +664,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
                 Exercise exercise = new Exercise(exerciseType, userId, startTimeData, endTimeData,
                         calories, pulse, "", distanceDouble, comment);
                 mainViewModel.insertExercise(exercise);
-                Log.d(TAG, "savePressed() --> Exercise saved to database" + exercise);
 
                 //Intent for moving back to main page
                 Intent intentForMainActivity = new Intent(this, MainActivity.class);
