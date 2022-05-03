@@ -151,5 +151,14 @@
     <string name="profile_activity_max_heart_rate_text">Max heart rate:</string>
     <string name="profile_activity_estimated_bmr_text">Estimated BMR</string>
 
+    <!-- About Sportti application -->
+    <string name="about_sportti">Sportti, application for active people</string>
+    <string name="copyright">Copyright (©) Rasmus Hyyppä, Jukka-Pekka Jaakkola, Lassi Bågman, Yana Krylova."</string>
+    <string name="about_sportti_definitions">List of definitions and concepts used in the application: "</string>
+    <string name="about_sportti_bmr">BMR: Basal Metabolic Rate, estimation of it is done by: Mifflin-St Jeor Equation. "</string>
+    <string name="about_sportti_MET">MET: Metabolic equivalent of task, used to calculate calories by standard set value. "</string>
+    <string name="about_sportti_vo2max">VO2MAX: Maximal oxygen consumption, for more accurate calorie calculations. "</string>
+    <string name="about_sportti_vo2max_heart_rate">VO2MAX will be calculated from the exercises on the application background, after resting- and maximal heart rate are set."</string>
+    <string name="about_application">About application</string>
 
 </resources>
