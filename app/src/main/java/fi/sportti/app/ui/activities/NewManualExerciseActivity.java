@@ -107,7 +107,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         textViewDistance.setText("0 meters");
         textViewCalories.setText("0 calories");
         textViewPulse.setText("0 bpm");
-
     }
 
     /**
@@ -573,7 +572,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         });
     }
 
-    private void timeToString(){
+    private void timeToString() {
         if (durationMinutes < 10) {
             minutesString = "0" + durationMinutes;
         } else {
@@ -586,7 +585,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         }
     }
 
-    private void distanceToString(){
+    private void distanceToString() {
         if (distance < 10) {
             distanceString = "0000" + distance + "m";
         } else if (distance < 100) {
@@ -600,7 +599,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         }
     }
 
-    private void caloriesToString(){
+    private void caloriesToString() {
         if (calories < 10) {
             caloriesString = "000" + calories + "kcal";
         } else if (calories < 100) {
@@ -612,7 +611,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         }
     }
 
-    private void pulseToString(){
+    private void pulseToString() {
         if (pulse < 10) {
             pulseString = "00" + pulse + "bpm";
         } else if (pulse < 100) {
@@ -633,7 +632,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
 
     /**
      * Method for converting some of the user inputs and sending them to the database
-     *
      */
     private void saveExerciseData() {
 
