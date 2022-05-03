@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Text used trough out the app -->
     <string name="app_name">Sportti</string>
     <string name="channel_name">Exercise</string>
     <string name="channel_description">Exercise recording is active</string>
@@ -21,8 +22,6 @@
     <string name="comment">Comment:</string>
     <string name="save_exercise">Save exercise</string>
     <string name="delete">Delete</string>
-
-
     <string name="pop_up_placeholder">Placeholder</string>
 
     <!-- Record exercise -->
@@ -33,7 +32,6 @@
     <string name="history_days">Days</string>
     <string name="history_months">Months</string>
     <string name="history_old_exercises">Exercises</string>
-
     <string name="button_open_map">Open map</string>
 
     <!-- Exercise details page -->
@@ -70,6 +68,7 @@
     <string name="informative_message_for_permissions">"Sportti needs this permission to display exercise routes on map.\n\nAre you sure you want to deny this permission?"</string>
     <string name="required_permission_denied_message">"Permission required to display map was denied.\nYou can change this in phone's settings"</string>
     <string name="map_not_available">Map is not available</string>
+
     <!-- Text for duration pop up -->
     <string name="duration_pop_up_tittle_text">Give duration</string>
     <string name="duration_pop_up_duration_default">00h 00m</string>
@@ -104,6 +103,15 @@
     <string name="pulse_pop_up_minus_1">-1</string>
     <string name="pulse_pop_up_minus_100">-100</string>
 
+    <!-- Text for exercise pop up -->
+    <string name="exercise_pop_up_button_start_recording">Start recording</string>
+    <string name="exercise_pop_up_button_save_exercise">Save Exercise</string>
+
+    <!-- Text for save exercise activity -->
+    <string name="save_exercise_activity_button_select_start_time">Select start time</string>
+    <string name="save_exercise_activity_button_save_exercise">Save exercise</string>
+
+    <!-- What is this for?! -->
     <string name="button_text_profile">Profile</string>
 
     <!-- User profile -->
@@ -143,5 +151,14 @@
     <string name="profile_activity_max_heart_rate_text">Max heart rate:</string>
     <string name="profile_activity_estimated_bmr_text">Estimated BMR</string>
 
+    <!-- About Sportti application -->
+    <string name="about_sportti">Sportti, application for active people</string>
+    <string name="copyright">Copyright (©) Rasmus Hyyppä, Jukka-Pekka Jaakkola, Lassi Bågman, Yana Krylova."</string>
+    <string name="about_sportti_definitions">List of definitions and concepts used in the application: "</string>
+    <string name="about_sportti_bmr">BMR: Basal Metabolic Rate, estimation of it is done by: Mifflin-St Jeor Equation. "</string>
+    <string name="about_sportti_MET">MET: Metabolic equivalent of task, used to calculate calories by standard set value. "</string>
+    <string name="about_sportti_vo2max">VO2MAX: Maximal oxygen consumption, for more accurate calorie calculations. "</string>
+    <string name="about_sportti_vo2max_heart_rate">VO2MAX will be calculated from the exercises on the application background, after resting- and maximal heart rate are set."</string>
+    <string name="about_application">About application</string>
 
 </resources>

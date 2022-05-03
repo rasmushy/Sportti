@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--@author Rasmus Hyyppä-->
 <resources>
     <string-array name="save_topic_list">
         <item>Exercise:</item>

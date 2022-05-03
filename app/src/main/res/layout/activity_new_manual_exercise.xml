@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--@author Lassi Bågman-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -113,7 +114,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="34dp"
         android:onClick="openSelectStartTime"
-        android:text="Select start time"
+        android:text="@string/save_exercise_activity_button_select_start_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -160,7 +161,7 @@
         android:layout_height="55dp"
         android:layout_marginBottom="32dp"
         android:onClick="onClickSaveExercise"
-        android:text="Save exercise"
+        android:text="@string/save_exercise_activity_button_save_exercise"
         android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -175,13 +176,13 @@
         android:layout_height="90dp"
         android:ems="10"
         android:hint="@string/new_exercise_comment_here"
+        android:importantForAutofill="no"
         android:inputType="textMultiLine"
         android:maxLength="255"
-        android:textColorHint="#78909C"
+        android:textColorHint="#00838F"
         app:layout_constraintBottom_toTopOf="@+id/buttonSaveExercise"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPulse"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonPulse" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

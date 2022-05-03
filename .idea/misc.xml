@@ -3,11 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_exercise_details.xml" value="0.1" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_new_manual_exercise.xml" value="0.25" />
         <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_new_recorded_exercise.xml" value="0.32760416666666664" />
         <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_profile.xml" value="0.23067279565399082" />
-        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_save_exercise.xml" value="0.32760416666666664" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_save_exercise.xml" value="0.22" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/informative_ui_before_asking_permissions.xml" value="0.1" />
         <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_give_average_pulse.xml" value="0.5" />
         <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_give_calories.xml" value="0.5" />
         <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_give_distance.xml" value="0.5" />
@@ -17,6 +19,7 @@
         <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_select_start_time.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/drawable/border.xml" value="0.31" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/drawable/border_for_bottom_buttons.xml" value="0.31" />
+        <entry key="..\:/Users/eucal/AndroidStudioProjects/Sportti/app/src/main/res/layout/recordexercise_listview_layout.xml" value="0.1" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_exercise_details.xml" value="0.35989583333333336" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_history.xml" value="0.189453125" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_main.xml" value="0.25" />
@@ -27,12 +30,15 @@
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/activity_start_exercise.xml" value="0.25" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/exercise_on_history_listview.xml" value="0.189453125" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/informative_ui_before_asking_permissions.xml" value="0.163671875" />
+        <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_give_average_pulse.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_give_calories.xml" value="0.269921875" />
+        <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_give_distance.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_height.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_max_heart_rate.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_min_heart_rate.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_select_duration.xml" value="0.5" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_select_new_exercise_type.xml" value="0.35989583333333336" />
+        <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_select_start_date.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_select_weekly_goal.xml" value="0.5" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_weekly_goal.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/pop_up_weight.xml" value="0.269921875" />
@@ -40,12 +46,11 @@
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/recordexercise_listview_layout.xml" value="0.33" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/saveexercise_listview_header_view.xml" value="0.33" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/saveexercise_listview_layout.xml" value="0.33" />
+        <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/layout/sportti_info_layout.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/menu/save_exercise_menu.xml" value="0.269921875" />
+        <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/menu/user_profile_menu.xml" value="0.269921875" />
         <entry key="..\:/Users/hyypr/AndroidStudioProjects/Sportti/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2145" />
-        <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/drawable/border.xml" value="0.132" />
-        <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/layout/activity_exercise_details.xml" value="0.33" />
-        <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/layout/activity_history.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/layout/activity_new_manual_exercise.xml" value="0.25" />
         <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/layout/activity_profile.xml" value="0.33" />
         <entry key="..\:/Users/jpj1/amk-opiskelu/Mobiilit_terveryssovellukset/projekti/sovellus/Sportti/app/src/main/res/layout/activity_save_exercise.xml" value="0.36666666666666664" />
