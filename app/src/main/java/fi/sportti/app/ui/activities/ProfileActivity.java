@@ -22,6 +22,7 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -31,7 +32,7 @@ import java.util.Calendar;
  * Data is used to calculate estimates of calories etc.
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class ProfileActivity extends MainActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView textViewWeight, textViewHeight, textViewGender, textViewBirthday, textViewWeeklyGoalsHours, textViewWeeklyGoalsMinutes, textViewRestingHeartRate, textViewMaximumHeartRate, textViewBasalMetabolicRate;
     private EditText userName;
