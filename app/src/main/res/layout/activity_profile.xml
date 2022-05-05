@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1.0"
-    android:background="@color/user_background"
     tools:context=".ui.activities.ProfileActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -92,7 +91,7 @@
                             android:id="@+id/textview_username"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
+                            android:layout_marginStart="2dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/profile_activity_username"
                             android:textAlignment="gravity"
@@ -149,7 +148,7 @@
                             android:id="@+id/textview_gender"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
+                            android:layout_marginStart="2dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/profile_activity_gender"
                             android:textAlignment="gravity"
@@ -195,6 +194,22 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:id="@+id/textview_duration"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginTop="8dp"
+                            android:minWidth="120dp"
+                            android:text="@string/profile_activity_weekly_goal_text"
+                            android:textAlignment="gravity"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/text_weekly_goal_hours"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                        <TextView
                             android:id="@+id/text_weekly_goal_hours"
                             android:layout_width="62dp"
                             android:layout_height="0dp"
@@ -206,22 +221,6 @@
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/text_weekly_goal_minutes"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
-
-                        <TextView
-                            android:id="@+id/textview_duration"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
-                            android:layout_marginTop="8dp"
-                            android:minWidth="120dp"
-                            android:text="@string/profile_activity_weekly_goal_text"
-                            android:textAlignment="gravity"
-                            android:textSize="20sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/text_weekly_goal_hours"
-                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.0" />
 
@@ -277,7 +276,7 @@
                             android:id="@+id/textview_age"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
+                            android:layout_marginStart="2dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/profile_activity_age_text"
                             android:textAlignment="gravity"
@@ -327,7 +326,7 @@
                             android:id="@+id/textview_weight"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
+                            android:layout_marginStart="2dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/profile_activity_weight_text"
                             android:textAlignment="gravity"
@@ -376,7 +375,7 @@
                             android:id="@+id/textview_height"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
+                            android:layout_marginStart="2dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/profile_activity_height_text"
                             android:textAlignment="gravity"
@@ -426,7 +425,7 @@
                             android:id="@+id/textview_resting_heart_rate"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
+                            android:layout_marginStart="2dp"
                             android:layout_marginTop="8dp"
                             android:minWidth="140dp"
                             android:text="@string/profile_activity_rest_heart_rate_text"
@@ -475,7 +474,7 @@
                             android:id="@+id/textview_maximum_heart_rate"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginStart="1dp"
+                            android:layout_marginStart="2dp"
                             android:layout_marginTop="8dp"
                             android:minWidth="140dp"
                             android:text="@string/profile_activity_max_heart_rate_text"
