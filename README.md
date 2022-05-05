@@ -7,4 +7,4 @@ Project for the Metropolia University of Applied Sciences Mobile Application cou
 ![Popup's for exercise](https://users.metropolia.fi/~rasmushy/ryhma4/choose_pop_up.png), ![Save exercise manually](https://users.metropolia.fi/~rasmushy/ryhma4/add_manual_exercise.png), ![Save recorded exercise](https://users.metropolia.fi/~rasmushy/ryhma4/save_exercise_page.png)
 
 ## Source code for the application. 
-This repository represent our coding process as a group in school project. 
+This repository represent our coding process as a group in school project. Project lasted for 1 month and we proceeded to finish almost all the features we were thinking about. 
