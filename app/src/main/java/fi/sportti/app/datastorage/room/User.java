@@ -19,7 +19,7 @@ public class User {
      * This allows user to look around in app without adding any personal information.
      */
     public User() {
-        this.userName = "username";
+        this.userName = "";
         this.gender = "Male";
         this.height = 170;
         this.weight = 70;

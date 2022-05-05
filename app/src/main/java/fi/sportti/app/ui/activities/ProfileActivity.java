@@ -41,7 +41,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView textViewWeight, textViewHeight, textViewGender, textViewBirthday, textViewWeeklyGoalsHours, textViewWeeklyGoalsMinutes, textViewRestingHeartRate, textViewMaximumHeartRate, textViewBasalMetabolicRate;
     private EditText userName;
-    private Button profileSaveButton;
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog;
     private User user;
@@ -69,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         textViewWeight = findViewById(R.id.text_weight);
         textViewGender = findViewById(R.id.text_gender);
         textViewBirthday = findViewById(R.id.text_date);
-        LinearLayout linearWeeklyGoalsLayout = (LinearLayout) findViewById(R.id.weekly_goals_layout);
+        LinearLayout linearWeeklyGoalsLayout = findViewById(R.id.weekly_goals_layout);
         LinearLayout linearHeightSelectionLayout = findViewById(R.id.height_selection_layout);
         LinearLayout linearWeightSelectionLayout = findViewById(R.id.weight_selection_layout);
         LinearLayout linearAgeSelectionLayout = findViewById(R.id.age_selection_layout);
@@ -84,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         textViewWeeklyGoalsMinutes = findViewById(R.id.text_weekly_goal_minutes);
         textViewWeeklyGoalsHours = findViewById(R.id.text_weekly_goal_hours);
         //Profile save button to update user data
-        profileSaveButton = findViewById(R.id.profile_button_save);
+        Button profileSaveButton = findViewById(R.id.profile_button_save);
         textViewHeight.setText(Integer.toString(user.getHeight()) + " centimeters");
         textViewWeight.setText(Integer.toString(user.getWeight()) + " kilograms");
         textViewGender.setText(user.getGender());
@@ -169,9 +168,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 SeekBar seekBarHeight = selectHeightPopUp.findViewById(R.id.seekBarSelectHeightPopUp);
                 TextView textViewSeekBarHeightValue = selectHeightPopUp.findViewById(R.id.textViewSeekBarHeightValue);
                 textViewSeekBarHeightValue.setText(user.getHeight() + " centimeters");
-                seekBarHeight.setProgress(user.getHeight()); //SET PROGRESS
                 seekBarHeight.setMax(300);
                 seekBarHeight.setMin(0);
+                seekBarHeight.setProgress(user.getHeight()); //SET PROGRESS
                 dialogBuilder.setView(selectHeightPopUp);
                 dialog = dialogBuilder.create();
                 dialog.show();
@@ -203,9 +202,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 SeekBar seekBarWeight = selectWeightPopUp.findViewById(R.id.seekBarSelectWeightPopUp);
                 TextView textViewSeekBarWeightValue = selectWeightPopUp.findViewById(R.id.textViewSeekBarWeightValue);
                 textViewSeekBarWeightValue.setText(user.getWeight() + " kilograms");
-                seekBarWeight.setProgress(user.getWeight()); //SET PROGRESS
                 seekBarWeight.setMax(150);
                 seekBarWeight.setMin(30);
+                seekBarWeight.setProgress(user.getWeight()); //SET PROGRESS
                 dialogBuilder.setView(selectWeightPopUp);
                 dialog = dialogBuilder.create();
                 dialog.show();
@@ -254,14 +253,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 TextView textViewSeekBarHourValue = selectWeeklyGoalPopUp.findViewById(R.id.textViewSeekBarHourValue);
 
                 textViewSeekBarHourValue.setText(user.getWeeklyGoalHour() + " hours");
-                seekBarHours.setProgress(user.getWeeklyGoalHour());//SET PROGRESS
                 seekBarHours.setMax(35);
                 seekBarHours.setMin(0);
+                seekBarHours.setProgress(user.getWeeklyGoalHour());//SET PROGRESS
 
                 textViewSeekBarMinuteValue.setText(user.getWeeklyGoalMinute() + " minutes");
-                seekBarMinutes.setProgress(user.getWeeklyGoalMinute());//SET PROGRESS
                 seekBarMinutes.setMax(60);
                 seekBarMinutes.setMin(0);
+                seekBarMinutes.setProgress(user.getWeeklyGoalMinute());//SET PROGRESS
 
                 dialogBuilder.setView(selectWeeklyGoalPopUp);
                 dialog = dialogBuilder.create();
@@ -327,9 +326,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 SeekBar seekBarMaximumHeartRate = selectMaximumHeartRate.findViewById(R.id.seekBarMaximumHeartRatePopUp);
                 TextView textViewSeekBarHeartRateMaximumValue = selectMaximumHeartRate.findViewById(R.id.textViewSetYourMaximumHeartRatePopUp);
                 textViewSeekBarHeartRateMaximumValue.setText(user.getMaxHeartRate() + " bpm");
-                seekBarMaximumHeartRate.setProgress(user.getMaxHeartRate()); //SET PROGRESS
                 seekBarMaximumHeartRate.setMax(220);
                 seekBarMaximumHeartRate.setMin(130);
+                seekBarMaximumHeartRate.setProgress(user.getMaxHeartRate()); //SET PROGRESS
                 dialogBuilder.setView(selectMaximumHeartRate);
                 dialog = dialogBuilder.create();
                 dialog.show();
@@ -406,8 +405,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     //Method to update BMR
     private void updateBMRToUI() {
         int basalMetabolicRate = getBasalMetabolicRate(user);
-        if (basalMetabolicRate == 1507) {
-            return;
+        if (basalMetabolicRate == getBasalMetabolicRate(new User())) {
+            return; //no estimate for new users
         }
         textViewBasalMetabolicRate.setText("Estimated BMR: " + Integer.toString(getBasalMetabolicRate(user)));
     }
@@ -434,9 +433,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             dialogBuilder.setView(aboutSporttiLayout);
             dialog = dialogBuilder.create();
             dialog.show();
-            continue_button_about.setOnClickListener(view -> {
-                dialog.dismiss();
-            });
+            continue_button_about.setOnClickListener(view -> dialog.dismiss());
             return true;
         }
         return super.onOptionsItemSelected(item);
