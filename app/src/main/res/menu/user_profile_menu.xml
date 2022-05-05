@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!--@author Rasmus Hyyppä-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/userprofile_menu_about_button"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="@string/about_application"
+        app:showAsAction="ifRoom" />
+</menu>

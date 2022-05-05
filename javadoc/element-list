@@ -1,0 +1,6 @@
+fi.sportti.app
+fi.sportti.app.databinding
+fi.sportti.app.datastorage.room
+fi.sportti.app.ui.constants
+fi.sportti.app.ui.utilities
+fi.sportti.app.ui.viewmodels

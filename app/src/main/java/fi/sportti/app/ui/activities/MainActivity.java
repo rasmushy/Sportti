@@ -1,4 +1,4 @@
-/**
+/*
  * Sportti, android application for fitness tracking and more.
  * Copyright Rasmus Hyyppä, Jukka-Pekka Jaakkola, Lassi Bågman, Yana Krylova
  */
@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initialStartUp() {
         if (mainViewModel.getFirstUser() != null) {
-            //Lets make another user and compare it to our first user in db
-            User plainUser = new User();
             //Get our db's first user
             user = mainViewModel.getFirstUser();
             return;

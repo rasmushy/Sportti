@@ -16,7 +16,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,7 +55,6 @@ import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SaveExerciseActivity extends AppCompatActivity {
-    private static final String TAG = "SaveExerciseActivity";
     private MainViewModel mainViewModel;
 
     //Dialog
@@ -87,7 +85,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
         exerciseDataList = new ArrayList<>();
         dialogBuilder = new AlertDialog.Builder(this);
 
-        //Mainviewmodel access
+        //Main view model access
         mainViewModel = MainActivity.getMainViewModel();
         //Our user
         user = mainViewModel.getFirstUser();
@@ -156,7 +154,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
 
         //Add Comment section as header view, and set view & adapter to listview
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-        View headerView = inflater.inflate(R.layout.saveexercise_listview_header_view, null, false);
+        final View headerView = inflater.inflate(R.layout.saveexercise_listview_header_view, null, false);
         exerciseListView.addHeaderView(headerView);
         exerciseListView.setAdapter(adapter);
 
@@ -187,9 +185,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
                 dialogBuilder.setView(giveCaloriesPopUp);
                 dialog = dialogBuilder.create();
                 //On dismiss dialog updates ui & data arrays
-                dialog.setOnDismissListener(dialog -> {
-                    exerciseDataArray[3] = textViewForData.getText().toString();
-                });
+                dialog.setOnDismissListener(dialog -> exerciseDataArray[3] = textViewForData.getText().toString());
                 //Create custom class that handles onClickListeners in PopUpLayout
                 ExerciseDialogOnClickSetter caloriesDialog = new ExerciseDialogOnClickSetter(giveCaloriesPopUp, counterUtilityCalories, textViewCaloriesPopUp, dialog, textViewForData);
                 //Initialize dialog with method openGiveCalories()
@@ -241,31 +237,25 @@ public class SaveExerciseActivity extends AppCompatActivity {
         }
 
         if (exerciseDataArray != null) {
-            Integer userId = mainViewModel.getFirstUser().getuid(); //Integer to get null check
-            if (userId != null) {
-                //Create exercise from our data
-                Exercise exercise = new Exercise(exerciseDataArray[0], userId,
-                        ZonedDateTime.parse(exerciseDataArray[1]),
-                        ZonedDateTime.parse(exerciseDataArray[2]),
-                        Integer.parseInt(exerciseDataArray[3]),
-                        Integer.parseInt(exerciseDataArray[4]),
-                        exerciseDataArray[5],
-                        Double.parseDouble(exerciseDataArray[6]),
-                        exerciseDataArray[7]);
+            int userId = mainViewModel.getFirstUser().getuid();
+            //Create exercise from our data
+            Exercise exercise = new Exercise(exerciseDataArray[0], userId,
+                    ZonedDateTime.parse(exerciseDataArray[1]),
+                    ZonedDateTime.parse(exerciseDataArray[2]),
+                    Integer.parseInt(exerciseDataArray[3]),
+                    Integer.parseInt(exerciseDataArray[4]),
+                    exerciseDataArray[5],
+                    Double.parseDouble(exerciseDataArray[6]),
+                    exerciseDataArray[7]);
+            //Inserting exercise to database
+            mainViewModel.insertExercise(exercise);
+            RouteContainer.getInstance().resetRoute();
+            //Send us back to MainActivity page after saving data.
+            Intent intentForMainActivity = new Intent(this, MainActivity.class);
 
-                //Inserting exercise to database
-                mainViewModel.insertExercise(exercise);
-                RouteContainer.getInstance().resetRoute();
-
-                Log.d(TAG, "savePressed() --> Exercise saved to database" + exercise);
-
-                //Send us back to MainActivity page after saving data.
-                Intent intentForMainActivity = new Intent(this, MainActivity.class);
-
-                // FLAG_ACTIVITY_CLEAR_TOP to clear activity stack:  https://developer.android.com/guide/components/activities/tasks-and-back-stack
-                intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intentForMainActivity);
-            }
+            // FLAG_ACTIVITY_CLEAR_TOP to clear activity stack:  https://developer.android.com/guide/components/activities/tasks-and-back-stack
+            intentForMainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intentForMainActivity);
         }
     }
 
@@ -293,7 +283,7 @@ public class SaveExerciseActivity extends AppCompatActivity {
     /**
      * Menu for SaveExerciseActivity, it includes trash bin that ask if you want to delete exercise instead of saving
      *
-     * @param menu
+     * @param menu onCreate() will set menu layout on this activity
      * @return
      */
     @Override
