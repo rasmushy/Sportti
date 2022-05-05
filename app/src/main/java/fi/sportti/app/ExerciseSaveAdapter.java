@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.adapters;
+package fi.sportti.app;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import fi.sportti.app.R;
 
 /**
  * Custom adapter for listview to display recorded data after recorded exercise.

@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.customViews;
+package fi.sportti.app;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,7 +17,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 
-import fi.sportti.app.R;
 import fi.sportti.app.ui.utilities.TimeConversionUtilities;
 
 /**

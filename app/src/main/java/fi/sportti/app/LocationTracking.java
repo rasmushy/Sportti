@@ -1,4 +1,4 @@
-package fi.sportti.app.location;
+package fi.sportti.app;
 
 import android.Manifest;
 import android.app.Notification;
@@ -22,10 +22,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-
-import fi.sportti.app.App;
-import fi.sportti.app.R;
-import fi.sportti.app.ui.activities.StartExerciseActivity;
 
 /**
  *@author Jukka-Pekka Jaakkola

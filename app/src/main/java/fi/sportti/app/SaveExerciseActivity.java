@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import static fi.sportti.app.datastorage.room.TypeConversionUtilities.zonedDateToUnixTime;
 import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.*;
@@ -33,16 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import fi.sportti.app.App;
 import fi.sportti.app.datastorage.room.User;
-import fi.sportti.app.location.RouteContainer;
 
-import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.ui.adapters.ExerciseSaveAdapter;
 
 import fi.sportti.app.ui.utilities.CounterUtility;
-import fi.sportti.app.ui.utilities.ExerciseDialogOnClickSetter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**

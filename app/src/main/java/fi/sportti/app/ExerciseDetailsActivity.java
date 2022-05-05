@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -18,8 +18,6 @@ import android.widget.TextView;
 
 import java.time.ZonedDateTime;
 
-import fi.sportti.app.App;
-import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 

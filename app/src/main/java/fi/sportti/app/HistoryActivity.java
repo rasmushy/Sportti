@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,10 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
-import fi.sportti.app.ui.customViews.CustomGraph;
-import fi.sportti.app.ui.adapters.ExerciseAdapter;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**

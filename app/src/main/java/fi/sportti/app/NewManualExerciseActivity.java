@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -28,7 +28,6 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.utilities.CounterUtility;

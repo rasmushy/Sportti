@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,9 +18,6 @@ import com.mapquest.mapping.MapQuest;
 import com.mapquest.mapping.maps.MapView;
 
 import java.util.List;
-
-import fi.sportti.app.R;
-import fi.sportti.app.location.RouteContainer;
 
 /**
  *@author Jukka-Pekka Jaakkola

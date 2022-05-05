@@ -6,7 +6,7 @@
     android:id="@+id/editTextDateStart"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.NewManualExerciseActivity">
+    tools:context=".NewManualExerciseActivity">
 
     <Button
         android:id="@+id/buttonPulse"

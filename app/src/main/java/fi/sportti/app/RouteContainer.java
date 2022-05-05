@@ -1,4 +1,4 @@
-package fi.sportti.app.location;
+package fi.sportti.app;
 
 import android.location.Location;
 import android.util.Log;
@@ -6,8 +6,6 @@ import android.util.Log;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.ArrayList;
-
-import fi.sportti.app.App;
 
 /**
  * @author Jukka-Pekka Jaakkola

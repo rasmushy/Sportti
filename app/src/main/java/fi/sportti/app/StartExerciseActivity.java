@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.getCalories;
 import static fi.sportti.app.ui.utilities.TimeConversionUtilities.timeStringFromLong;
@@ -22,7 +22,6 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
@@ -44,13 +43,8 @@ import java.time.ZonedDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fi.sportti.app.App;
-import fi.sportti.app.R;
 import fi.sportti.app.ui.constants.ExerciseType;
-import fi.sportti.app.datastorage.sharedpreferences.RecordController;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
-import fi.sportti.app.location.LocationTracking;
-import fi.sportti.app.location.RouteContainer;
 
 /**
  * Application running while you exercise to collect data from it.

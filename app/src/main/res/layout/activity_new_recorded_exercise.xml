@@ -6,7 +6,7 @@
     android:id="@+id/recordexercise_main_layout_constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.NewRecordedExerciseActivity">
+    tools:context=".NewRecordedExerciseActivity">
 
     <ListView
         android:id="@+id/recordexercise_listview_all_exercises"

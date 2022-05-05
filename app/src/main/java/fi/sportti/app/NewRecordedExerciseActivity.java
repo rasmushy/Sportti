@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +13,7 @@ import android.widget.Toast;
 import java.util.Arrays;
 import java.util.List;
 
-import fi.sportti.app.R;
 import fi.sportti.app.ui.constants.ExerciseType;
-import fi.sportti.app.ui.adapters.ExerciseTypeAdapter;
 
 /**
  * Activity where user selects what exercise will be recorded.

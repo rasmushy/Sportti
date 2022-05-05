@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sportti">
         <activity
-            android:name=".ui.activities.MapActivity"
+            android:name=".MapActivity"
             android:exported="false" />
 
         <uses-library
@@ -25,52 +25,52 @@
             android:required="false" />
 
         <activity
-            android:name=".ui.activities.SaveExerciseActivity"
+            android:name=".SaveExerciseActivity"
             android:exported="false"
             android:label="@string/save_exercise" />
         <activity
-            android:name=".ui.activities.StartExerciseActivity"
+            android:name=".StartExerciseActivity"
             android:launchMode="singleTop"
             android:exported="false"
             android:theme="@style/HiddenTitleTheme.Sportti"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activities.ExerciseDetailsActivity"
+            android:name=".ExerciseDetailsActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.HistoryActivity"
+            android:parentActivityName=".HistoryActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activities.HistoryActivity"
+            android:name=".HistoryActivity"
             android:exported="false"
-            android:parentActivityName=".ui.activities.MainActivity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"/>
 
         <!-- Added User's Profile -->
-        <activity android:name=".ui.activities.ProfileActivity"
+        <activity android:name=".ProfileActivity"
             android:label="Profile"
-            android:parentActivityName=".ui.activities.MainActivity">
+            android:parentActivityName=".MainActivity">
         </activity>
 
         <activity
-            android:name=".ui.activities.NewManualExerciseActivity"
+            android:name=".NewManualExerciseActivity"
             android:label="@string/new_exercise"
-            android:parentActivityName=".ui.activities.MainActivity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activities.NewRecordedExerciseActivity"
+            android:name=".NewRecordedExerciseActivity"
             android:label="@string/new_exercise"
-            android:parentActivityName=".ui.activities.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <!--MainActivity is landing page when you open application-->
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -79,7 +79,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".location.LocationTracking" android:foregroundServiceType="location" />
+        <service android:name=".LocationTracking" android:foregroundServiceType="location" />
     </application>
 
 </manifest>

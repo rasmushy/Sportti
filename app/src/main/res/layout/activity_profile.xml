@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_weight="1.0"
     android:background="@color/user_background"
-    tools:context=".ui.activities.ProfileActivity">
+    tools:context=".ProfileActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline2"

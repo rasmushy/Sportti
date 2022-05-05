@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import static fi.sportti.app.ui.utilities.CalorieConversionUtilities.getBasalMetabolicRate;
 
@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.User;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 

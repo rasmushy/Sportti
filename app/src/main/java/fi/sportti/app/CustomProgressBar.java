@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.customViews;
+package fi.sportti.app;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import fi.sportti.app.R;
 
 /**
  *@author Jukka-Pekka Jaakkola

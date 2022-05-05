@@ -1,4 +1,4 @@
-package fi.sportti.app.datastorage.sharedpreferences;
+package fi.sportti.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;

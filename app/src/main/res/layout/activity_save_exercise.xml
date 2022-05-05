@@ -6,7 +6,7 @@
     android:id="@+id/saveexercise_main_layout_constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.SaveExerciseActivity">
+    tools:context=".SaveExerciseActivity">
 
 
     <androidx.constraintlayout.widget.Guideline

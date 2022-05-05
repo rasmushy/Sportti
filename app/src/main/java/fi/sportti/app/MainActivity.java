@@ -4,7 +4,7 @@
  */
 
 
-package fi.sportti.app.ui.activities;
+package fi.sportti.app;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -18,13 +18,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import fi.sportti.app.R;
 import fi.sportti.app.datastorage.room.Exercise;
 import fi.sportti.app.datastorage.room.User;
-import fi.sportti.app.ui.customViews.CustomProgressBar;
 import fi.sportti.app.ui.viewmodels.MainViewModel;
 
 /**

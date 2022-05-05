@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.adapters;
+package fi.sportti.app;
 
 import android.content.Context;
 import android.os.Build;
@@ -14,7 +14,7 @@ import androidx.annotation.RequiresApi;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
-import fi.sportti.app.R;
+
 import fi.sportti.app.datastorage.room.Exercise;
 
 

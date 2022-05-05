@@ -1,4 +1,4 @@
-package fi.sportti.app.ui.utilities;
+package fi.sportti.app;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import fi.sportti.app.R;
+import fi.sportti.app.ui.utilities.CounterUtility;
 
 /**
  * Dialog utilities class for onClickEvents on popup layout in one place with complex if methods.
