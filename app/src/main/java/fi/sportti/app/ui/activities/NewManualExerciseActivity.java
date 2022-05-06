@@ -4,7 +4,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,7 +57,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             durationHours, durationMinutes, calories, pulse;
     private double distanceDouble;
     private long startDateLong;
-    private boolean dateSelected;
+    private boolean dateSelected, durationGiven = false;
     private String minutesString, hoursString, distanceString, caloriesString, pulseString,
             startDate, comment;
     private ZonedDateTime startTimeData, endTimeData;
@@ -117,9 +116,6 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         dialogBuilder.setView(selectStartDatePopUp);
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
-
-        //Boolean to prevent crashing if user has not selected date yet
-        dateSelected = false;
 
         //Finds views in pop up
         CalendarView calendarView = selectStartDatePopUp.findViewById(R.id.calendarViewPopUp);
@@ -267,9 +263,7 @@ public class NewManualExerciseActivity extends AppCompatActivity {
             public void onClick(View view) {
                 durationHours = counterUtilityHours.returnCounterInt();
                 durationMinutes = counterUtilityMinutes.returnCounterInt();
-                endTimeData = startTimeData;
-                endTimeData = endTimeData.plusHours(durationHours).plusMinutes(durationMinutes);
-                exerciseDataArray[2] = endTimeData.toString();
+                durationGiven = true;
                 textViewDuration.setText(counterUtilityHours.returnCounter() + "h " +
                         counterUtilityMinutes.returnCounter() + "min");
                 dialog.dismiss();
@@ -642,6 +636,13 @@ public class NewManualExerciseActivity extends AppCompatActivity {
         //Get user selection from spinner
         String exerciseType = spinnerSelectExercise.getSelectedItem().toString();
         exerciseDataArray[0] = exerciseType;
+
+        //Get end time
+        if(durationGiven){
+            endTimeData = startTimeData;
+            endTimeData = endTimeData.plusHours(durationHours).plusMinutes(durationMinutes);
+            exerciseDataArray[2] = endTimeData.toString();
+        }
 
         //Check if user has made a comment
         if (editTextComment.getText().toString().length() > 0) {
